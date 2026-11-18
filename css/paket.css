@@ -63,3 +63,26 @@ body[data-niva="elit"] .ios-g[data-t="is"] svg { color: #7ab8ff; } body[data-niv
 .ios-g + .ios-g::before { content: ''; width: 3px; height: 3px; margin-right: 8px; margin-left: -8px; border-radius: 50%; background: var(--text-3); opacity: .5; }
 @keyframes ios-flamma { 0%, 100% { transform: scale(1) rotate(0); } 30% { transform: scale(1.12, 1.05) rotate(-4deg); } 60% { transform: scale(.96, 1.08) rotate(3deg); } }
 @media (prefers-reduced-motion: reduce) { .ios-titel-text { animation: none; background-position: 0 0; } .ios-g, .ios-g[data-t="glod"] svg { animation: none; } }
+
+/* 04 "I korthet" som låsskärmens widgetar: tre små glasrutor i rad, symbol + värde + etikett, går att trycka på */
+.ios-glance { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px !important; margin-top: 14px !important; }
+.ios-g { display: grid !important; grid-template-columns: 26px minmax(0, 1fr); align-items: center; gap: 8px !important; padding: 9px 10px; border-radius: 16px; text-align: left;
+  background: var(--lg-yta, rgba(255, 255, 255, .55)); -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5);
+  box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .6), 0 0 0 .5px var(--kant), 0 8px 18px -14px rgba(24, 54, 83, .35); transition: transform .3s cubic-bezier(.32, .72, 0, 1); -webkit-tap-highlight-color: transparent; }
+.ios-g:active { transform: scale(.95); }
+.ios-g + .ios-g::before { display: none !important; }
+.ios-g > svg { width: 22px !important; height: 22px !important; }
+.ios-g > span { display: grid; min-width: 0; }
+.ios-g b { font: 600 15px/1.1 var(--font-siffror) !important; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ios-g small { font: 500 11.5px/1.2 var(--font-brod); color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body[data-niva="elit"] .ios-g { background: rgba(246, 244, 239, .06); box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .12), 0 0 0 .5px rgba(255, 255, 255, .08); }
+
+/* 05 sista prickarna framför etiketter bort: Dagsform/Rörelse/Sömn i ringens färg, sammanfattningen på kroppen, knäprickarna */
+.mh-namn i { display: none !important; }
+.mh-namn { font: 600 14px var(--font-brod) !important; }
+.kv-snabbval .kv-prick { display: none !important; }
+.kv-sammanfattning > i:first-child { display: none !important; }
+/* rutorna är smala bredvid profilbilden – symbolen ovanpå, som en låsskärmswidget */
+.ios-g { grid-template-columns: 1fr !important; justify-items: start; gap: 6px !important; padding: 10px 11px !important; }
+.ios-g > svg { width: 20px !important; height: 20px !important; }
+.ios-glance { margin-right: -64px; }

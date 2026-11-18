@@ -609,10 +609,10 @@
         <h1 class="ios-titel"><span class="ios-titel-text">${e(hej)}, ${e(visNamn())}</span></h1>
         <p class="ios-under">${e(rad)}</p>
         ${(() => { const sv = svit(), p0 = planFor(idag()), gj = passPa(dagStr(idag())).length, ci = c && c.datum === dagStr(idag());
-          const del = [sv > 1 ? ['flamma', 'glod', `${sv} dagar i rad`] : null,
-            p0 ? [gj ? 'bock' : typIkon(p0.typ), gj ? 'ok' : 'is', gj ? `${p0.typ} klar` : `${p0.typ} ${p0.tid}`] : ['mane', 'is', 'Vilodag'],
-            ci ? ['puls', df >= 60 ? 'ok' : 'gul', `Dagsform ${df}`] : ['puls', 'gra', 'Check-in väntar']].filter(Boolean);
-          return `<div class="ios-glance" aria-label="Idag i korthet">${del.map(([i, t, x], n) => `<span class="ios-g" data-t="${t}" style="--n:${n}">${ik(i)}<b>${e(x)}</b></span>`).join('')}</div>`; })()}
+          const del = [sv > 1 ? ['flamma', 'glod', sv, sv === 1 ? 'dag i rad' : 'dagar i rad'] : ['flamma', 'gra', 0, 'dagar i rad'],
+            p0 ? [gj ? 'bock' : typIkon(p0.typ), gj ? 'ok' : 'is', gj ? 'Klar' : p0.tid, p0.typ] : ['mane', 'is', 'Vila', 'idag'],
+            ci ? ['puls', df >= 60 ? 'ok' : 'gul', df, 'dagsform'] : ['puls', 'gra', 'Check-in', 'väntar']];
+          return `<div class="ios-glance" aria-label="Idag i korthet">${del.map(([i, t, v, x], n) => `<button type="button" class="ios-g" data-t="${t}" style="--n:${n}" data-g="${n === 2 ? 'checkin' : n === 1 && p0 ? 'ts-checka' : 'flik'}" ${n === 0 ? 'data-v="jag"' : ''}>${ik(i)}<span><b class="tal">${e(String(v))}</b><small>${e(x)}</small></span></button>`).join('')}</div>`; })()}
       </div>
       <button class="valkomst-profil" data-g="flik" data-v="jag" aria-label="Din profil · hälsopoäng ${hp}">
         <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="${R}" class="vp-spar"/><circle cx="30" cy="30" r="${R}" class="vp-bage" style="stroke-dasharray:${L};stroke-dashoffset:${L * (1 - hp / 100)}"/></svg>
