@@ -125,3 +125,5 @@ body[data-tema="landslaget"][data-niva="elit"] .flik-kapsel .flik-markor::before
   animation: ls-ord2 1.9s cubic-bezier(.4, 0, .2, 1) 1.3s both !important; }
 @keyframes ls-ord2 { from { opacity: 0; transform: translateY(8px) scale(.97); background-position: 100% 0; } 30% { opacity: 1; transform: none; } to { opacity: 1; transform: none; background-position: 0 0; } }
 body[data-tema="landslaget"] .splash-ord p { color: #a9cfff !important; opacity: .9; }
+/* g:s nedstapel klipptes: textklippet målar bara inom elementets ruta – ge ordmärket plats under baslinjen */
+.ls-ordmarke { line-height: 1.2 !important; padding: .04em .06em .14em !important; margin-bottom: -.14em !important; }
