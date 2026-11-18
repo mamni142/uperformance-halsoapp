@@ -877,12 +877,20 @@
   function kvLandskap() {
     const gran = (x, y, h) => `<path d="M${x} ${y - h}L${x + h * .32} ${y - h * .45}H${x + h * .16}L${x + h * .42} ${y}H${x - h * .42}L${x - h * .16} ${y - h * .45}H${x - h * .32}Z"/>`;
     const skog = Array.from({ length: 22 }, (_, i) => { const x = 6 + i * 18.4 + ((i * 7) % 5), y = 112 + ((i * 13) % 6), h = 13 + ((i * 11) % 9); return Math.abs(x - 200) < 70 ? '' : gran(x, y, h); }).join('');
-    const flagga = (x, y, d) => `<g class="kv-flagga" transform="translate(${x} ${y})"><line x1="0" y1="0" x2="0" y2="-26"/><g class="kv-duk" style="animation-delay:${d}s"><rect x="0" y="-26" width="15" height="9.5" rx="1" fill="#0b5cc2"/><rect x="4.5" y="-26" width="2.6" height="9.5" fill="#ffcd00"/><rect x="0" y="-22.4" width="15" height="2.4" fill="#ffcd00"/></g></g>`;
+    // Svensk flagga i rätta proportioner (16 × 10, korset 5 + 2 + 9 / 4 + 2 + 4) som vajar: duken böljar (SMIL på formen),
+    // korset följer med genom klippningen och veckens ljus och skugga glider utåt. Stång med guldknopp på en snödriva.
+    const flagga = (x, y, n, d) => { const D1 = 'M0 -29 C5 -30.6 10 -27.4 16 -29.2 L16 -19.2 C10 -17.4 5 -20.6 0 -19 Z', D2 = 'M0 -29 C5 -27.6 10 -30.4 16 -28.6 L16 -18.6 C10 -20.4 5 -17.6 0 -19 Z';
+      const form = `<animate attributeName="d" dur="2.6s" begin="${d}s" repeatCount="indefinite" values="${D1};${D2};${D1}" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" keyTimes="0;.5;1"/>`;
+      return `<g class="kv-flagga" transform="translate(${x} ${y})"><defs><clipPath id="kv-fl-${n}"><path d="${D1}">${form}</path></clipPath>
+        <linearGradient id="kv-fv-${n}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="8" y2="0" spreadMethod="repeat"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".5" stop-color="#000" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity=".28"/></linearGradient></defs>
+        <ellipse class="kv-driva" cx="0" cy="0.6" rx="4.2" ry="1.4"/><rect class="kv-stang" x="-.6" y="-31" width="1.2" height="31.4" rx=".6"/><circle cx="0" cy="-31.4" r="1.25" fill="#ffcd00"/>
+        <g clip-path="url(#kv-fl-${n})"><rect x="0" y="-32" width="17" height="15" fill="#006aa7"/><rect x="5" y="-32" width="2" height="15" fill="#fecc02"/><rect x="0" y="-25.1" width="17" height="2" fill="#fecc02"/>
+          <rect x="-16" y="-32" width="48" height="15" fill="url(#kv-fv-${n})"><animateTransform attributeName="transform" type="translate" from="0 0" to="8 0" dur="1.3s" begin="${d}s" repeatCount="indefinite"/></rect></g></g>`; };
     return `<svg class="kv-landskap" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
       <path class="kv-fj1" d="M0 120V70L38 52L70 64L112 36L150 58L178 48L214 62L250 30L292 56L326 44L362 60L400 46V120Z"/>
-      <path class="kv-fj1-sno" d="M112 36L124 44L118 46L106 40ZM250 30L264 40L256 42L244 36Z"/>
+      <path class="kv-fj1-sno" d="M112 36L103.6 41.6L107.6 40.6L110.4 43.2L113.6 41L116.6 42.4L120.4 41.1ZM250 30L241 38L245.4 37.1L248.6 39.8L251.6 37.2L255 38.2L258.4 35.5Z"/>
       <path class="kv-fj2" d="M0 120V92Q60 78 120 90T240 88T400 84V120Z"/>
-      ${flagga(112, 37, 0)}${flagga(250, 31, -.8)}<g class="kv-skog">${skog}</g></svg>`;
+      ${flagga(112, 37.5, 0, 0)}${flagga(250, 31.5, 1, -.9)}<g class="kv-skog">${skog}</g></svg>`;
   }
   // Landslaget: vad tekniken belastar (allmän bild, ingen mätning) – tryck på en rad så visas området på kroppen.
   const TEKNIK = [
