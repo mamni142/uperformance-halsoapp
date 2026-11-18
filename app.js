@@ -378,6 +378,7 @@
 
   /* ---- 09 hem: Idag ---- */
   const FLIKAR = ['idag', 'kropp', 'screening', 'jag'];
+  let valkomnaVisad = false; // välkomstentrén (hälsningen glider upp, korten kommer fram) en gång per session
   function hem(f = 'idag', { in: inn, kvar } = {}) {
     const fore = FLIKAR.indexOf(flik), efter = FLIKAR.indexOf(f), samma = flik === f && !!nu; // samma flik ritas om mjukt – rubriken och väljarna står still
     flik = f;
@@ -385,7 +386,7 @@
     if (st.profil && document.body.dataset.niva !== st.profil.niva) document.body.dataset.niva = st.profil.niva; // introt är alltid mörkt – appen följer profilen
     const html = { idag: vyIdag, kropp: vyKropp, screening: vyScreening, jag: vyJag }[f]();
     visa(html, { in: samma && (!inn || inn === 'tona' || inn === 'mjuk') ? 'mjuk' : inn || (fore < 0 ? 'tona' : efter > fore ? 'fram' : efter < fore ? 'bak' : 'tona'), kvar: kvar || 440, flikar: true, efter: (el) => {
-      if (f === 'idag') { kroppValFn = (id) => { if (id) ontArk(id); }; paminnKoll(); const x = $('.lp-kort .lp-karta', el); if (x) fargaRunda(x, exempelRunda(loppNu())); } else gomNotis();
+      if (f === 'idag') { kroppValFn = (id) => { if (id) ontArk(id); }; if (!valkomnaVisad && !lugn) { valkomnaVisad = true; el.dataset.valkomna = ''; /* ligger kvar på skärmen – tas den bort startar kortens vanliga intoning om */ } paminnKoll(); const x = $('.lp-kort .lp-karta', el); if (x) fargaRunda(x, exempelRunda(loppNu())); } else gomNotis();
       if (f === 'kropp') kroppValFn = (id) => { if (!id) return; if (kroppLage === 'ont') ontArk(id); else if (kroppLage === 'test' && grupp(id)) gruppArk(grupp(id).k); };
     } });
     $$('[data-flik]', flikrad).forEach((b) => b.toggleAttribute('aria-current', b.dataset.flik === f) || b.setAttribute('aria-current', b.dataset.flik === f ? 'page' : 'false'));
@@ -644,8 +645,9 @@
     const insikt = vecka >= 150 ? `Veckans rörelsemål är nått${bra[0].namn !== 'Rörelse' && bra[0].d >= .5 ? ` · ${bra[0].namn.toLowerCase()} drar upp` : ''}`
       : `${150 - vecka} min kvar till veckans mål${bra[0].d >= .5 ? ` · ${bra[0].namn.toLowerCase()} drar upp` : ''}`;
     const delta = (g) => { const v = g.namn !== 'Sömn' ? Math.round(g.d) : Math.round(g.d * 10) / 10, t = Math.abs(v) < (g.namn === 'Rörelse' ? 5 : g.namn === 'Dagsform' ? 2 : .5) ? 'is' : v > 0 ? 'ok' : 'gul';
-      return `<em data-ton="${t}">${t === 'is' ? '±0' : `${v > 0 ? '+' : '−'}${fmt(Math.abs(v), g.namn === 'Rörelse' || Number.isInteger(v) ? 0 : 1)}${g.enh || ''}`}</em>`; };
-    return `<section class="mh in" style="--i:1">
+      return `<em class="lg-delta" data-ton="${t}" data-rikt="${t === 'is' ? 'lika' : v > 0 ? 'upp' : 'ner'}">${t === 'is' ? '±0' : `${fmt(Math.abs(v), g.namn === 'Rörelse' || Number.isInteger(v) ? 0 : 1)}${g.enh || ''}`}</em>`; };
+    const hh = idag().getHours(), fas = hh >= 5 && hh < 10 ? 'morgon' : hh < 17 ? 'dag' : hh < 22 ? 'kvall' : 'natt';
+    return `<section class="mh in" style="--i:1" data-fas="${fas}">
       <div class="mh-topp"><div><small>Idag</small><h3>Dagsform</h3></div><span class="mh-status" data-ton="${ton}"><i></i>${ord}</span></div>
       <div class="mh-rad">
         <svg class="mh-ringar" viewBox="0 0 160 160" aria-hidden="true"><defs>${ringar.map((g, i) => `<linearGradient id="mh-g${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${g.f[0]}"/><stop offset="1" stop-color="${g.f[1]}"/></linearGradient>`).join('')}</defs>
