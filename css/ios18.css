@@ -173,3 +173,26 @@ body[data-niva="elit"] .kv-snabb { background: rgba(246, 244, 239, .05); }
 /* raden med Bak och status: en ren glaskapsel */
 .kv-fot { border-radius: 999px !important; }
 .kv-fot .kv-vrid, .kv-fot > span, .kv-fot > div { font: 600 13px var(--font-brod) !important; }
+
+/* Screening i iOS 18-stil */
+/* testdagens tid, längd och plats: text med symboler och prickar, inga kapslar */
+.sc-meta { display: flex !important; flex-wrap: wrap; gap: 4px 12px !important; }
+.sc-meta span { display: inline-flex !important; align-items: center; gap: 5px; padding: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; min-height: 0 !important;
+  font: 600 13.5px var(--font-brod) !important; color: var(--text-2) !important; }
+.sc-meta span svg { width: 15px !important; height: 15px !important; color: #2f8cf0; }
+body[data-niva="elit"] .sc-meta span svg { color: #7ab8ff; }
+.sc-meta span + span::before { content: ''; width: 3px; height: 3px; margin-right: 7px; margin-left: -7px; border-radius: 50%; background: var(--text-3); opacity: .5; }
+/* strecket framför etiketterna tas bort */
+.sc-hjalte .ogon::before, .ogon::before { display: none !important; }
+/* Förbered dig: runda iOS-bockar */
+.sc-forbered .bock-ruta { width: 24px !important; height: 24px !important; border-radius: 50% !important; border: 1.5px solid var(--kant-2) !important; background: none !important;
+  display: grid !important; place-items: center; color: transparent !important; transition: background .3s, border-color .3s, transform .35s cubic-bezier(.2, 1.4, .35, 1) !important; }
+.sc-forbered [aria-pressed="true"] .bock-ruta { background: linear-gradient(160deg, #a6f0d9, #3fc9a3) !important; border-color: transparent !important; color: #0b1520 !important; transform: scale(1.06); }
+.sc-forbered .bock-ruta svg { width: 13px !important; height: 13px !important; stroke-width: 3 !important; }
+.sc-forbered [aria-pressed="true"] > span:last-child { color: var(--text-3); text-decoration: line-through; text-decoration-color: var(--text-3); }
+/* grundformens steg: en grupperad lista med hårfina avdelare */
+.sc-trappa-kort .trappa { gap: 0 !important; border-radius: 18px; overflow: hidden; background: var(--yta); box-shadow: 0 0 0 .5px var(--kant); }
+body[data-niva="elit"] .sc-trappa-kort .trappa { background: rgba(246, 244, 239, .05); }
+body[data-niva] .sc-trappa-kort .trappsteg { border-radius: 0 !important; background: none !important; box-shadow: none !important; position: relative; }
+.sc-trappa-kort .trappsteg + .trappsteg::before { content: ''; position: absolute; top: 0; left: 54px; right: 0; height: .5px; background: var(--kant-2); }
+.sc-trappa-kort .trapp-text b { font: 600 15px var(--font-rubrik) !important; }

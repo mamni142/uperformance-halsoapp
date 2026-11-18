@@ -421,7 +421,7 @@
   }
   function topp(rubrik) {
     const p = st.profil;
-    return `<div class="hem-topp in" style="--i:0"><div class="halsning"><small>${e(datumText())}<span class="niva-markering">${ik(elit() ? 'blixt' : 'sol')}${elit() ? 'Elit' : 'Motionär'}</span></small><h1>${rubrik}</h1></div>
+    return `<div class="hem-topp in" style="--i:0"><div class="halsning"><span class="ios-datum">${ik(idag().getHours() >= 17 || idag().getHours() < 5 ? 'mane' : 'sol')}${e(datumText())}</span><h1 class="ios-titel"><span class="ios-titel-text">${rubrik}</span></h1></div>
       <button class="profilbild" data-g="flik" data-v="jag" aria-label="Din profil">${e((p?.namn || 'U')[0].toUpperCase())}</button></div>`;
   }
   function senasteCheckin() { return st.checkin[st.checkin.length - 1] || null; }
