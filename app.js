@@ -645,7 +645,7 @@
     const lapp = (v) => { const [x, y] = P(T(v), 116); return `<text class="zon-etikett" x="${x.toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="middle">${fmt(v, 1)}</text>`; };
     const vinkel = T(kvot) * 180 - 90;
     return `<svg viewBox="0 0 230 130" aria-hidden="true">${bage(0, T(.8) - .012, 'zon-lag')}${bage(T(.8) + .012, T(1.3) - .012, 'zon-ok')}${bage(T(1.3) + .012, 1, 'zon-hog')}
-      ${lapp(.8)}${lapp(1.3)}<g class="visare ac-svep" style="--v:${vinkel}deg;transform:rotate(${vinkel}deg)"><g class="ac-darr"><path d="M112.5 116 L115 40 L117.5 116 Z"/><circle class="ac-spets" cx="115" cy="42" r="3.2"/></g><circle cx="115" cy="116" r="9" class="nav"/><circle cx="115" cy="116" r="3.5" class="nav-mitt"/></g></svg>`;
+      ${lapp(.8)}${lapp(1.3)}${Array.from({ length: 17 }, (_, k) => { const [x0, y0] = P(k / 16, 80), [x1, y1] = P(k / 16, k % 4 ? 76 : 72); return `<line class="ac-streck" x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}"/>`; }).join('')}<g class="visare ac-svep ac-knopp-g" data-zon="${kvot < .8 ? 'lag' : kvot <= 1.3 ? 'ok' : 'hog'}" style="--v:${vinkel}deg;transform:rotate(${vinkel}deg)"><circle class="ac-sken" cx="115" cy="20" r="15"/><circle class="ac-knopp" cx="115" cy="20" r="9"/><circle class="ac-knopp-mitt" cx="115" cy="20" r="4"/></g></svg>`;
   }
   // Motionärens dagsform i iOS 26-stil (som Aktivitet/Fitness): tre ringar med rund ände och glans vid huvudet,
   // värdena i en lista bredvid med förändring mot snittet, en smart rad och en fotnot.

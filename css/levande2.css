@@ -53,3 +53,15 @@ body[data-niva] :is(span.chip[data-ton], .mh-status, .tg-status, .match-status, 
 @media (prefers-reduced-motion: reduce) { .skarm.fraga-skarm[data-ut], .fraga-fortsatt .in { animation: none !important; } }
 @keyframes fr-ut-fram { 35% { opacity: 0; } to { transform: translateX(-34%); opacity: 0; } }
 @keyframes fr-ut-bak { 35% { opacity: 0; } to { transform: translateX(34%); opacity: 0; } }
+
+/* ACWR-mätaren i iOS-stil (2026-11-18): ingen nål – en vit knopp med ring i zonens färg och mjukt sken glider ut på bågen till dagens värde, fina streck innanför */
+.ac-streck { stroke: color-mix(in srgb, var(--text) 22%, transparent); stroke-width: 1.2; stroke-linecap: round; }
+.ac-knopp-g .ac-knopp { fill: #fff !important; stroke: var(--ac-k, #7ee0c3) !important; stroke-width: 3.5 !important; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .35)); }
+.ac-knopp-g .ac-knopp-mitt { fill: var(--ac-k, #7ee0c3) !important; stroke: none !important; }
+.ac-knopp-g .ac-sken { fill: var(--ac-k, #7ee0c3) !important; stroke: none !important; opacity: .28; transform-box: fill-box; transform-origin: center; animation: ac-sken 2.4s ease-in-out 2s infinite; }
+@keyframes ac-sken { 50% { transform: scale(1.35); opacity: .08; } }
+.ac-knopp-g[data-zon="lag"] { --ac-k: #8fc4ff; } .ac-knopp-g[data-zon="ok"] { --ac-k: #7ee0c3; } .ac-knopp-g[data-zon="hog"] { --ac-k: #ff8a5c; }
+body[data-niva="motionar"] .ac-knopp-g[data-zon="ok"] { --ac-k: #1fb383; }
+body[data-tema="landslaget"] .ac-knopp-g[data-zon="ok"] { --ac-k: #ffcd00; } body[data-tema="landslaget"] .ac-knopp-g[data-zon="lag"] { --ac-k: #6db6ff; }
+.acwr .zon-lag, .acwr .zon-ok, .acwr .zon-hog, .acwr2 path[class^="zon-"] { stroke-width: 10 !important; }
+@media (prefers-reduced-motion: reduce) { .ac-knopp-g .ac-sken { animation: none; } }
