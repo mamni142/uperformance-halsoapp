@@ -1968,7 +1968,7 @@
 
   // Andning: box-andning 4–4–4–4 (in, håll, ut, håll) med en cirkel som växer och krymper
   function vtAndning() {
-    return `<div class="kort vt-kort vt-andning" data-lage="redo"><div class="vt-and-scen"><span class="vt-and-ring"></span><span class="vt-and-cirkel"></span><div class="vt-and-text"><b data-vt-and>Redo</b><small data-vt-and-tid>4 sekunder per steg</small></div></div>
+    return `<div class="kort vt-kort vt-andning" data-lage="redo"><div class="vt-and-scen"><span class="vt-and-ring"></span><span class="vt-and-ring vt-and-ring2"></span><span class="vt-and-cirkel"></span><div class="vt-and-text"><b data-vt-and>Redo</b></div></div><p class="vt-and-under tal" data-vt-and-tid>4 sekunder per steg</p>
       <div class="vt-val" role="group" aria-label="Längd">${[1, 2, 3].map((m) => `<button type="button" data-g="vt-andning" data-v="${m}">${m} min</button>`).join('')}</div></div>
       <p class="vt-fot">${ik('info')}<span>${LANDS ? 'Lugn andning före start och efter tuffa intervaller – in genom näsan, ut genom munnen.' : 'Andas in, håll, andas ut, håll – fyra sekunder var. Bra för att varva ned.'}${st.halsa?.kopplad ? ' Minuterna kan sparas som mindfulness i Apple Hälsa (prototyp).' : ''}</span></p>`;
   }
@@ -1988,32 +1988,32 @@
   // Vätska: glas à 250 ml mot ett dagsmål (2 liter + en halv liter per träningstimme – allmän riktlinje)
   function vtVatska() {
     const d = dagStr(idag()), ml = (st.vatska ||= {})[d] || 0, passMin = st.pass.filter((x) => x.datum === d).reduce((s0, x) => s0 + x.min, 0), mal = Math.round((2000 + passMin / 60 * 500) / 250) * 250;
-    return `<div class="kort vt-kort vt-vatska" style="--v:${Math.min(1, ml / mal).toFixed(3)}"><div class="vt-glas" aria-hidden="true"><span class="vt-glas-vatten"><i></i></span></div>
-      <div class="vt-vatska-text"><b class="tal">${fmt(ml / 1000, 2)}<small> / ${fmt(mal / 1000, 2)} l</small></b><span>${ml >= mal ? 'Dagens mål är nått' : `${Math.ceil((mal - ml) / 250)} glas kvar idag`}</span>
+    return `<div class="kort vt-kort vt-vatska" style="--v:${Math.min(1, ml / mal).toFixed(3)}"><div class="vt-glas" aria-hidden="true"><span class="vt-glas-vatten"><i></i><b></b><b></b><b></b></span><span class="vt-glas-skala"><i></i><i></i><i></i></span><span class="vt-glas-glans"></span></div>
+      <div class="vt-vatska-text"><b class="tal">${fmt(ml / 1000, 2)}<small> / ${fmt(mal / 1000, 2)} l</small></b><span>${ml >= mal ? 'Dagens mål är nått' : `${Math.ceil((mal - ml) / 250)} glas kvar idag`}</span><span class="vt-droppar" aria-hidden="true">${Array.from({ length: mal / 250 }, (_, k) => `<i ${k < ml / 250 ? 'data-full' : ''} style="--k:${k}">${ik('droppe')}</i>`).join('')}</span>
         <div class="vt-knappar"><button class="knapp knapp-primar" data-g="vt-vatten" data-v="250">${ik('plus')}Ett glas</button><button class="ikonknapp" data-g="vt-vatten" data-v="-250" aria-label="Ta bort ett glas" ${ml ? '' : 'disabled'}>−</button></div></div></div>
       <p class="vt-fot">${ik('info')}<span>${LANDS ? 'Kall, torr luft tar mycket vätska – drick även när du inte är törstig. ' : ''}Målet är en allmän riktlinje: 2 liter plus en halv liter per träningstimme idag${passMin ? ` (${passMin} min)` : ''}.${st.halsa?.kopplad && st.halsa.skriv?.vatten ? ' Glasen skickas till Apple Hälsa (prototyp).' : ''}</span></p>`;
   }
 
   // Köldeffekt (landslaget): SMHI:s formel för vindens avkylning, risk och klädsel – och FIS gräns för tävlingsstart
   function vtKyla() { const k = st.kyla || { t: -12, v: 4 };
-    return `<div class="kort vt-kort vt-kyla"><label class="vt-reglage"><span>Temperatur <b data-vt-kyla-t>${k.t} °C</b></span><input type="range" min="-35" max="5" step="1" value="${k.t}" data-vt-kyla="t"></label>
-      <label class="vt-reglage"><span>Vind <b data-vt-kyla-v>${k.v} m/s</b></span><input type="range" min="0" max="15" step="1" value="${k.v}" data-vt-kyla="v"></label>
+    return `<div class="kort vt-kort vt-kyla"><label class="vt-reglage"><span>Temperatur <b data-vt-kyla-t>${String(k.t).replace("-", "−")} °C</b></span><input type="range" min="-35" max="5" step="1" value="${k.t}" data-vt-kyla="t" style="--p:${((k.t + 35) / 40 * 100).toFixed(1)}%"></label>
+      <label class="vt-reglage"><span>Vind <b data-vt-kyla-v>${k.v} m/s</b></span><input type="range" min="0" max="15" step="1" value="${k.v}" data-vt-kyla="v" style="--p:${(k.v / 15 * 100).toFixed(1)}%"></label>
       <div data-vt-kyla-ut>${vtKylaUt(k.t, k.v)}</div></div>
       <p class="vt-fot">${ik('info')}<span>Köldeffekten räknas med SMHI:s formel för vindens avkylning. Enligt FIS tävlingsregler skjuts en längdtävling upp när det är kallare än −20 °C på banans kallaste punkt.</span></p>`; }
   function vtKylaUt(T, v) {
     const te = v < 1.3 ? T : 13.12 + .6215 * T - 13.956 * v ** .16 + .4867 * T * v ** .16, r = Math.round(te);
     const [ton, namn, rad] = r > -10 ? ['ok', 'Kyligt', 'Vanlig vinterklädsel – mössa och tunna handskar.'] : r > -25 ? ['gul', 'Kallt', 'Skydda ansikte och fingrar, vindtätt ytterlager.']
       : r > -40 ? ['rod', 'Mycket kallt', 'Risk för förfrysning på bar hud – täck kinder och näsa, korta passet.'] : ['rod', 'Extremt kallt', 'Bar hud fryser snabbt – träna inomhus.'];
-    return `<div class="vt-kyla-ut" data-ton="${ton}"><div><small>Känns som</small><b class="tal">${r}°</b></div><div><span class="vt-kyla-niva">${namn}</span><p>${rad}</p></div></div>
+    return `<div class="vt-kyla-ut" data-ton="${ton}"><div><small>Känns som</small><b class="tal">${String(r).replace("-", "−")}°</b></div><div><span class="vt-kyla-niva">${namn}</span><p>${rad}</p></div></div>
       ${T < -20 ? `<p class="vt-fis">${ik('varning')}<span>Under −20 °C – en FIS-tävling skulle skjutas upp.</span></p>` : ''}
       <ol class="vt-lager">${[['Närmast', r > -10 ? 'Tunt underställ i ull eller syntet' : 'Underställ i ull'], ['Mitten', r > -10 ? 'Tunn mellanjacka' : r > -25 ? 'Fleece eller tunn dun' : 'Varm mellanjacka'], ['Ytterst', r > -25 ? 'Vindtät tävlingsdräkt eller jacka' : 'Vindtätt med extra skydd på bålen']].map(([a, b], k) => `<li style="--k:${k}"><b>${a}</b><span>${b}</span></li>`).join('')}</ol>`;
   }
-  function vtKylaRita(a) { const t = +$('[data-vt-kyla="t"]', a).value, v = +$('[data-vt-kyla="v"]', a).value; st.kyla = { t, v }; spara();
-    $('[data-vt-kyla-t]', a).textContent = `${t} °C`; $('[data-vt-kyla-v]', a).textContent = `${v} m/s`; $('[data-vt-kyla-ut]', a).innerHTML = vtKylaUt(t, v); }
+  function vtKylaRita(a) { const t = +$('[data-vt-kyla="t"]', a).value, v = +$('[data-vt-kyla="v"]', a).value; st.kyla = { t, v }; spara(); $('[data-vt-kyla="t"]', a).style.setProperty('--p', `${((t + 35) / 40 * 100).toFixed(1)}%`); $('[data-vt-kyla="v"]', a).style.setProperty('--p', `${(v / 15 * 100).toFixed(1)}%`);
+    $('[data-vt-kyla-t]', a).textContent = `${String(t).replace("-", "−")} °C`; $('[data-vt-kyla-v]', a).textContent = `${v} m/s`; $('[data-vt-kyla-ut]', a).innerHTML = vtKylaUt(t, v); }
 
   // Apple Hälsa: vilka data som läses och skrivs (som iOS tillståndsark), sedan dagens värden från telefonen och klockan
   function vtHalsa() {
-    const h = halsa(), x = HALSA_EX(), rad = (lista, typ) => lista.map(([k, t, i]) => `<button class="vt-halsa-rad" role="switch" aria-checked="${h[typ][k] !== false}" data-g="vt-halsa-typ" data-typ="${typ}" data-k="${k}"><span class="ikonruta" data-ton="rod">${ik(i)}</span><span>${t}</span><i class="vt-brytare"></i></button>`).join('');
+    const h = halsa(), x = HALSA_EX(), rad = (lista, typ) => lista.map(([k, t, i]) => `<button class="vt-halsa-rad" role="switch" aria-checked="${h[typ][k] !== false}" data-g="vt-halsa-typ" data-typ="${typ}" data-k="${k}"><span class="vt-hk-ikon" data-k="${k}">${ik(i)}</span><span>${t}</span><i class="vt-brytare"></i></button>`).join('');
     const klockor = [['Apple Watch', 'Direkt i Apple Hälsa'], ['Garmin', 'Via Garmin Connect → Apple Hälsa'], ['Polar', 'Via Polar Flow → Apple Hälsa'], ['Suunto och Coros', 'Via deras appar → Apple Hälsa'], ['Strava', 'Pass via Apple Hälsa']];
     return `${h.kopplad ? `<div class="kort vt-kort vt-halsa-nu"><div class="vt-halsa-topp"><span class="vt-halsa-ikon">${ik('hjarta')}</span><div><b>Kopplad till Apple Hälsa</b><small>Senast synkad nyss · exempeldata</small></div><span class="exempel">Exempel</span></div>
         <dl class="vt-halsa-tal"><div><dt>Steg</dt><dd class="tal">${fmt(x.steg)}</dd></div><div><dt>Vilopuls</dt><dd class="tal">${x.vila}<small> slag/min</small></dd></div><div><dt>HRV</dt><dd class="tal">${x.hrv}<small> ms</small></dd></div>
@@ -2022,7 +2022,7 @@
       : `<div class="kort vt-kort vt-halsa-intro"><span class="vt-halsa-ikon stor">${ik('hjarta')}</span><b>Låt appen läsa från Apple Hälsa</b><p>Steg, puls, sömn och pass kommer in automatiskt från iPhone och klockan – du slipper skriva in dem. Du väljer själv vad som delas och kan ändra det när som helst i Hälsa-appen.</p></div>`}
       <h4 class="vt-rubrik">Läsa från Hälsa</h4><div class="vt-halsa-lista">${rad(HALSA_LAS, 'las')}</div>
       <h4 class="vt-rubrik">Skriva till Hälsa</h4><div class="vt-halsa-lista">${rad(HALSA_SKRIV, 'skriv')}</div>
-      <h4 class="vt-rubrik">Klockor och appar</h4><ul class="vt-klockor">${klockor.map(([t, u]) => `<li><span class="ikonruta" data-ton="is">${ik('klocka')}</span><span><b>${t}</b><small>${u}</small></span></li>`).join('')}</ul>
+      <h4 class="vt-rubrik">Klockor och appar</h4><ul class="vt-klockor">${klockor.map(([t, u]) => `<li><span class="vt-hk-ikon" data-k="klocka">${ik('klocka')}</span><span><b>${t}</b><small>${u}</small></span></li>`).join('')}</ul>
       <button class="knapp ${h.kopplad ? 'knapp-sek' : 'knapp-primar'} knapp-bred vt-halsa-knapp" data-g="vt-halsa-koppla">${ik(h.kopplad ? 'stang' : 'hjarta')}${h.kopplad ? 'Koppla från Apple Hälsa' : 'Koppla Apple Hälsa'}</button>
       <p class="vt-fot">${ik('las')}<span>Prototyp: i iPhone-appen frågar iOS om tillstånd för varje typ (HealthKit) och datan stannar på telefonen tills du delar den med ditt team. Här visas exempeldata.</span></p>`;
   }
