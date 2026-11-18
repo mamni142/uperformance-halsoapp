@@ -121,6 +121,36 @@
   .pres-markor { position: absolute; z-index: 0; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 6px); border-radius: 999px; background: linear-gradient(180deg, #a6f0d9, var(--accent));
     transition: transform .55s cubic-bezier(.32, .72, 0, 1), background .5s; box-shadow: 0 8px 20px -10px var(--accent); }
   body[data-pres="landslaget"] .pres-markor { transform: translateX(calc(100% + 4px)); background: linear-gradient(180deg, #ffe066, #ffcd00); }
+  /* Växeln levande: ljus som vandrar runt kanten, markören töjer sig när den glider, glans som sveper, ring där man klickar */
+  .pres { --pk: 126, 224, 195; overflow: hidden; transition: box-shadow .5s; }
+  body[data-pres="landslaget"] .pres { --pk: 255, 205, 0; }
+  .pres:hover { box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .2), 0 0 24px -8px rgba(var(--pk), .55); }
+  .pres-kant { position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit; padding: 1px;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+  .pres-kant i { position: absolute; left: 50%; top: 50%; width: 140%; aspect-ratio: 1; margin: -70% 0 0 -70%; border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent 0 62%, rgba(var(--pk), .0) 64%, rgba(var(--pk), .95) 80%, #fff 82%, transparent 86% 100%); animation: pres-varv 5.5s linear infinite; }
+  @keyframes pres-varv { to { transform: rotate(1turn); } }
+  .pres-markor { background: none !important; overflow: hidden; }
+  .pres-markor::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(180deg, #c6f7e8, #7ee0c3 55%, #4fcfa8); transition: opacity .5s;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 -2px 4px rgba(0, 0, 0, .12); }
+  .pres-markor::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, .75) 48%, transparent 64%);
+    transform: translateX(-120%); animation: pres-glans 4.2s ease-in-out 1.2s infinite; }
+  @keyframes pres-glans { 0% { transform: translateX(-120%); } 32%, 100% { transform: translateX(120%); } }
+  body[data-pres="landslaget"] .pres-markor::before { background: linear-gradient(180deg, #fff0a0, #ffd633 55%, #f0b400); }
+  body[data-pres="landslaget"] .pres-markor { box-shadow: 0 8px 22px -8px rgba(255, 190, 0, .9); }
+  .pres-markor[data-glid]::before { animation: pres-toj .6s cubic-bezier(.3, .7, .3, 1); }
+  @keyframes pres-toj { 0% { transform: scaleX(1); } 35% { transform: scaleX(1.14) scaleY(.9); } 70% { transform: scaleX(.97) scaleY(1.03); } 100% { transform: none; } }
+  .pres button { transition: color .35s, transform .18s cubic-bezier(.3, .7, .3, 1), text-shadow .35s; -webkit-tap-highlight-color: transparent; }
+  .pres button:hover:not([aria-pressed="true"]) { color: #fff; text-shadow: 0 0 12px rgba(var(--pk), .6); }
+  .pres button:active { transform: scale(.95); }
+  .pres button:focus-visible { outline: 2px solid rgba(var(--pk), .9); outline-offset: 2px; }
+  .pres-ring { position: absolute; z-index: 1; width: 16px; height: 16px; margin: -8px; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, rgba(255, 255, 255, .85), rgba(var(--pk), .4) 45%, transparent 70%);
+    animation: pres-ring .7s cubic-bezier(.2, .8, .2, 1) forwards; }
+  @keyframes pres-ring { from { transform: scale(.4); opacity: 1; } to { transform: scale(9); opacity: 0; } }
+  .pres-gnista { position: absolute; z-index: 3; width: 4px; height: 4px; margin: -2px; border-radius: 50%; pointer-events: none; background: #fff; box-shadow: 0 0 6px 2px rgba(var(--pk), .9);
+    animation: pres-gnista .65s cubic-bezier(.2, .8, .2, 1) forwards; }
+  @keyframes pres-gnista { to { transform: translate(var(--dx), var(--dy)) scale(.3); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .pres-kant i, .pres-markor::after, .pres-markor[data-glid]::before, .pres-ring, .pres-gnista { animation: none !important; } .pres-ring, .pres-gnista { display: none; } }
   .ls-marke-sida { display: none; }
   body[data-pres="landslaget"] .ls-marke-sida { display: grid; gap: 3px; }
   body[data-pres="landslaget"] .marke { display: none; }
@@ -149,7 +179,7 @@
     <path fill="currentColor" d="M518.7,181.6c0,7.7-2.5,13.9-7.6,18.7-5.1,4.7-12.7,7.1-22.8,7.1h-18.2v38.4h-9v-90h27.2c10,0,17.6,2.4,22.7,7.1,5.1,4.7,7.7,11,7.7,18.8h0ZM488.3,199.6c14.1,0,21.1-6,21.1-18s-1.7-10.6-5-13.6c-3.3-3.1-8.7-4.6-16.1-4.6h-18.2v36.3h18.2ZM597.4,207c0,3.1,0,5.4-.3,7.1h-58.3c.3,5.3,1.5,9.9,3.9,13.6,2.3,3.8,5.4,6.7,9.1,8.6,3.8,1.9,7.9,2.8,12.4,2.8s10.7-1.4,14.7-4.2,6.7-6.7,8-11.5h9.5c-1.7,6.9-5.4,12.5-11.1,16.9-5.6,4.3-12.6,6.4-21.1,6.4s-12.5-1.5-17.8-4.4c-5.2-3-9.4-7.2-12.4-12.6-2.9-5.5-4.4-11.9-4.4-19.2s1.5-13.7,4.4-19.2,7-9.7,12.2-12.6c5.2-2.9,11.2-4.4,17.9-4.4s12.5,1.5,17.5,4.4c5.1,2.9,8.9,6.9,11.6,11.8,2.7,4.9,4.1,10.3,4.1,16.3v.2ZM588.3,206.7c0-5.2-1-9.7-3.2-13.4-2.1-3.7-5.1-6.5-8.9-8.4-3.8-1.9-7.9-2.8-12.4-2.8-6.7,0-12.4,2.1-17.1,6.4-4.7,4.3-7.3,10.3-7.9,18.2h49.5ZM622.9,187.9c2-4.4,5-7.8,9-10.2,4.1-2.4,9.1-3.6,15.1-3.6v9.4h-2.4c-6.5,0-11.8,1.8-15.7,5.3s-5.9,9.4-5.9,17.6v39.3h-9v-70.3h9v12.5h0ZM688.2,183h-16.3v62.7h-9v-62.7h-9.8v-7.6h9.8v-4.9c0-7.6,1.9-13.3,5.8-16.9,3.9-3.6,10.3-5.4,19.1-5.4v7.7c-5.8,0-10,1.1-12.4,3.3-2.3,2.2-3.5,6-3.5,11.2v4.9h16.3v7.6h0ZM733.2,246.7c-6.6,0-12.6-1.5-17.9-4.4-5.2-3-9.4-7.2-12.5-12.6-3-5.5-4.5-11.9-4.5-19.2s1.5-13.6,4.6-19.1,7.3-9.7,12.6-12.6c5.3-3,11.3-4.5,17.9-4.5s12.6,1.5,17.9,4.5c5.4,2.9,9.6,7.1,12.6,12.6,3.1,5.4,4.6,11.8,4.6,19.1s-1.5,13.6-4.6,19.1-7.3,9.7-12.7,12.7c-5.4,2.9-11.4,4.4-18,4.4h0ZM733.2,238.9c4.6,0,8.9-1,12.9-3.1,3.9-2.1,7.1-5.3,9.5-9.5,2.5-4.3,3.7-9.5,3.7-15.7s-1.2-11.4-3.6-15.6c-2.4-4.3-5.6-7.5-9.5-9.5-3.9-2.1-8.2-3.2-12.9-3.2s-8.9,1.1-12.9,3.2c-3.9,2.1-7.1,5.2-9.5,9.5-2.3,4.2-3.5,9.4-3.5,15.6s1.2,11.4,3.5,15.7c2.4,4.2,5.5,7.4,9.4,9.5s8.2,3.1,12.9,3.1h0ZM794,187.9c2-4.4,5-7.8,9-10.2,4.1-2.4,9.1-3.6,15.1-3.6v9.4h-2.4c-6.5,0-11.8,1.8-15.7,5.3s-5.9,9.4-5.9,17.6v39.3h-9v-70.3h9v12.5h0ZM915.3,174.1c8.2,0,14.9,2.6,20.1,7.9,5.2,5.1,7.9,12.7,7.9,22.5v41.2h-8.9v-40.2c0-7.6-1.8-13.5-5.5-17.5s-8.7-6.1-15.1-6.1-11.9,2.2-15.8,6.6c-3.9,4.4-5.9,10.7-5.9,19.1v38.1h-8.9v-40.2c0-7.6-1.8-13.5-5.5-17.5s-8.8-6.1-15.2-6.1-11.9,2.2-15.8,6.6c-3.9,4.4-5.9,10.7-5.9,19.1v38.1h-9v-70.3h9v12.1c2.2-4.4,5.4-7.7,9.5-9.9,4.1-2.3,8.7-3.5,13.8-3.5s11.4,1.5,16,4.4,8,7.2,10,12.9c1.9-5.6,5.1-9.8,9.7-12.7,4.6-3,9.9-4.5,15.7-4.5h-.2ZM959.2,210.4c0-7.2,1.4-13.5,4.2-18.9,2.9-5.5,6.9-9.7,12-12.6,5.1-3,10.9-4.5,17.4-4.5s12.4,1.5,17.3,4.6c4.9,3.1,8.4,7,10.6,11.8v-15.4h9v70.3h-9v-15.6c-2.2,4.8-5.8,8.8-10.7,12-4.8,3.1-10.6,4.6-17.3,4.6s-12.1-1.5-17.3-4.5c-5.1-3-9.1-7.3-12-12.7-2.8-5.5-4.2-11.8-4.2-19.1h0ZM1020.6,210.6c0-5.7-1.2-10.6-3.5-14.9-2.3-4.3-5.5-7.6-9.5-9.9-3.9-2.3-8.3-3.5-13.1-3.5s-9.4,1.1-13.4,3.3c-3.9,2.2-7.1,5.5-9.4,9.8-2.2,4.2-3.3,9.2-3.3,15.1s1.1,10.8,3.3,15.2c2.3,4.3,5.4,7.6,9.4,9.9,3.9,2.2,8.4,3.3,13.4,3.3s9.2-1.2,13.1-3.5c4-2.3,7.2-5.6,9.5-9.9,2.3-4.3,3.5-9.3,3.5-14.9h0ZM1083.1,174.1c8.4,0,15.3,2.6,20.6,7.9,5.3,5.1,8,12.7,8,22.5v41.2h-8.9v-40.2c0-7.6-1.9-13.5-5.8-17.5-3.8-4-9-6.1-15.6-6.1s-12.2,2.1-16.2,6.4c-4,4.3-6.1,10.6-6.1,18.9v38.4h-9v-70.3h9v12c2.2-4.3,5.4-7.6,9.7-9.8,4.2-2.3,9-3.5,14.3-3.5h0ZM1127.5,210.6c0-7.3,1.5-13.6,4.4-19.1s7-9.7,12.1-12.6c5.1-3,11-4.5,17.6-4.5s15.8,2.1,21.4,6.4c5.7,4.3,9.3,10.1,10.9,17.5h-9.7c-1.2-5.1-3.8-9-7.9-11.8-3.9-2.9-8.9-4.4-14.8-4.4s-9,1.1-12.7,3.2c-3.8,2.1-6.8,5.4-9,9.7-2.1,4.2-3.2,9.4-3.2,15.6s1.1,11.4,3.2,15.7c2.2,4.3,5.2,7.5,9,9.7,3.8,2.1,8,3.2,12.7,3.2s10.9-1.4,14.8-4.2c4-2.9,6.7-7,7.9-12.1h9.7c-1.6,7.2-5.3,13-10.9,17.4-5.7,4.4-12.8,6.6-21.4,6.6s-12.5-1.5-17.6-4.4c-5.1-3-9.2-7.2-12.1-12.6-2.9-5.5-4.4-11.9-4.4-19.2h0ZM1274.2,207c0,3.1,0,5.4-.3,7.1h-58.3c.3,5.3,1.5,9.9,3.9,13.6,2.3,3.8,5.4,6.7,9.1,8.6,3.8,1.9,7.9,2.8,12.4,2.8s10.7-1.4,14.7-4.2,6.7-6.7,8-11.5h9.5c-1.7,6.9-5.4,12.5-11.1,16.9-5.6,4.3-12.6,6.4-21.1,6.4s-12.5-1.5-17.8-4.4c-5.2-3-9.4-7.2-12.4-12.6-2.9-5.5-4.4-11.9-4.4-19.2s1.5-13.7,4.4-19.2,7-9.7,12.2-12.6c5.2-2.9,11.2-4.4,17.9-4.4s12.5,1.5,17.5,4.4c5.1,2.9,8.9,6.9,11.6,11.8,2.7,4.9,4.1,10.3,4.1,16.3v.2ZM1265,206.7c0-5.2-1-9.7-3.2-13.4-2.1-3.7-5.1-6.5-8.9-8.4s-7.9-2.8-12.4-2.8c-6.7,0-12.4,2.1-17.1,6.4-4.7,4.3-7.3,10.3-7.9,18.2h49.5Z"/>
   </symbol></svg>
   <div class="sida-text">
-    <div class="pres" role="group" aria-label="Presentation"><span class="pres-markor" aria-hidden="true"></span><button type="button" data-pres="uperformance" aria-pressed="true">Uperformance</button><button type="button" data-pres="landslaget" aria-pressed="false">Längdlandslaget</button></div>
+    <div class="pres" role="group" aria-label="Presentation"><span class="pres-kant" aria-hidden="true"><i></i></span><span class="pres-markor" aria-hidden="true"></span><button type="button" data-pres="uperformance" aria-pressed="true">Uperformance</button><button type="button" data-pres="landslaget" aria-pressed="false">Längdlandslaget</button></div>
     <svg class="marke" viewBox="0 0 1274.2 395" aria-label="Uperformance"><use href="#logo"/></svg>
     <span class="ls-marke-sida" aria-label="Längdlandslaget"><b>LÄNGDLANDSLAGET</b><small>Koncept av Uperformance</small></span>
     <h1 data-text-byte data-txt="h1">Hälsoappen – <em>din kropp, dina värden</em>, nästa steg.</h1>
@@ -166,7 +196,7 @@
     <div class="skarm">
       <div class="statusrad"><span data-klocka>9:41</span><span><svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 16 12"><path d="M8 2.5c2.3 0 4.4.9 6 2.4l1.3-1.4A10.5 10.5 0 0 0 8 .5C5.2.5 2.6 1.6.7 3.5L2 4.9a8.5 8.5 0 0 1 6-2.4zm0 4c1.2 0 2.3.5 3.2 1.2l1.3-1.4A6.6 6.6 0 0 0 8 4.5c-1.7 0-3.3.7-4.5 1.8l1.3 1.4C5.7 7 6.8 6.5 8 6.5zm0 2.4L6.3 10.6 8 12l1.7-1.4z"/></svg><svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="23" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="17" height="8" rx="2"/><rect x="24.5" y="4" width="1.8" height="4" rx=".9" opacity=".5"/></svg></span></div>
       <div class="ön" aria-hidden="true"></div>
-      <iframe id="app" src="app.html?v=112" title="Uperformance hälsoapp" allow="fullscreen"></iframe>
+      <iframe id="app" src="app.html?v=114" title="Uperformance hälsoapp" allow="fullscreen"></iframe>
       <div class="reflex" aria-hidden="true"></div>
       <div class="hem-strek" aria-hidden="true"></div>
     </div>
@@ -217,7 +247,7 @@
       document.title = p === 'landslaget' ? 'Längdlandslaget – Hälsoappen · koncept av Uperformance' : 'Uperformance – Hälsoappen · prototyp'; };
     const u = new URL(location.href); if (p === 'landslaget') u.searchParams.set('pres', 'landslaget'); else u.searchParams.delete('pres'); history.replaceState(null, '', u);
     // appen i telefonen: tona ut, byt tema, tona in när den laddat
-    const src = `app.html?v=112${p === 'landslaget' ? '&tema=landslaget' : ''}`;
+    const src = `app.html?v=114${p === 'landslaget' ? '&tema=landslaget' : ''}`;
     if (direkt) { satt(); if (!f.src.endsWith(src)) f.src = src; return; }
     skarmEl.dataset.byter = ''; setTimeout(() => { f.src = src; }, 380);
     f.addEventListener('load', () => setTimeout(() => delete skarmEl.dataset.byter, 120), { once: true });
@@ -226,7 +256,19 @@
       document.startViewTransition(satt);
     } else { document.body.dataset.byterText = ''; setTimeout(() => { satt(); delete document.body.dataset.byterText; }, 300); }
   }
-  document.querySelectorAll('.pres [data-pres]').forEach((b) => b.addEventListener('click', (ev) => bytPres(b.dataset.pres, ev)));
+  // Klickkänslan: en ljusring där man tryckte, gnistor ur markören och en töjning när den glider (bara vid ett verkligt byte)
+  const presEl = document.querySelector('.pres'), presMarkor = presEl.querySelector('.pres-markor'), lugnPres = matchMedia('(prefers-reduced-motion: reduce)');
+  function presKlick(b, ev) {
+    if (lugnPres.matches) return; const r0 = presEl.getBoundingClientRect(), x = (ev.clientX || r0.left + b.offsetLeft + b.offsetWidth / 2) - r0.left, y = (ev.clientY || r0.top + r0.height / 2) - r0.top;
+    const ring = document.createElement('span'); ring.className = 'pres-ring'; ring.style.left = x + 'px'; ring.style.top = y + 'px'; presEl.append(ring); ring.addEventListener('animationend', () => ring.remove());
+    if (b.getAttribute('aria-pressed') === 'true') return;
+    presMarkor.removeAttribute('data-glid'); void presMarkor.offsetWidth; presMarkor.setAttribute('data-glid', ''); setTimeout(() => presMarkor.removeAttribute('data-glid'), 650);
+    const mx = b.offsetLeft + b.offsetWidth / 2, my = r0.height / 2;
+    for (let i = 0; i < 10; i++) { const g = document.createElement('span'), v = i / 10 * 6.283 + .3, d = 18 + (i % 3) * 10; g.className = 'pres-gnista';
+      g.style.cssText = `left:${mx}px;top:${my}px;--dx:${(Math.cos(v) * d * 1.8).toFixed(1)}px;--dy:${(Math.sin(v) * d * .6).toFixed(1)}px;animation-delay:${(.25 + (i % 4) * .03).toFixed(2)}s`;
+      presEl.append(g); g.addEventListener('animationend', () => g.remove()); }
+  }
+  document.querySelectorAll('.pres [data-pres]').forEach((b) => b.addEventListener('click', (ev) => { presKlick(b, ev); bytPres(b.dataset.pres, ev); }));
   if (new URLSearchParams(location.search).get('pres') === 'landslaget') bytPres('landslaget', null, { direkt: true });
 </script>
 </body>
