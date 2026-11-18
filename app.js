@@ -19,9 +19,14 @@
   const datumText = () => idag().toLocaleDateString('sv-SE', { weekday: 'long', day: 'numeric', month: 'long' });
   const halsning = () => { const h = idag().getHours(); return h < 10 ? 'God morgon' : h < 17 ? 'Hej' : 'God kväll'; };
   const app = $('#app'), skarmLager = $('#skarm'), flikrad = $('#flikrad');
+  // Temat: samma app med Uperformances eller längdlandslagets presentation (?tema=landslaget). Egen data per tema.
+  const TEMA = new URLSearchParams(location.search).get('tema') === 'landslaget' ? 'landslaget' : 'uperformance', LANDS = TEMA === 'landslaget';
+  document.documentElement.dataset.tema = TEMA; document.body.dataset.tema = TEMA;
+  if (LANDS) document.title = 'Längdlandslaget – Hälsoappen · koncept av Uperformance';
+  const MATCH = LANDS ? 'Tävling' : 'Match';
 
   /* ---- 02 lagring och exempeldata ---- */
-  const NYCKEL = 'up-halsa-v1';
+  const NYCKEL = LANDS ? 'up-halsa-landslaget-v1' : 'up-halsa-v1';
   const nytt = () => ({ version: 1, profil: null, svar: { namn: '', fodd: 1992, kon: '', pass: '', ont: [], mal: [] }, checkin: [], pass: [], skador: [], dela: { team: true, medicin: true } });
   let st = (() => { try { const s = JSON.parse(localStorage.getItem(NYCKEL)); return s && s.version === 1 ? s : nytt(); } catch (err) { return nytt(); } })();
   const spara = () => { try { localStorage.setItem(NYCKEL, JSON.stringify(st)); } catch (err) { /* privat läge */ } };
@@ -34,15 +39,16 @@
   // Exempeldata skapas när profilen skapas: fyra veckors pass och check-ins (märkt exempel i gränssnittet).
   function exempeldata(p) {
     const pass = [], checkin = [];
-    const typer = p.niva === 'elit' ? ['Lagträning', 'Styrka', 'Lagträning', 'Löpning', 'Match', 'Återhämtning'] : ['Promenad', 'Löpning', 'Styrka', 'Cykel', 'Promenad'];
+    const typer = LANDS ? (p.niva === 'elit' ? ['Klassiskt', 'Styrka', 'Skate', 'Intervaller', 'Rullskidor', 'Återhämtning'] : ['Klassiskt', 'Skate', 'Löpning', 'Styrka', 'Klassiskt'])
+      : p.niva === 'elit' ? ['Lagträning', 'Styrka', 'Lagträning', 'Löpning', 'Match', 'Återhämtning'] : ['Promenad', 'Löpning', 'Styrka', 'Cykel', 'Promenad'];
     let fro = 7;
     for (let d = 27; d >= 1; d--) {
       const dag = dagar(-d), vd = dag.getDay();
       const tranar = p.niva === 'elit' ? vd !== 1 : [1, 3, 6].includes(vd) || (p.pass === '5+' && vd === 5);
       if (tranar) {
-        const typ = p.niva === 'elit' && vd === 6 ? 'Match' : typer[(d * 3) % typer.length];
-        const min = typ === 'Match' ? 95 : typ === 'Återhämtning' ? 35 : 45 + ((d * 7) % 5) * 10;
-        const rpe = typ === 'Match' ? 8 : typ === 'Återhämtning' ? 3 : 4 + ((d * 5) % 4);
+        const typ = p.niva === 'elit' && vd === 6 ? MATCH : typer[(d * 3) % typer.length];
+        const min = typ === MATCH ? 95 : typ === 'Återhämtning' ? 35 : 45 + ((d * 7) % 5) * 10;
+        const rpe = typ === MATCH ? 8 : typ === 'Återhämtning' ? 3 : 4 + ((d * 5) % 4);
         pass.push({ datum: dagStr(dag), typ, min, rpe: Math.min(9, rpe + (d < 7 ? 1 : 0)) });
       }
       fro = klamp(fro + ((d * 13) % 5) - 2, 5, 9);
@@ -207,9 +213,9 @@
         <span class="splash-puls"></span><span class="splash-puls" style="animation-delay:1.85s"></span><span class="splash-halo"></span>
         <span class="komet" aria-hidden="true"></span>
         <svg viewBox="0 0 396 396"><path class="splash-spar" d="M198,10c103.9,0,188,84,188,187.5s-84.1,187.5-188,187.5S10,301,10,197.5,94.1,10,198,10Z"/><path class="splash-ring" d="M198,10c103.9,0,188,84,188,187.5s-84.1,187.5-188,187.5S10,301,10,197.5,94.1,10,198,10Z"/>
-        <path class="splash-u" d="M177.5,127.8v88.6c0,7.3,1.6,13,4.7,17.3,3.3,4.1,8.4,6.2,15.5,6.2s12.4-2.1,15.8-6.2c3.4-4.3,5.1-10.1,5.1-17.3v-88.6h49.1v88.6c0,14.9-3.1,27.8-9.3,38.4-6.2,10.5-14.7,18.4-25.5,23.8-10.8,5.3-22.9,8-36.2,8s-25.2-2.7-35.5-8c-10.2-5.3-18.2-13.2-24-23.8-5.8-10.5-8.7-23.3-8.7-38.4v-88.6h49.1-.1Z"/></svg>
+        ${LANDS ? '<path class="splash-u ls-flinga" d="M198 110v176M122 154l152 88M122 242l152-88M198 110l-18 18M198 110l18 18M198 286l-18-18M198 286l18-18M122 154l25 4M122 154l9 23M274 242l-25-4M274 242l-9-23M122 242l9-23M122 242l25-4M274 154l-9 23M274 154l-25 4"/>' : ''}<path class="splash-u${LANDS ? ' ls-dold' : ''}" d="M177.5,127.8v88.6c0,7.3,1.6,13,4.7,17.3,3.3,4.1,8.4,6.2,15.5,6.2s12.4-2.1,15.8-6.2c3.4-4.3,5.1-10.1,5.1-17.3v-88.6h49.1v88.6c0,14.9-3.1,27.8-9.3,38.4-6.2,10.5-14.7,18.4-25.5,23.8-10.8,5.3-22.9,8-36.2,8s-25.2-2.7-35.5-8c-10.2-5.3-18.2-13.2-24-23.8-5.8-10.5-8.7-23.3-8.7-38.4v-88.6h49.1-.1Z"/></svg>
       </div>
-      <div class="splash-ord"><svg viewBox="440 140 840 120" class="ordmarke" aria-label="Uperformance"><use href="#logo" width="1274.2" height="395"/></svg><p>${'Hälsa med elitstandard'.split('').map((t, i) => `<span style="--k:${i}">${t === ' ' ? '&nbsp;' : t}</span>`).join('')}</p></div>
+      <div class="splash-ord">${LANDS ? '<b class="ls-ordmarke" aria-label="Längdlandslaget">Längdlandslaget</b>' : '<svg viewBox="440 140 840 120" class="ordmarke" aria-label="Uperformance"><use href="#logo" width="1274.2" height="395"/></svg>'}<p>${(LANDS ? 'Koncept av Uperformance' : 'Hälsa med elitstandard').split('').map((t, i) => `<span style="--k:${i}">${t === ' ' ? '&nbsp;' : t}</span>`).join('')}</p></div>
       <div class="intro-laddar" aria-hidden="true"><i></i></div>`, { in: 'tona', klass: 'splash' });
     kroppStart(); // nätet byggs medan loggan ritas
     introTakt(el);
@@ -258,13 +264,13 @@
   }
   function valkommen({ fore = false } = {}) {
     document.body.dataset.niva = 'elit';
-    return visa(`<div class="valkommen-topp in" style="--i:0"><span class="marke"><svg viewBox="0 0 1274.2 395" aria-label="Uperformance"><use href="#logo"/></svg></span><span class="exempel">Prototyp</span></div>
+    return visa(`<div class="valkommen-topp in" style="--i:0">${LANDS ? '<span class="marke ls-marke"><b>LÄNGDLANDSLAGET</b><small>Koncept av Uperformance</small></span>' : '<span class="marke"><svg viewBox="0 0 1274.2 395" aria-label="Uperformance"><use href="#logo"/></svg></span>'}<span class="exempel">${LANDS ? 'Koncept' : 'Prototyp'}</span></div>
       <div class="valkommen-kropp"><div class="bana" aria-hidden="true"></div>
         <span class="bana-chip" style="--i:0">${ik('rorlighet')}Rörlighet</span><span class="bana-chip" style="--i:1">${ik('hantel')}Styrka</span>
         <span class="bana-chip" style="--i:2">${ik('balans')}Balans</span><span class="bana-chip" style="--i:3">${ik('hjarta')}Kondition</span>
         <div data-kropp-plats></div></div>
-      <div class="valkommen-text"><h1 class="in" style="--i:1">Hälsa med <span class="skimmer">elitstandard.</span></h1>
-        <p class="in" style="--i:2">Din kropp, dina värden och nästa steg – i en app. Testtillfället blir en ögonblicksbild, appen gör det till ett program.</p></div>
+      <div class="valkommen-text"><h1 class="in" style="--i:1">${LANDS ? 'Hela säsongen. <span class="skimmer">En app.</span>' : 'Hälsa med <span class="skimmer">elitstandard.</span>'}</h1>
+        <p class="in" style="--i:2">${LANDS ? 'Kroppen, passen, vallan och loppen – för längdlandslaget. Ett koncept av Uperformance med exempeldata.' : 'Din kropp, dina värden och nästa steg – i en app. Testtillfället blir en ögonblicksbild, appen gör det till ett program.'}</p></div>
       <div class="valkommen-fot in" style="--i:3"><button class="knapp knapp-primar knapp-bred" data-g="borja">Skapa din profil ${ik('pil')}</button>
         <span class="liten">5 frågor · ungefär en minut</span></div>`, { in: fore ? 'avslojning' : 'tona', kvar: fore ? 60000 : 1300, klass: 'valkommen',
       // fore: läggs under loggan och väntar inklippt (data-avsloj = vantar) tills introVag öppnar den; splashen tas bort av introVag
@@ -466,8 +472,8 @@
     const ms = lor - nu0, dgr = Math.floor(ms / 864e5), tim = Math.floor((ms % 864e5) / 36e5), skada = st.skador.find((s) => !s.slut);
     const tva = (n) => String(n).padStart(2, '0');
     return `<div class="kort match2 in" style="--i:${i}">
-      <div class="match2-topp"><span class="ogon utan">Nästa match</span><span class="match-status" data-ton="${skada ? 'gul' : 'ok'}"><i></i>${skada ? 'Begränsad' : 'Tillgänglig'}</span></div>
-      <div class="match2-rad"><div><b>${lor.toLocaleDateString('sv-SE', { weekday: 'short', day: 'numeric', month: 'short' }).replace(/^./, (x) => x.toUpperCase())}</b><small>Avspark 15:00 · exempel</small></div>
+      <div class="match2-topp"><span class="ogon utan">${LANDS ? 'Nästa tävling' : 'Nästa match'}</span><span class="match-status" data-ton="${skada ? 'gul' : 'ok'}"><i></i>${skada ? 'Begränsad' : 'Tillgänglig'}</span></div>
+      <div class="match2-rad"><div><b>${lor.toLocaleDateString('sv-SE', { weekday: 'short', day: 'numeric', month: 'short' }).replace(/^./, (x) => x.toUpperCase())}</b><small>${LANDS ? 'Start 13:00 · exempel' : 'Avspark 15:00 · exempel'}</small></div>
         <div class="tavla-siffror"><span><b class="tal">${tva(dgr)}</b><small>dagar</small></span><i>:</i><span><b class="tal">${tva(tim)}</b><small>tim</small></span></div></div>
       <small class="liten">${skada ? 'Beslut efter fystränarens bedömning.' : 'Inga hinder registrerade.'}</small></div>`;
   }
@@ -688,7 +694,7 @@
         : `<p class="dampad" style="font-size:.84rem">Inga besvär markerade. Tryck på kroppen om något känns.</p>`}<span class="kropp-mini-tips">Tryck för kroppskartan</span></div></div></button>`;
     let bento, efter;
     if (elit()) {
-      const manad = st.pass.filter((x) => (idag() - new Date(x.datum)) / 864e5 < 28), matcher = manad.filter((x) => x.typ === 'Match').length, skada = st.skador.find((s) => !s.slut);
+      const manad = st.pass.filter((x) => (idag() - new Date(x.datum)) / 864e5 < 28), matcher = manad.filter((x) => x.typ === MATCH).length, skada = st.skador.find((s) => !s.slut);
       const vinkel = klamp((kvot - .4) / 1.6, 0, 1) * 180 - 90;
       // 28 dagar som streck: dagarna med pågående skada är begränsade (gul). Exempeldata.
       const begr = skada ? klamp(Math.round((idag() - new Date(skada.start)) / 864e5) + 1, 0, 28) : 0;
@@ -699,7 +705,7 @@
             <div class="belastning-tal"><b class="tal">${fmt(kvot, 2)}</b><small>ACWR idag</small><span><b class="tal" data-rakna="${Math.round(b.akut)}">0</b> AU · 7 d</span><span>Optimalt 0,8–1,3</span></div></div>
           ${veckaStaplar((d) => st.pass.filter((x) => x.datum === d).reduce((s, x) => s + x.min * x.rpe, 0), 'AU')}
           ${insiktHtml(`Senaste 7 dagarnas belastning delad med snittet för 28 dagar – ${kvot < .8 ? 'under' : kvot <= 1.3 ? 'inom' : 'över'} den optimala zonen.`, 'info', 'bento-insikt')}</div>
-        ${ruta({ ikon: 'team', namn: 'Tillgänglighet', tal: `<span data-rakna="${skada ? 82 : 98}">0</span><small>%</small>`, under: `28 dagar · ${matcher} matcher`, graf: dagband })}
+        ${ruta({ ikon: 'team', namn: 'Tillgänglighet', tal: `<span data-rakna="${skada ? 82 : 98}">0</span><small>%</small>`, under: `28 dagar · ${matcher} ${LANDS ? 'tävlingar' : 'matcher'}`, graf: dagband })}
         ${stressRuta}
         ${kroppRuta}</div>`;
       efter = `${skada ? skadeKort(skada, 6) : ''}${pcmeKort(7)}`;
@@ -717,7 +723,7 @@
         <button class="kort tryck nasta-steg in" style="--i:6" data-g="screening-boka"><div class="rad"><span class="ikonruta" data-ton="is">${ik('kalender')}</span><div style="flex:1;min-width:0"><span class="ogon utan">Nästa steg</span>
           <h3>Fyll i förscreeningen</h3><p class="liten">12 frågor inför din hälsokartläggning</p></div>${ik('hoger')}</div><div class="nasta-framsteg"><div class="matare"><i style="--v:42%"></i></div><small class="tal">5 av 12</small></div></button>`;
     }
-    return `<div class="idag-vy">${idagTopp()}${veckoRemsa()}${hjalte}${elit() ? matchKort(2) : ''}${snabbcheck(elit() ? 3 : 2)}${schemaKort(elit() ? 3 : 2)}${fokusKort(elit() ? 4 : 3)}${loppKort(elit() ? 4 : 3)}${bento}${efter}
+    return `<div class="idag-vy">${idagTopp()}${veckoRemsa()}${hjalte}${elit() ? matchKort(2) : ''}${snabbcheck(elit() ? 3 : 2)}${schemaKort(elit() ? 3 : 2)}${LANDS ? vallaKort(elit() ? 3 : 2) : ''}${fokusKort(elit() ? 4 : 3)}${loppKort(elit() ? 4 : 3)}${bento}${efter}
       <p class="exempel in" style="--i:8">Exempeldata i prototypen</p></div>`;
   }
   function skadeKort(s, i) {
@@ -920,7 +926,7 @@
     const g = grupp(id), s = [], b = belastning(), ton = g ? g.ton[sidaAv(id)] : null;
     if (g && ton && ton !== 'ok') s.push(['trend', ton, `${g.namn}: ${TON_TEXT[ton].toLowerCase()} på din sida`, PLAN[g.k] ? PLAN[g.k].varfor(g) : 'Testvärdet ligger under din baslinje.']);
     if (b.kvot > 1.3) s.push(['puls', 'gul', `Belastningen har ökat snabbt (${fmt(b.kvot, 2)})`, 'Senaste veckans träning är mer än 30 % över ditt snitt. Snabba ökningar ger oftare ont.']);
-    const nya = st.pass.filter((p) => (idag() - new Date(p.datum)) / 864e5 < 7 && ['Löpning', 'Match', 'Styrka'].includes(p.typ)).length;
+    const nya = st.pass.filter((p) => (idag() - new Date(p.datum)) / 864e5 < 7 && ['Löpning', MATCH, 'Styrka', 'Klassiskt', 'Skate', 'Rullskidor', 'Intervaller'].includes(p.typ)).length;
     if (nya >= 3 && /kna|fot|vad|lar|hoft/.test(id)) s.push(['sko', 'is', `${nya} löp- eller styrkepass senaste veckan`, 'Benen har fått mycket att jobba med. Ont som kommer efter passen och släpper till nästa dag är ofta belastningsrelaterat.']);
     if (z && z.typ === 'Stelhet') s.push(['rorlighet', 'is', 'Stelhet snarare än smärta', 'Stelhet som släpper när du värmt upp handlar oftare om rörlighet än om skada.']);
     if (!s.length) s.push(['info', 'is', 'Ingen tydlig orsak i din data', 'Inga testvärden under baslinjen och normal belastning här. Följ hur det känns i smärtdagboken några dagar.']);
@@ -1125,7 +1131,7 @@
       <div class="jg-kopplingar in" style="--i:6">${[['puls', 'Klocka', 'Puls, sömn och steg'], ['matt', 'Våg', 'Vikt och sammansättning'], ['hjarta', 'Pulsband', 'Belastning på passet']].map(([i, t, u], n) => `<div class="jg-koppling" style="--n:${n}"><span class="ikonruta" data-ton="is">${ik(i)}</span><b>${t}</b><small>${u}</small></div>`).join('')}</div>
 
       ${rub(6, 'Ditt team')}
-      <div class="kort jg-team in" style="--i:7"><span class="profilbild">DR</span><div><b>Dale Reese</b><small>Testansvarig · Uperformance</small></div><span class="chip" data-ton="ok"><i class="online"></i>Ditt team</span></div>
+      <div class="kort jg-team in" style="--i:7">${LANDS ? '<span class="profilbild">MT</span><div><b>Medicinska teamet</b><small>Landslagets stab · exempel</small></div>' : '<span class="profilbild">DR</span><div><b>Dale Reese</b><small>Testansvarig · Uperformance</small></div>'}<span class="chip" data-ton="ok"><i class="online"></i>Ditt team</span></div>
 
       ${rub(7, 'Inställningar')}
       <div class="jg-inst in" style="--i:8">${inst.map(([k, i, t, h, ton]) => `<button class="jg-inst-rad" data-g="${k === 'notiser' ? 'notiser' : k === 'coach' ? 'coach-ark' : k === 'schema' ? 'ts-schema' : 'jag-inst'}" data-k="${k}" ${k === 'notiser' ? `role="switch" aria-checked="${st.notiser !== false}"` : ''}><span class="ikonruta" data-ton="${ton}">${ik(i)}</span><b>${t}</b>${h}</button>`).join('')}</div>
@@ -1147,13 +1153,15 @@
   // Coachen har tre tonlägen (mjuk · mitt emellan · hård) och enkla, förklarade regler – den pushar aldrig när kroppen säger stopp.
   const VECKA_ORDNING = [1, 2, 3, 4, 5, 6, 0];
   const DAGNAMN = ['Söndag', 'Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag'];
-  const TYP_IKON = { Lagträning: 'boll', Match: 'boll', Styrka: 'hantel', Löpning: 'sko', Återhämtning: 'hjarta', Promenad: 'sko', Cykel: 'puls', Simning: 'droppe', Rörlighet: 'rorlighet', Annat: 'gnista' };
+  const TYP_IKON = { Klassiskt: 'skidor', Skate: 'skidor', Rullskidor: 'skidor', Intervaller: 'puls', Tävling: 'stjarna', Lagträning: 'boll', Match: 'boll', Styrka: 'hantel', Löpning: 'sko', Återhämtning: 'hjarta', Promenad: 'sko', Cykel: 'puls', Simning: 'droppe', Rörlighet: 'rorlighet', Annat: 'gnista' };
   const typIkon = (t) => TYP_IKON[t] || 'gnista';
   const TONER = [['mjuk', 'Mjuk', 'Peppande och förstående'], ['mitt', 'Mitt emellan', 'Rak och vänlig'], ['hard', 'Hård', 'Kräver mer av dig']];
   const TIDER = ['07:00', '12:00', '17:30', '19:00'];
   const FORE = [[60, '1 h före'], [30, '30 min före'], [0, 'När passet börjar']];
   function standardSchema(p) {
     const s = Array(7).fill(null), satt = (d, typ, min, tid) => { s[d] = { typ, min, tid }; };
+    if (LANDS && p.niva === 'elit') { satt(2, 'Intervaller', 90, '09:00'); satt(3, 'Klassiskt', 120, '09:00'); satt(4, 'Styrka', 60, '16:00'); satt(5, 'Skate', 90, '09:00'); satt(6, 'Klassiskt', 150, '09:00'); satt(0, 'Rullskidor', 90, '10:00'); return s; }
+    if (LANDS) { satt(2, 'Klassiskt', 60, '17:30'); satt(4, 'Styrka', 40, '17:30'); satt(6, 'Skate', 90, '10:00'); return s; }
     if (p.niva === 'elit') { satt(2, 'Lagträning', 90, '17:30'); satt(3, 'Styrka', 60, '17:00'); satt(4, 'Lagträning', 90, '17:30'); satt(5, 'Löpning', 40, '17:00'); satt(6, 'Match', 95, '15:00'); satt(0, 'Återhämtning', 35, '10:00'); return s; }
     const n = { salan: 2, '1-2': 3, '3-4': 4, '5+': 5 }[p.pass] || 3;
     const plan = [[1, 'Promenad', 30, '17:30'], [3, 'Styrka', 40, '17:30'], [6, 'Löpning', 30, '10:00'], [5, 'Cykel', 45, '17:30'], [2, 'Rörlighet', 20, '07:00']];
@@ -1179,7 +1187,7 @@
   function traningsSvit() { let n = 0; for (let i = 0; i < 60; i++) { const d = dagar(-i), ds = dagStr(d), plan = planFor(d);
     if (passPa(ds).length) { n++; continue; } if (!plan || i === 0 || hoppad(ds)) continue; break; } return n; }
   const minuterAv = (t) => Number(String(t || '0:0').split(':')[0]) * 60 + Number(String(t || '0:0').split(':')[1]);
-  const typLiten = (t) => (t === 'Match' ? 'match' : t.toLowerCase());
+  const typLiten = (t) => (t === MATCH ? MATCH.toLowerCase() : t.toLowerCase());
   // Coachens meddelande: regler i ordning, sedan rätt tonläge. Säkerheten först – även Hård säger vila när kroppen säger stopp.
   function coachMeddelande() {
     const c = coach(), t = TONER.findIndex(([k]) => k === c.ton), v = (a) => a[t < 0 ? 1 : t];
@@ -1278,7 +1286,7 @@
       let y0 = null; n.addEventListener('pointerdown', (ev) => { y0 = ev.clientY; });
       n.addEventListener('pointerup', (ev) => { if (y0 !== null && ev.clientY - y0 < -18) { n.dataset.svept = ''; gomNotis(); } y0 = null; }); }
     n.dataset.g = g; delete n.dataset.svept;
-    n.innerHTML = `<span class="up-notis-ikon" aria-hidden="true">U</span><span class="up-notis-text"><span class="up-notis-topp"><b>UPERFORMANCE</b><small>nu</small></span><b class="up-notis-rub">${e(m.rub)}</b><small>${e(m.text)}</small></span>`;
+    n.innerHTML = `<span class="up-notis-ikon" aria-hidden="true">U</span><span class="up-notis-text"><span class="up-notis-topp"><b>${LANDS ? 'LÄNGDLANDSLAGET' : 'UPERFORMANCE'}</b><small>nu</small></span><b class="up-notis-rub">${e(m.rub)}</b><small>${e(m.text)}</small></span>`;
     n.setAttribute('aria-label', `Påminnelse: ${m.rub}. ${m.text}`);
     clearTimeout(notis.t); delete n.dataset.visas; void n.offsetWidth; n.dataset.visas = ''; try { navigator.vibrate?.([10, 40, 10]); } catch (err) { /* ingen vibration */ }
     notis.t = setTimeout(gomNotis, 6500);
@@ -1346,15 +1354,42 @@
     'M112 0 C104 70 124 170 108 250', 'M196 0 C204 90 184 160 202 250', 'M286 0 C276 80 298 170 284 250', 'M0 0 L150 120', 'M340 10 L210 140'];
   const GATOR = GATOR_D.map((d, i) => `<path d="${d}" class="${i % 3 ? '' : 'stor'}"/>`).join('');
   const KVARTER = Array.from({ length: 54 }, (_, i) => { const x = (i % 9) * 38 + 6 + ((i * 7) % 5), y = Math.floor(i / 9) * 42 + 6 + ((i * 11) % 6); return `<rect x="${x}" y="${y}" width="${24 + (i * 5) % 9}" height="${26 + (i * 3) % 8}" rx="3"/>`; }).join('');
-  const FART = [[7, 'gar', 'Går', 'is'], [10, 'jogg', 'Joggar', 'ok'], [13, 'spring', 'Springer', 'gul'], [99, 'tar', 'Tar i', 'rod']];
+  const FART = LANDS ? [[14, 'gar', 'Lugnt', 'is'], [19, 'jogg', 'Distans', 'ok'], [24, 'spring', 'Tempo', 'gul'], [99, 'tar', 'Spurt', 'rod']]
+    : [[7, 'gar', 'Går', 'is'], [10, 'jogg', 'Joggar', 'ok'], [13, 'spring', 'Springer', 'gul'], [99, 'tar', 'Tar i', 'rod']];
+  // Längdlandslagets lopp (schematiska banor, exempel). Partnerna enligt skidor.com/idrotter/langdakning/elit--landslag.
+  const LS_PARTNER = { kalla: 'skidor.com · Längdlandslagen', rubrik: 'Längdlandslagets partners', remsaRubrik: 'Huvud- och premiumpartner', etikett: { evenemang: 'Lagpartners' },
+    huvud: [['Svenska Spel', 'Huvudpartner'], ['Adidas', 'Premiumpartner']], evenemang: ['Bauhaus', 'Elgiganten', 'Ica', 'Novo Nordisk', 'SCA', 'Sundström', 'Swedbank', 'Thermia'], media: [], leverantorer: [] };
+  const LOPP_LANDS = [
+    { id: 'vasa', namn: 'Vasaloppet', stad: 'Sälen – Mora', km: 90, nar: 'Mars', typ: 'Klassiskt 90 km', partner: LS_PARTNER,
+      bana: 'M22 64 C54 52 78 92 108 98 C138 104 150 56 184 58 C218 60 214 124 246 136 C276 148 292 118 312 146 C326 166 320 196 300 212',
+      vatten: 'M236 204 C276 192 318 206 340 198 L340 250 L222 250 C224 230 228 214 236 204 Z',
+      parker: [[92, 166, 64, 30], [206, 34, 72, 22], [52, 30, 40, 18], [150, 200, 40, 20]], broar: [],
+      platser: [[22, 64, 'Sälen · start', 'b'], [108, 98, 'Smågan', 'o'], [184, 58, 'Risberg', 'o'], [246, 136, 'Evertsberg', 'v'], [312, 146, 'Oxberg', 'h'], [300, 212, 'Mora · mål', 'b']],
+      backar: [[0.01, 0.07], [0.3, 0.36]],
+      beloningar: [
+        { id: 'adidas', partner: 'Adidas', typ: 'stracka', km: 30, rubrik: '20 % på skidkläder', text: 'I butik och på nätet', kod: 'LL-ADI20' },
+        { id: 'ica', partner: 'Ica', typ: 'plats', t: .56, plats: 'Evertsberg', rubrik: 'Blåbärssoppa och bulle på köpet', text: 'Hämta i kontrollen', kod: 'LL-ICA' },
+        { id: 'elg', partner: 'Elgiganten', typ: 'stracka', km: 60, rubrik: '10 % på en pulsklocka', text: 'När passet är synkat', kod: 'LL-ELG10' },
+        { id: 'bauhaus', partner: 'Bauhaus', typ: 'plats', t: .8, plats: 'Oxberg', rubrik: '15 % på vallabord och verktyg', text: 'I Bauhaus butiker', kod: 'LL-BH15' },
+        { id: 'thermia', partner: 'Thermia', typ: 'stracka', km: 90, rubrik: 'Värm upp i målområdet', text: 'När du gått i mål i Mora', kod: 'LL-MAL' } ] },
+    { id: 'falun', namn: 'VM i Falun 2027', stad: 'Falun · Lugnet', km: 10, nar: 'Feb – mars 2027', typ: '10 km', partner: LS_PARTNER,
+      bana: 'M84 196 C60 160 70 106 112 84 C152 64 210 66 246 92 C278 116 282 160 256 186 C232 208 196 204 168 192 C142 182 120 216 84 196',
+      vatten: 'M0 26 C70 18 150 34 230 24 C290 18 320 22 340 20 L340 0 L0 0 Z',
+      parker: [[180, 140, 100, 56], [50, 120, 30, 40]], broar: [],
+      platser: [[84, 196, 'Lugnet · start och mål', 'b'], [176, 70, 'Mördarbacken', 'o'], [270, 150, 'Skidstadion', 'h']], backar: [[0.25, 0.4], [0.62, 0.72]],
+      beloningar: [
+        { id: 'sca', partner: 'SCA', typ: 'stracka', km: 5, rubrik: 'Halvvägs – heja-hälsning', text: 'Exempel på en partnerhälsning', kod: 'LL-SCA' },
+        { id: 'swedbank', partner: 'Swedbank', typ: 'stracka', km: 10, rubrik: 'Målgångsbild att spara', text: 'När du gått i mål', kod: 'LL-SWB' } ] },
+  ];
   const fartZon = (kmh) => FART.find(([max]) => kmh < max);
   const tidText = (sek) => { sek = Math.round(sek); const h = Math.floor(sek / 3600), m = Math.floor((sek % 3600) / 60), s = sek % 60; return h ? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}` : `${m}:${String(s).padStart(2, '0')}`; };
   const tempoText = (sekPerKm) => `${Math.floor(sekPerKm / 60)}:${String(Math.round(sekPerKm % 60)).padStart(2, '0')}`;
+  if (LANDS) LOPP.splice(0, LOPP.length, ...LOPP_LANDS);
   const loppNu = () => LOPP.find((l) => l.id === (st.lopp?.id || 'varvet')) || LOPP[0];
-  const loppSt = () => { st.lopp = st.lopp || { id: 'varvet', mal: (elit() ? 92 : 125) * 60 }; return st.lopp; };
+  const loppSt = () => { st.lopp = st.lopp || (LANDS ? { id: 'vasa', mal: Math.round(90 * (elit() ? 165 : 330) / 60) * 60 } : { id: 'varvet', mal: (elit() ? 92 : 125) * 60 }); return st.lopp; };
   // Exempelrundan: 120 punkter längs banan, farten i km/h – lugnt i början, långsammare i backarna, gång vid vätskan, spurt sist.
   function exempelRunda(l) {
-    const N = 120, bas = elit() ? 12.6 : 9.8;
+    const N = 120, bas = LANDS ? (elit() ? 22 : 15.5) : elit() ? 12.6 : 9.8;
     return Array.from({ length: N }, (_, i) => { const t = i / (N - 1); let v = bas * (t < .06 ? .86 : 1) * (1 + .1 * Math.sin(i * .33) + .05 * Math.sin(i * 1.7));
       if (l.backar.some(([a, b]) => t >= a && t <= b)) v *= .76;
       if (!elit() && [0.24, 0.48, 0.72].some((p) => Math.abs(t - p) < .012)) v = 5.6;
@@ -1404,29 +1439,31 @@
   // Riegels formel (T2 = T1 · (D2/D1)^1,06) – en känd tumregel för att räkna om en tid till en annan distans.
   const riegel = (t1, d1, d2) => t1 * Math.pow(d2 / d1, 1.06);
   function basta10() { // bästa 10-km-tid i exempelhistoriken (märkt exempel)
-    return elit() ? 39 * 60 + 40 : 54 * 60 + 10;
+    return LANDS ? (elit() ? 24 * 60 + 30 : 41 * 60) : elit() ? 39 * 60 + 40 : 54 * 60 + 10;
   }
   // Loppets partners – namnen som text tills partnernas egna loggfiler finns (inga efterritade loggor). Källan visas.
   // Loggfiler från partnerna läggs i partner/ och skrivs in här (namn → fil). Saknas filen visas namnet som ordmärke.
-  const PARTNER_LOGGA = { ASICS: 'partner/asics.svg', Polestar: 'partner/polestar.svg', Stadium: 'partner/stadium.svg', STC: 'partner/stc.svg', Volvokoncernen: 'partner/volvo.svg', Garmin: 'partner/garmin.svg', Chiquita: 'partner/chiquita.svg', 'Radisson Blu Scandinavia': 'partner/radisson.svg', 'Göteborg Energi': 'partner/goteborg-energi.svg', 'Vitamin Well': 'partner/vitamin-well.svg', Biotherm: 'partner/biotherm.svg', Almondy: 'partner/almondy.svg', Dannebacken: 'partner/dannebacken.png', Cramo: 'partner/cramo.svg', 'Norion Bank': 'partner/norion-bank.svg', 'Solar Sverige': 'partner/solar.svg', Skinome: 'partner/skinome.svg', 'Mix Megapol': 'partner/mix-megapol.svg', 'Göteborgs-Posten': 'partner/gp.svg', "Runner's World": 'partner/runners-world.png', ProPud: 'partner/propud.svg', Therabody: 'partner/therabody.svg', 'HLR Konsulten': 'partner/hlr-konsulten.svg', Learnifier: 'partner/learnifier.svg' }; // från partnernas webbplatser och Wikimedia Commons
+  const PARTNER_LOGGA = { ASICS: 'partner/asics.svg', Polestar: 'partner/polestar.svg', Stadium: 'partner/stadium.svg', STC: 'partner/stc.svg', Volvokoncernen: 'partner/volvo.svg', Garmin: 'partner/garmin.svg', Chiquita: 'partner/chiquita.svg', 'Radisson Blu Scandinavia': 'partner/radisson.svg', 'Göteborg Energi': 'partner/goteborg-energi.svg', 'Vitamin Well': 'partner/vitamin-well.svg', Biotherm: 'partner/biotherm.svg', Almondy: 'partner/almondy.svg', Dannebacken: 'partner/dannebacken.png', Cramo: 'partner/cramo.svg', 'Norion Bank': 'partner/norion-bank.svg', 'Solar Sverige': 'partner/solar.svg', Skinome: 'partner/skinome.svg', 'Mix Megapol': 'partner/mix-megapol.svg', 'Göteborgs-Posten': 'partner/gp.svg', "Runner's World": 'partner/runners-world.png', ProPud: 'partner/propud.svg', Therabody: 'partner/therabody.svg', 'HLR Konsulten': 'partner/hlr-konsulten.svg', Learnifier: 'partner/learnifier.svg',
+    'Svenska Spel': 'partner/landslaget/svenska-spel.png', Adidas: 'partner/landslaget/adidas.jpg', Bauhaus: 'partner/landslaget/bauhaus.png', Elgiganten: 'partner/landslaget/elgiganten.jpg', Ica: 'partner/landslaget/ica.jpg',
+    'Novo Nordisk': 'partner/landslaget/novo-nordisk.png', SCA: 'partner/landslaget/sca.jpg', Sundström: 'partner/landslaget/sundstrom.jpg', Swedbank: 'partner/landslaget/swedbank.jpg', Thermia: 'partner/landslaget/thermia.png' }; // från partnernas webbplatser och Wikimedia Commons
   const VITA_LOGGOR = new Set(['Mix Megapol', 'HLR Konsulten']); // vita loggor – mörk platta i ljust läge
   function sponsorRemsa(l) {
     const p = l.partner; if (!p) return '';
-    return `<div class="lp-sponsorer" aria-label="Huvudpartners: ${e(p.huvud.map(([n]) => n).join(', '))}"><span class="lp-s-etikett">Huvudpartners</span><span class="lp-s-rad">${p.huvud.map(([n], i) => PARTNER_LOGGA[n]
+    return `<div class="lp-sponsorer" aria-label="Huvudpartners: ${e(p.huvud.map(([n]) => n).join(', '))}"><span class="lp-s-etikett">${e(p.remsaRubrik || 'Huvudpartners')}</span><span class="lp-s-rad">${p.huvud.map(([n], i) => PARTNER_LOGGA[n]
       ? (n === 'Polestar' ? `<span class="lp-s-polestar" style="--n:${i}"><img class="lp-s-logga" src="${PARTNER_LOGGA[n]}" alt="">POLESTAR</span>` : `<img class="lp-s-logga" src="${PARTNER_LOGGA[n]}" alt="${e(n)}" style="--n:${i}">`) : `<b class="lp-s-ord" style="--n:${i}">${e(n)}</b>`).join('<i aria-hidden="true"></i>')}</span></div>`;
   }
   function partnerHtml(l) {
     const p = l.partner; if (!p) return '';
     const rad = (rubrik, lista) => `<div class="lp-p-grupp"><span class="lp-p-etikett">${rubrik}</span><div class="lp-p-chips">${lista.map((n, i) => PARTNER_LOGGA[n] ? `<span class="lp-p-chip lp-p-chip-logga${VITA_LOGGOR.has(n) ? ' lp-p-vit' : ''}" style="--n:${i}"><img src="${PARTNER_LOGGA[n]}" alt="${e(n)}"></span>` : `<span class="lp-p-chip" style="--n:${i}">${e(n)}</span>`).join('')}</div></div>`;
-    return `<section class="lp-partner" aria-labelledby="lp-p-rubrik"><div class="lp-p-topp"><h3 id="lp-p-rubrik">${e(l.namn)}s partners</h3><span class="lp-p-kalla">Källa: ${e(p.kalla)}</span></div>
+    return `<section class="lp-partner" aria-labelledby="lp-p-rubrik"><div class="lp-p-topp"><h3 id="lp-p-rubrik">${e(p.rubrik || `${l.namn}s partners`)}</h3><span class="lp-p-kalla">Källa: ${e(p.kalla)}</span></div>
       <div class="lp-p-huvud">${p.huvud.map(([n, u], i) => `<div class="lp-p-kort" style="--n:${i}">${PARTNER_LOGGA[n] ? `<span class="lp-p-loggarad"><img class="lp-p-logga" src="${PARTNER_LOGGA[n]}" alt="${n === 'Polestar' ? '' : e(n)}">${n === 'Polestar' ? '<b class="lp-p-ordmarke">POLESTAR</b>' : ''}</span>` : `<b class="lp-p-namn">${e(n)}</b>`}<small>${e(u)}</small></div>`).join('')}</div>
-      ${rad('Evenemangspartners', p.evenemang)}${rad('Mediepartners', p.media)}${rad('Leverantörer', [...new Set(p.leverantorer)])}</section>`;
+      ${p.evenemang.length ? rad(p.etikett?.evenemang || 'Evenemangspartners', p.evenemang) : ''}${p.media.length ? rad('Mediepartners', p.media) : ''}${p.leverantorer.length ? rad('Leverantörer', [...new Set(p.leverantorer)]) : ''}</section>`;
   }
   // Belöningar: var på banan (andel) och om de är upplåsta (sparas per lopp i st.lopp.upplast).
   const belT = (l, b) => (b.typ === 'stracka' ? Math.min(1, b.km / l.km) : b.t);
   const upplast = (l) => new Set(((loppSt().upplast || {})[l.id]) || []);
   function lasUpp(l, b) { const s0 = loppSt(); s0.upplast = s0.upplast || {}; const lista = s0.upplast[l.id] = s0.upplast[l.id] || []; if (lista.includes(b.id)) return false; lista.push(b.id); spara(); return true; }
-  function belVillkor(b) { return b.typ === 'stracka' ? (b.km >= 21 ? 'Gå i mål' : `Spring ${fmt(b.km, 0)} km`) : `Spring förbi ${b.partner} vid ${b.plats}`; }
+  function belVillkor(b) { const sp = LANDS ? 'Åk' : 'Spring'; return b.typ === 'stracka' ? (b.km >= (LANDS ? loppNu().km : 21) ? 'Gå i mål' : `${sp} ${fmt(b.km, 0)} km`) : `${sp} förbi ${b.plats}`; }
   function beloningHtml(l) {
     const lista = l.beloningar; if (!lista) return ''; const u = upplast(l), n = lista.filter((b) => u.has(b.id)).length;
     return `<section class="lp-bel" aria-labelledby="lp-bel-rubrik"><div class="lp-bel-topp"><div><h3 id="lp-bel-rubrik">Belöningar längs banan</h3><small>Lås upp erbjudanden från loppets partners när du springer</small></div>
@@ -1446,6 +1483,16 @@
     const rad = $(`.lp-bel-rad[data-bel="${b.id}"]`, arkLager); if (rad) { rad.dataset.upplast = ''; $('.lp-bel-lage', rad).innerHTML = `<button class="lp-bel-kod" data-g="bel-kod" data-kod="${e(b.kod)}" aria-label="Kopiera koden ${e(b.kod)}"><span class="tal">${e(b.kod)}</span>${ik('dokument')}</button>`; rad.animate?.([{ transform: 'scale(1)' }, { transform: 'scale(1.03)' }, { transform: 'scale(1)' }], { duration: 500, easing: 'cubic-bezier(.2, 1.3, .35, 1)' }); }
     const n = upplast(l).size, t0 = $('[data-bel-rakna]', arkLager); if (t0) t0.innerHTML = `<b class="tal">${n}</b>/${l.beloningar.length}`; $('[data-bel-matare]', arkLager)?.style.setProperty('--v', `${n / l.beloningar.length * 100}%`);
   }
+  // Vallaguiden (bara landslaget): välj snötemperatur → typ av glid- och fästvalla. Allmän guide – vallateamet avgör.
+  const VALLA = [[-15, 'Kall, torr snö', 'Hård glidvalla för kyla', 'Grön eller kall fästvalla', '#7fc8ff'], [-8, 'Kall snö', 'Kall–medel glidvalla', 'Blå fästvalla', '#4f9dff'],
+    [-3, 'Medelföre', 'Medel glidvalla', 'Lila fästvalla', '#9b7bff'], [0, 'Runt nollan', 'Varm glidvalla med struktur', 'Röd fästvalla eller klister', '#ff7a6b'], [3, 'Blöt snö', 'Varm glidvalla, grov struktur', 'Universalklister', '#ffb347']];
+  function vallaKort(i) {
+    const v = st.valla ?? 1, [t, fore, glid, fast, farg] = VALLA[v];
+    return `<section class="kort ls-valla in" style="--i:${i};--vf:${farg}"><div class="kort-rubrik"><div><span class="ogon utan">Vallaguiden · före passet</span><h3 style="margin-top:4px">${e(fore)}</h3></div><span class="ls-temp tal">${t > 0 ? '+' : ''}${t}°</span></div>
+      <div class="ls-termo" role="group" aria-label="Snötemperatur">${VALLA.map(([x], n) => `<button type="button" data-g="valla" data-v="${n}" aria-pressed="${n === v}"><b class="tal">${x > 0 ? '+' : ''}${x}°</b></button>`).join('')}<span class="ls-termo-markor" style="--n:${v}"></span></div>
+      <div class="ls-valla-rad"><div><small>Glid</small><b>${e(glid)}</b></div><div><small>Fäste</small><b>${e(fast)}</b></div></div>
+      <p class="ls-valla-fot">${ik('info')}<span>Allmän guide – ert vallateam avgör efter testerna på plats.</span></p></section>`;
+  }
   function loppKort(i) {
     const l = loppNu(), s = loppSt(), prog = riegel(basta10(), 10, l.km), under = prog <= s.mal;
     return `<button class="kort lp-kort tryck in" style="--i:${i}" data-g="lopp-ark" aria-label="${e(l.namn)}: mål ${tidText(s.mal)}, prognos ${tidText(prog)}. Öppna rundan och verktygen.">
@@ -1459,12 +1506,12 @@
   function loppArk(vy = 'karta', { bara = false } = {}) {
     const l = loppNu(), s = loppSt(), v = exempelRunda(l), f = rundaFakta(l, v), prog = riegel(basta10(), 10, l.km), malTempo = s.mal / l.km;
     const flikar = [['karta', 'Rundan'], ['verktyg', 'Verktyg'], ['lopp', 'Lopp']];
-    const delar = l.km > 20 ? [5, 10, 15, l.km] : l.km > 9 ? [2.5, 5, 7.5, l.km] : [1, 2.5, 4, l.km];
+    const delar = l.km > 50 ? [20, 45, 70, l.km] : l.km > 20 ? [5, 10, 15, l.km] : l.km > 9 ? [2.5, 5, 7.5, l.km] : [1, 2.5, 4, l.km];
     let inne = '';
     if (vy === 'karta') inne = `
       <div class="lp-kartram"><canvas class="lp-3d" role="img" aria-label="Karta i 3D över ${e(l.namn)} med rundan färgad efter farten"></canvas><div class="lp-live" data-lp-live><b class="tal">${fmt(l.km, 1)}</b><small>km</small><span class="lp-zon">Exempelpass · schematisk bana</span></div>
         <span class="lp-skiss">Schematisk bana</span>${sponsorRemsa(l)}</div>
-      <div class="lp-legend">${FART.map(([max, k, t], n) => `<span data-z="${k}"><i></i>${t}<small>${n === 0 ? `< 7` : n === 3 ? '13+' : `${FART[n - 1][0]}–${max}`} km/h</small></span>`).join('')}</div>
+      <div class="lp-legend">${FART.map(([max, k, t], n) => `<span data-z="${k}"><i></i>${t}<small>${n === 0 ? `< ${FART[0][0]}` : n === 3 ? `${FART[2][0]}+` : `${FART[n - 1][0]}–${max}`} km/h</small></span>`).join('')}</div>
       <button class="knapp knapp-sek knapp-bred lp-spela" data-g="lopp-spela">${ik('spela')}Spela upp rundan</button>
       <dl class="lp-fakta"><div><dt>Tid</dt><dd class="tal">${tidText(f.sek)}</dd></div><div><dt>Snittempo</dt><dd class="tal">${tempoText(f.tempo)}<small>/km</small></dd></div><div><dt>Snabbast</dt><dd class="tal">km ${f.snabb + 1}</dd></div></dl>
       <div class="lp-andel" aria-label="Andel av rundan per fart">${FART.map(([, k, t], n) => `<i data-z="${k}" style="--a:${(f.andel[n] * 100).toFixed(1)}%" title="${t} ${Math.round(f.andel[n] * 100)} %"></i>`).join('')}</div>
@@ -1476,7 +1523,7 @@
     if (vy === 'verktyg') inne = `
       <section class="lp-verktyg"><div class="lp-v-topp"><span class="ikonruta" data-ton="is">${ik('klocka')}</span><div><b>Tempokalkylator</b><small>Välj måltid – appen räknar tempot och delsträckorna</small></div></div>
         <div class="jg-ci"><label for="lp-mal"><span class="jg-ci-namn"><span class="jg-ci-ikon">${ik('mal')}</span>Måltid</span><span class="jg-ci-tal tal" data-lp-maltal>${tidText(s.mal)}</span></label>
-          <input class="reglage" id="lp-mal" type="range" min="${Math.round(l.km * 180)}" max="${Math.round(l.km * 480)}" step="${l.km > 20 ? 60 : 15}" value="${s.mal}" data-lp-mal></div>
+          <input class="reglage" id="lp-mal" type="range" min="${Math.round(l.km * (LANDS ? 110 : 180))}" max="${Math.round(l.km * 480)}" step="${l.km > 20 ? 60 : 15}" value="${s.mal}" data-lp-mal></div>
         <div class="lp-tempo"><div><b class="tal" data-lp-tempo>${tempoText(malTempo)}</b><small>min/km</small></div><div><b class="tal" data-lp-kmh>${fmt(l.km / (s.mal / 3600), 1)}</b><small>km/h</small></div></div>
         <ol class="lp-delar" data-lp-delar>${delar.map((d) => `<li><span>${d === l.km ? 'Mål' : `${fmt(d, 1)} km`}</span><b class="tal">${tidText(malTempo * d)}</b></li>`).join('')}</ol></section>
       <section class="lp-verktyg"><div class="lp-v-topp"><span class="ikonruta">${ik('trend')}</span><div><b>Prognos</b><small>Från din bästa 10 km (exempel) med Riegels formel</small></div></div>
@@ -1667,7 +1714,8 @@
     { efter: (a) => $$('[data-ci]', a).forEach((r) => r.addEventListener('input', () => { reglageFarg(r); $(`[data-ci-tal="${r.dataset.ci}"]`, a).innerHTML = `${r.value}<small>/10</small>`;
       const v = {}; $$('[data-ci]', a).forEach((x) => { v[x.dataset.ci] = +x.value; }); const d = dagsform(v); $('[data-ci-summa]', a).textContent = d; $('[data-ci-matare]', a).style.setProperty('--v', `${d}%`); })) });
   }
-  const PASSTYPER = () => (elit() ? ['Lagträning', 'Match', 'Styrka', 'Löpning', 'Återhämtning', 'Annat'] : ['Promenad', 'Löpning', 'Styrka', 'Cykel', 'Simning', 'Annat']);
+  const PASSTYPER = () => (LANDS ? (elit() ? ['Klassiskt', 'Skate', 'Rullskidor', 'Intervaller', 'Styrka', 'Tävling'] : ['Klassiskt', 'Skate', 'Rullskidor', 'Löpning', 'Styrka', 'Annat'])
+    : elit() ? ['Lagträning', 'Match', 'Styrka', 'Löpning', 'Återhämtning', 'Annat'] : ['Promenad', 'Löpning', 'Styrka', 'Cykel', 'Simning', 'Annat']);
   function passArk({ typ = null, min = 60, plan = false, rubrik = 'Logga ett pass' } = {}) {
     const typer = typ && !PASSTYPER().includes(typ) ? [typ, ...PASSTYPER()] : PASSTYPER(), forval = typ || typer[0], rpe0 = 6;
     ark(`<div class="ark-rubrik jg-ark-rubrik"><span class="ikonruta" data-ton="is">${ik(typ ? typIkon(typ) : elit() ? 'boll' : 'sko')}</span><div><span class="ogon utan">${plan ? 'Från schemat' : elit() ? 'Aktivitetsregistrering' : 'Rörelse'}</span><h2>${rubrik}</h2></div><button class="ikonknapp" data-stang-ark aria-label="Stäng">${ik('stang')}</button></div>
@@ -1798,8 +1846,9 @@
     'bel-nollstall': () => { const s0 = loppSt(); if (s0.upplast) delete s0.upplast[loppNu().id]; spara(); loppArk('karta', { bara: true }); toast('Belöningarna är låsta igen – spela upp rundan'); },
     'bel-kod': (b) => { const k = b.dataset.kod; try { navigator.clipboard?.writeText(k); } catch (err) { /* ingen urklippstavla */ } b.classList.add('kopierad'); setTimeout(() => b.classList.remove('kopierad'), 1200); toast(`Koden ${k} är kopierad`); },
     paket: (b) => { st.paket = b.dataset.v; spara(); $$('.pk', b.parentElement).forEach((x) => x.setAttribute('aria-pressed', x === b)); summa(); },
+    valla: (b) => { st.valla = +b.dataset.v; spara(); const k = b.closest('.ls-valla'); if (!k) return; const ny = document.createElement('div'); ny.innerHTML = vallaKort(0); const n = ny.firstElementChild; n.classList.remove('in'); k.replaceWith(n); summa(); },
     'lopp-garmin': () => toast('Kopplingen till klockan öppnas i nästa version'),
-    'lopp-val': (b) => { const l = LOPP.find((x) => x.id === b.dataset.v); if (!l) return; const s0 = loppSt(); s0.id = l.id; s0.mal = Math.round(l.km * (elit() ? 260 : 330) / 60) * 60; spara();
+    'lopp-val': (b) => { const l = LOPP.find((x) => x.id === b.dataset.v); if (!l) return; const s0 = loppSt(); s0.id = l.id; s0.mal = Math.round(l.km * (LANDS ? (elit() ? 165 : 330) : elit() ? 260 : 330) / 60) * 60; spara();
       loppArk('karta'); toast(`${l.namn} är ditt lopp`); if (flik === 'idag') setTimeout(() => { const k = $('.lp-kort', nu); if (k) { k.outerHTML = loppKort(4); const ny = $('.lp-kort', nu); ny.classList.remove('in'); const x = $('.lp-karta', ny); if (x) fargaRunda(x, exempelRunda(l)); } }, 400); },
     'lopp-schema': () => { const s0 = schema(); s0[0] = { typ: 'Löpning', min: elit() ? 90 : 75, tid: '10:00' }; s0[4] = { typ: 'Löpning', min: 45, tid: '17:30' }; spara(); toast('Långpass på söndag och tempopass på torsdag är inlagda'); },
     grupp: (b) => { if (b.dataset.k) gruppArk(b.dataset.k); else kropp?.markera?.(null); },

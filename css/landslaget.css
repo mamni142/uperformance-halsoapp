@@ -1,0 +1,89 @@
+/* Längdlandslagets tema (?tema=landslaget) – samma app, landslagets blå och gula, egna animeringar: norrsken, skidspår, snöflingan i introt.
+   Allt är avgränsat till body[data-tema="landslaget"], så Uperformance-versionen påverkas inte. Laddas sist. */
+
+/* 01 Färgerna */
+body[data-tema="landslaget"] { --ls-bla: #0b5cc2; --ls-bla-ljus: #4da3ff; --ls-gul: #ffcd00; --ls-gul-ljus: #ffe066; --ls-natt: #041733; }
+body[data-tema="landslaget"][data-niva="elit"] { --bg: #041733; --bg-2: #062046; --accent: #ffcd00; --accent-text: #ffd84d; --is: #6db6ff; --is-text: #8ec8ff; --yta-tat: #0a2a52; }
+body[data-tema="landslaget"][data-niva="motionar"] { --bg: #f2f6fb; --bg-2: #e6eef8; --accent: #ffcd00; --accent-text: #0a4fa3; --is: #2f86e8; --is-text: #0b5cc2; }
+body[data-tema="landslaget"][data-niva="elit"] { background: radial-gradient(90% 60% at 80% 0%, rgba(77, 163, 255, .28), transparent 60%), radial-gradient(70% 50% at 0% 100%, rgba(255, 205, 0, .1), transparent 60%), #041733 !important; }
+body[data-tema="landslaget"][data-niva="motionar"] { background: radial-gradient(90% 60% at 80% 0%, rgba(77, 163, 255, .18), transparent 60%), radial-gradient(70% 50% at 0% 100%, rgba(255, 205, 0, .14), transparent 60%), #f2f6fb !important; }
+
+/* huvudknappar, plus och markörer i gult med marinblå text */
+body[data-tema="landslaget"] .knapp-primar:not([disabled]), body[data-tema="landslaget"] .flik-plus { background: linear-gradient(180deg, #ffe066, #ffcd00) !important; color: #072a5c !important;
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, .7), inset 0 -3px 8px rgba(160, 110, 0, .28), 0 12px 26px -12px rgba(200, 150, 0, .7) !important; }
+body[data-tema="landslaget"] .knapp-glitter:not([disabled]) { box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, .7), 0 14px 30px -12px rgba(200, 150, 0, .7), 0 0 30px -8px rgba(255, 205, 0, .6) !important; }
+body[data-tema="landslaget"] :is(.segment-markor, .kv-lage-markor) { background: linear-gradient(180deg, #ffe066, #ffcd00) !important; }
+body[data-tema="landslaget"] :is(.segment, .kv-lage) button[aria-pressed="true"] { color: #072a5c !important; }
+body[data-tema="landslaget"] .vecka-dag[data-idag] b { background: linear-gradient(180deg, #ffe066, #ffcd00) !important; color: #072a5c !important; box-shadow: 0 6px 14px -6px rgba(200, 150, 0, .7) !important; }
+body[data-tema="landslaget"] .chip.chip-val[aria-pressed="true"] { background: #ffcd00 !important; color: #072a5c !important; }
+body[data-tema="landslaget"] :is(.ts-dag[data-lage="klar"] .ts-prick, .pl-bock[aria-pressed="true"], .sc-forbered [aria-pressed="true"] .bock-ruta, .lp-rad[aria-pressed="true"] .bock, .pk-bock, .lp-upp-bock, .ts-coach-bild, .pl-nr, .tanke-ikon) {
+  background: linear-gradient(160deg, #ffe066, #ffcd00) !important; color: #072a5c !important; }
+body[data-tema="landslaget"] .ts-dag[data-lage="idag"] .ts-prick { background: linear-gradient(160deg, #a9d4ff, #4da3ff) !important; color: #041733 !important; }
+/* ringarna och mätarna i blått och gult */
+body[data-tema="landslaget"] #g-ring stop:first-child, body[data-tema="landslaget"] #tr-0 stop:first-child { stop-color: #ffe066; }
+body[data-tema="landslaget"] #g-ring stop:last-child, body[data-tema="landslaget"] #tr-0 stop:last-child { stop-color: #ffcd00; }
+body[data-tema="landslaget"] #mh-g0 stop:first-child { stop-color: #ffe066; } body[data-tema="landslaget"] #mh-g0 stop:last-child { stop-color: #e0a800; }
+body[data-tema="landslaget"] .matare > i { background: linear-gradient(90deg, #4da3ff, #ffcd00) !important; }
+body[data-tema="landslaget"] .sk-bage { stroke: #ffcd00 !important; }
+body[data-tema="landslaget"] .ac-spets, body[data-tema="landslaget"] .acwr .zon-ok { fill: #ffcd00 !important; }
+body[data-tema="landslaget"] .acwr .zon-ok { stroke: #ffcd00 !important; }
+body[data-tema="landslaget"][data-niva="motionar"] .mh-lista [data-n="0"] .mh-namn { color: #a37800 !important; }
+
+/* 02 Varumärket: ordmärket i introt, välkomstens märke, notisens ikon */
+.ls-ordmarke { display: block; font: 800 34px/1 var(--font-rubrik); letter-spacing: -.02em; text-transform: none;
+  background: linear-gradient(100deg, #ffffff 0 30%, #ffcd00 48%, #6db6ff 66%, #ffffff 84%); background-size: 260% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: ls-ord 2.2s cubic-bezier(.4, 0, .2, 1) 1.4s both; }
+@keyframes ls-ord { from { opacity: 0; background-position: 100% 0; letter-spacing: .08em; } 40% { opacity: 1; } to { opacity: 1; background-position: 0 0; letter-spacing: -.02em; } }
+.ls-marke { display: grid !important; gap: 2px; width: auto !important; height: auto !important; }
+.ls-marke b { font: 800 15px/1 var(--font-rubrik); letter-spacing: .14em; color: var(--text); }
+.ls-marke small { font: 600 10.5px/1 var(--font-brod); letter-spacing: .04em; color: var(--accent-text); }
+.ls-dold { display: none !important; }
+.ls-flinga { fill: none !important; stroke: #ffcd00 !important; stroke-width: 16 !important; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 900; stroke-dashoffset: 900;
+  animation: ls-flinga 1.6s cubic-bezier(.4, 0, .2, 1) .8s forwards !important; transform-box: fill-box; transform-origin: center; filter: drop-shadow(0 0 14px rgba(255, 205, 0, .55)); }
+@keyframes ls-flinga { 60% { stroke-dashoffset: 0; transform: rotate(0); } to { stroke-dashoffset: 0; transform: rotate(60deg); } }
+body[data-tema="landslaget"] .splash-ring { stroke: #4da3ff !important; }
+body[data-tema="landslaget"] .up-notis-ikon { background: linear-gradient(160deg, #0b5cc2, #041733) !important; color: #ffcd00 !important; }
+body[data-tema="landslaget"] .intro-norrsken i:nth-child(1) { background: radial-gradient(closest-side, rgba(77, 163, 255, .55), transparent) !important; }
+body[data-tema="landslaget"] .intro-norrsken i:nth-child(2) { background: radial-gradient(closest-side, rgba(255, 205, 0, .3), transparent) !important; }
+
+/* 03 Norrsken över hälsningen och skidspår som glider förbi – landslagets egen rörelse (bara transform/opacitet) */
+body[data-tema="landslaget"] .idag-vy > .valkomst { position: relative; }
+body[data-tema="landslaget"] .idag-vy > .valkomst::before { content: ''; position: absolute; z-index: 0; inset: -60px -40px auto; height: 220px; pointer-events: none; opacity: .75;
+  background: radial-gradient(40% 60% at 20% 50%, rgba(77, 163, 255, .55), transparent 70%), radial-gradient(35% 55% at 55% 40%, rgba(95, 230, 190, .35), transparent 70%), radial-gradient(30% 50% at 85% 55%, rgba(255, 205, 0, .3), transparent 70%);
+  filter: blur(18px); animation: ls-norrsken 14s ease-in-out infinite alternate; }
+body[data-tema="landslaget"][data-niva="motionar"] .idag-vy > .valkomst::before { opacity: .45; }
+@keyframes ls-norrsken { 0% { transform: translateX(-6%) scaleY(.9) skewX(-6deg); } 50% { transform: translateX(4%) scaleY(1.1) skewX(4deg); } 100% { transform: translateX(8%) scaleY(.95) skewX(-3deg); } }
+body[data-tema="landslaget"] .idag-vy > .valkomst::after { content: ''; position: absolute; z-index: 0; left: -20px; right: -20px; bottom: -10px; height: 22px; pointer-events: none; opacity: .5;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 22' preserveAspectRatio='none'%3E%3Cpath d='M0 6 C100 2 200 12 400 6' fill='none' stroke='%234da3ff' stroke-width='1.4' stroke-dasharray='14 6'/%3E%3Cpath d='M0 16 C100 12 200 22 400 16' fill='none' stroke='%234da3ff' stroke-width='1.4' stroke-dasharray='14 6'/%3E%3C/svg%3E") 0 0 / 400px 22px repeat-x;
+  animation: ls-spar 6s linear infinite; }
+@keyframes ls-spar { to { background-position: -400px 0; } }
+body[data-tema="landslaget"] .valkomst-text, body[data-tema="landslaget"] .valkomst-profil { position: relative; z-index: 1; }
+
+/* 04 Vallaguiden */
+.ls-valla { overflow: hidden; }
+.ls-valla::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(70% 90% at 100% 0%, color-mix(in srgb, var(--vf) 22%, transparent), transparent 60%); transition: background .5s; }
+.ls-temp { font: 600 30px/1 var(--font-siffror) !important; color: var(--vf); transition: color .4s; }
+.ls-termo { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; padding: 4px; border-radius: 999px; background: var(--yta-2); margin-bottom: 12px; isolation: isolate; }
+.ls-termo button { position: relative; z-index: 1; min-height: 38px; border-radius: 999px; font: 600 14px var(--font-siffror); color: var(--text-2); transition: color .3s; }
+.ls-termo button[aria-pressed="true"] { color: #fff; }
+.ls-termo-markor { position: absolute; z-index: 0; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 24px) / 5); border-radius: 999px; background: var(--vf);
+  transform: translateX(calc(var(--n) * (100% + 4px))); transition: transform .5s cubic-bezier(.32, .72, 0, 1), background .4s; box-shadow: 0 6px 16px -8px var(--vf); }
+.ls-valla-rad { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ls-valla-rad div { padding: 10px 12px; border-radius: 16px; background: var(--yta-2); box-shadow: inset 3px 0 0 var(--vf); animation: ts-in .4s cubic-bezier(.2, .8, .2, 1) both; }
+.ls-valla-rad div + div { animation-delay: .06s; }
+.ls-valla-rad small { display: block; font: 600 12px var(--font-brod); color: var(--text-3); }
+.ls-valla-rad b { display: block; margin-top: 2px; font: 600 14px/1.3 var(--font-rubrik); }
+.ls-valla-fot { display: grid; grid-template-columns: 16px 1fr; gap: 6px; margin: 10px 0 0; font-size: 12px; color: var(--text-3); }
+.ls-valla-fot svg { width: 14px; height: 14px; margin-top: 1px; }
+
+@media (prefers-reduced-motion: reduce) { body[data-tema="landslaget"] .idag-vy > .valkomst::before, body[data-tema="landslaget"] .idag-vy > .valkomst::after, .ls-ordmarke, .ls-flinga { animation: none !important; } .ls-flinga { stroke-dashoffset: 0; } }
+
+/* 05 Rättningar: flingan syns, landslagets loggor (JPG/PNG med vit botten) på vita plattor i alla lägen – aldrig inverterade */
+.ls-flinga { opacity: 1 !important; }
+img[src*="partner/landslaget/"] { filter: none !important; opacity: 1 !important; background: #fff; border-radius: 6px; padding: 2px 4px; object-fit: contain; }
+.lp-s-rad img[src*="partner/landslaget/"] { height: 22px !important; max-width: 62px !important; }
+.lp-p-chip-logga:has(img[src*="partner/landslaget/"]) { background: #fff !important; padding: 4px 8px !important; }
+.lp-p-chip-logga img[src*="partner/landslaget/"] { height: 22px !important; padding: 0; }
+.lp-p-kort img[src*="partner/landslaget/"] { height: 32px !important; max-width: 120px !important; }
+.lp-bel-logga img[src*="partner/landslaget/"] { max-width: 44px !important; max-height: 26px !important; padding: 0; }
+body[data-tema="landslaget"] .lp-s-logga[src*="landslaget/"] { filter: none !important; }
