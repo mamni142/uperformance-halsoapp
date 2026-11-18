@@ -1,0 +1,46 @@
+/* Rubriken på Idag som i iOS 18 (Fitness/Hälsa) och paketen som på hemsidan. Laddas sist. */
+
+/* 01 Rubriken: datumet i grå versaler, en stor rubrik i textfärg, en rad under */
+.ios-datum { display: block; font: 600 13px/1.2 var(--font-brod); letter-spacing: .02em; text-transform: uppercase; color: var(--text-3); animation: ios-in .5s cubic-bezier(.2, .8, .2, 1) both .05s; }
+.ios-titel { margin: 2px 0 0; font: 700 34px/1.12 var(--font-rubrik) !important; letter-spacing: -.028em !important; color: var(--text) !important; background: none !important;
+  -webkit-text-fill-color: currentColor !important; animation: ios-in .55s cubic-bezier(.2, .8, .2, 1) both .1s; }
+.ios-under { margin: 6px 0 0; max-width: 30ch; font: 400 15px/1.4 var(--font-brod); color: var(--text-2); animation: ios-in .55s cubic-bezier(.2, .8, .2, 1) both .18s; }
+@keyframes ios-in { from { opacity: 0; transform: translateY(6px); } }
+
+/* 02 Paketen – mörka kort med ljuskometer runt kanten (samma idé som hemsidans Bas+/Bas++) */
+.pk-rad { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.pk { position: relative; isolation: isolate; display: grid; align-content: center; justify-items: center; gap: 3px; min-height: 84px; padding: 14px 6px 12px; border-radius: 18px; overflow: hidden;
+  color: #f6f4ef; text-align: center; background: radial-gradient(120% 90% at 20% 0%, rgba(126, 224, 195, .16), transparent 55%), radial-gradient(120% 90% at 100% 100%, rgba(167, 210, 255, .14), transparent 55%), linear-gradient(170deg, #16283a, #0b1520);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), inset 0 0 0 .5px rgba(255, 255, 255, .1), 0 12px 26px -16px rgba(11, 21, 32, .7);
+  transition: transform .35s cubic-bezier(.32, .72, 0, 1), box-shadow .35s; -webkit-tap-highlight-color: transparent; }
+.pk:active { transform: scale(.96); }
+.pk-namn { position: relative; z-index: 2; font: 700 17px/1 var(--font-rubrik); letter-spacing: -.02em; }
+.pk small { position: relative; z-index: 2; font: 500 11.5px var(--font-brod); color: rgba(246, 244, 239, .62); }
+.pk-plus { display: inline-block; margin-left: 1px; background: linear-gradient(100deg, #a7d2ff, #7ee0c3); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.pk[data-steg="2"] .pk-plus { animation: pk-plus 4.5s ease-in-out infinite; }
+@keyframes pk-plus { 0%, 70%, 100% { transform: none; } 80% { transform: rotate(-12deg) scale(1.15); } 90% { transform: rotate(6deg); } }
+/* kometen: en konisk gradient i en stor kvadrat som vrids, synlig bara i en tunn ram (mask) – bara transform i loopen */
+.pk-ram { position: absolute; inset: 0; z-index: 1; border-radius: inherit; padding: 1.5px; pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.pk-ram i { position: absolute; left: 50%; top: 50%; width: 260%; aspect-ratio: 1; margin: -130% 0 0 -130%;
+  background: conic-gradient(from 0deg, transparent 0 72%, rgba(126, 224, 195, .2) 80%, #7ee0c3 90%, #fff 92%, transparent 94%); animation: pk-snurr 6s linear infinite; }
+.pk[data-steg="2"] .pk-ram { padding: 2px; }
+.pk[data-steg="2"] .pk-ram i { background: conic-gradient(from 0deg, transparent 0 32%, #a7d2ff 42%, #fff 44%, transparent 46% 82%, #7ee0c3 92%, #fff 94%, transparent 96%); animation-duration: 3.4s; }
+@keyframes pk-snurr { to { transform: rotate(360deg); } }
+/* skenet som följer kanten för Bas++ och glöden utanför */
+.pk[data-steg="2"] { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 0 0 .5px rgba(126, 224, 195, .3), 0 14px 30px -14px rgba(15, 110, 87, .75), 0 0 26px -8px rgba(126, 224, 195, .45); }
+.pk-sken { position: absolute; inset: -40% -60%; z-index: 0; pointer-events: none; background: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, .1) 50%, transparent 60%); transform: translateX(-60%); }
+.pk[data-steg="2"] .pk-sken { animation: pk-svep 5s cubic-bezier(.4, 0, .2, 1) 1s infinite; }
+@keyframes pk-svep { 0% { transform: translateX(-60%); } 35%, 100% { transform: translateX(60%); } }
+.pk-premium { position: absolute; z-index: 2; top: 7px; left: 50%; transform: translateX(-50%); font: 700 8.5px var(--font-brod); font-style: normal; letter-spacing: .14em; text-transform: uppercase;
+  background: linear-gradient(90deg, #a7d2ff, #7ee0c3, #fff, #7ee0c3); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: pk-skimmer 3s linear infinite; }
+@keyframes pk-skimmer { to { background-position: -200% 0; } }
+.pk[data-steg="2"] .pk-namn { margin-top: 6px; }
+/* vald: mint kant och en bock i hörnet */
+.pk-bock { position: absolute; z-index: 3; top: 6px; right: 6px; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; color: #0b1520;
+  background: linear-gradient(160deg, #a6f0d9, #5fd3b0); transform: scale(0); transition: transform .4s cubic-bezier(.2, 1.4, .35, 1); }
+.pk-bock svg { width: 11px; height: 11px; stroke-width: 3; }
+.pk[aria-pressed="true"] .pk-bock { transform: scale(1); }
+.pk[aria-pressed="true"] { box-shadow: inset 0 0 0 1.5px #7ee0c3, 0 14px 30px -14px rgba(15, 110, 87, .75), 0 0 24px -10px rgba(126, 224, 195, .6); }
+.pk[aria-pressed="true"][data-steg="2"] { box-shadow: inset 0 0 0 1.5px #7ee0c3, 0 14px 30px -14px rgba(15, 110, 87, .75), 0 0 30px -8px rgba(126, 224, 195, .6); }
+@media (prefers-reduced-motion: reduce) { .pk-ram i, .pk-sken, .pk-premium, .pk-plus { animation: none !important; } .ios-datum, .ios-titel, .ios-under { animation: none; } }

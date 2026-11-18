@@ -1,0 +1,40 @@
+/* Hälsorutorna levande i iOS 18-stil: förändringen som pil + tal (som i Hälsa), kurvor som ritas fram och slutar i en pulserande punkt,
+   tillgänglighetsprickarna fylls i en våg, staplarna växer. Bara transform/opacitet/stroke-dashoffset (en gång) – loopar bara transform/opacitet. */
+
+/* 01 Förändringen: pil + tal i tonfärg, ingen kapsel */
+.lg-delta { display: inline-flex !important; align-items: center; gap: 3px; padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important;
+  font: 650 13px var(--font-siffror, inherit) !important; font-style: normal !important; font-variant-numeric: tabular-nums; }
+.lg-delta::before { content: ''; width: 9px; height: 9px; background: currentColor; flex: none;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1.2 11 7.6H7.6V11H4.4V7.6H1z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1.2 11 7.6H7.6V11H4.4V7.6H1z'/%3E%3C/svg%3E") center / contain no-repeat; }
+.lg-delta[data-rikt="ner"]::before { transform: rotate(180deg); }
+.lg-delta[data-rikt="lika"]::before { display: none; }
+.lg-delta[data-ton="ok"] { color: #1f9c74 !important; } .lg-delta[data-ton="gul"] { color: #d98a0b !important; } .lg-delta[data-ton="is"] { color: var(--text-3) !important; }
+body[data-niva="elit"] .lg-delta[data-ton="ok"] { color: #5fe0b8 !important; } body[data-niva="elit"] .lg-delta[data-ton="gul"] { color: #ffbf4d !important; }
+
+/* 02 Kurvan ritas fram, ytan tonar in, punkten i slutet pulserar */
+.minispark-ram { position: relative; display: block; width: 100%; }
+.minispark-ram .minispark { display: block; width: 100%; }
+.minispark-linje { stroke-dasharray: 1; stroke-dashoffset: 1; animation: bt-rita 1.2s cubic-bezier(.4, 0, .2, 1) .35s forwards; vector-effect: non-scaling-stroke; stroke-width: 2.2 !important; stroke-linecap: round; stroke-linejoin: round; }
+.minispark-yta { opacity: 0; animation: bt-tona .8s ease .9s forwards; }
+@keyframes bt-rita { to { stroke-dashoffset: 0; } }
+@keyframes bt-tona { to { opacity: 1; } }
+.minispark-prick { position: absolute; right: 0; top: var(--y); width: 8px; height: 8px; margin: -4px -4px 0 0; border-radius: 50%; background: currentColor; color: var(--accent);
+  box-shadow: 0 0 0 2.5px var(--yta, #fff); opacity: 0; transform: scale(.4); animation: bt-prick-in .45s cubic-bezier(.2, 1.4, .35, 1) 1.45s forwards; }
+.minispark-prick::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; background: currentColor; opacity: 0; animation: bt-puls 2.4s ease-out 1.9s infinite; }
+@keyframes bt-prick-in { to { opacity: 1; transform: none; } }
+@keyframes bt-puls { 0% { opacity: .35; transform: scale(.5); } 100% { opacity: 0; transform: scale(1.6); } }
+.bento-ruta:has(.ikonruta[data-ton="is"]) .minispark-prick { color: #2f8cf0; }
+body[data-niva="elit"] .bento-ruta:has(.ikonruta[data-ton="is"]) .minispark-prick { color: #7ab8ff; }
+body[data-niva="elit"] .minispark-prick { box-shadow: 0 0 0 2.5px #172636; }
+
+/* 03 Tillgänglighetsprickarna fylls på i en våg, den senaste dagen andas */
+.idag-vy .dagband i { opacity: 0; transform: scale(.3); animation: bt-prick-in .4s cubic-bezier(.2, 1.4, .35, 1) forwards; animation-delay: calc(var(--i, 0) * 22ms + .4s) !important; }
+.idag-vy .dagband i:last-child { animation: bt-prick-in .4s cubic-bezier(.2, 1.4, .35, 1) forwards, bt-anda 2.6s ease-in-out 1.4s infinite; animation-delay: calc(var(--i, 0) * 22ms + .4s), 1.4s !important; }
+@keyframes bt-anda { 50% { transform: scale(1.25); } }
+
+/* 04 Staplarna växer upp en i taget */
+.idag-vy .mini-staplar i { transform-origin: bottom; animation: bt-vaxa .6s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i, 0) * 45ms + .3s); }
+@keyframes bt-vaxa { from { transform: scaleY(.08); opacity: .4; } }
+
+@media (prefers-reduced-motion: reduce) { .minispark-linje { stroke-dashoffset: 0; animation: none; } .minispark-yta, .minispark-prick, .idag-vy .dagband i { opacity: 1; transform: none; animation: none !important; } .minispark-prick::after, .idag-vy .mini-staplar i { animation: none !important; } }

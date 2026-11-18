@@ -488,7 +488,7 @@
   // Förändringsbricka i ton (som Beredskapen): d = förändringen, bra = om ökning är bra, dec = decimaler, enh = enhet.
   function deltaHtml(d, bra = true, dec = 1, enh = '') {
     const noll = Math.abs(d) < (dec ? .5 : 1), ton = noll ? 'is' : (d > 0) === bra ? 'ok' : 'gul';
-    return `<em class="lg-delta" data-ton="${ton}">${noll ? '±0' : `${d > 0 ? '+' : '−'}${fmt(Math.abs(d), dec)}${enh}`}</em>`;
+    return `<em class="lg-delta" data-ton="${ton}" data-rikt="${noll ? 'lika' : d > 0 ? 'upp' : 'ner'}">${noll ? '±0' : `${fmt(Math.abs(d), dec)}${enh}`}</em>`;
   }
   // En smart rad: ikon + en mening som förklarar datan.
   const insiktHtml = (text, ikon = 'gnista', k = '') => `<p class="lg-insikt ${k}">${ik(ikon)}<span>${e(text)}</span></p>`;
@@ -558,7 +558,8 @@
   function minisparkar(varden, max = 10) {
     const v = varden.length ? varden : [0]; const w = 100, h = 30, st0 = v.length > 1 ? w / (v.length - 1) : w;
     const pts = v.map((x, i) => `${(i * st0).toFixed(1)},${(h - 3 - (x / max) * (h - 6)).toFixed(1)}`).join(' ');
-    return `<svg class="minispark" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,30 ${pts} 100,30" class="minispark-yta"/><polyline points="${pts}" class="minispark-linje"/></svg>`;
+    const sist = v[v.length - 1], yS = (h - 3 - (sist / max) * (h - 6)) / h * 100;
+    return `<span class="minispark-ram"><svg class="minispark" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,30 ${pts} 100,30" class="minispark-yta"/><polyline points="${pts}" class="minispark-linje" pathLength="1"/></svg><i class="minispark-prick" style="--y:${yS.toFixed(1)}%" aria-hidden="true"></i></span>`;
   }
   // Himlen bakom hälsningen: dygnet (morgon, dag, kväll, natt), årstiden (snö, blomblad, sommarsol, löv) och svenska högtider.
   // Testa med ?himmel=natt|morgon|dag|kvall och ?hogtid=jul|nyar|lucia|hjarta|pask|midsommar|nationaldag|advent.
@@ -603,10 +604,9 @@
     const hm = himmelLage();
     return `<header class="valkomst in" style="--i:0">${himmelHtml()}
       <div class="valkomst-text">
-        <span class="valkomst-hej"><span class="dygn" data-fas="${natt || h >= 17 ? 'kvall' : 'dag'}" aria-hidden="true"><i></i></span><span class="hej-text">${hej},</span></span>
-        <h1 class="namn-levande" aria-label="${e(visNamn())}">${[...visNamn()].map((t, k) => `<span aria-hidden="true" style="--k:${k}">${e(t)}</span>`).join('')}</h1>
-        <p class="ord-in">${rad.split(' ').map((o, k) => `<span style="--k:${k}">${e(o)}</span>`).join(' ')}</p>
-        <span class="valkomst-meta">${hm.halsning ? `<span class="hogtid-chip">${e(hm.halsning)}</span>` : ''}${e(datumText().replace(/^./, (x) => x.toUpperCase()))}<span class="niva-markering">${ik(elit() ? 'blixt' : 'sol')}${elit() ? 'Elit' : 'Motionär'}</span></span>
+        <span class="ios-datum">${e(datumText())}${hm.halsning ? ` · ${e(hm.halsning)}` : ''}</span>
+        <h1 class="ios-titel">${e(hej)}, ${e(visNamn())}</h1>
+        <p class="ios-under">${e(rad)}</p>
       </div>
       <button class="valkomst-profil" data-g="flik" data-v="jag" aria-label="Din profil · hälsopoäng ${hp}">
         <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="${R}" class="vp-spar"/><circle cx="30" cy="30" r="${R}" class="vp-bage" style="stroke-dasharray:${L};stroke-dashoffset:${L * (1 - hp / 100)}"/></svg>
@@ -726,7 +726,7 @@
     ['Sjukdomshistoria', 'Uppdateras årligen', 'dokument', 'ok'], ['Funktionsscreening', 'Årligen', 'rorlighet', 'tom'], ['Hjärnskakningsscreening', 'Årligen', 'hjarna', 'tom']];
   function pcmeKort(i) {
     const klara = PCME.filter((x) => x[3] === 'ok').length;
-    return `<div class="kort in" style="--i:${i}"><div class="kort-rubrik"><div><h3>PCME</h3><span class="liten">Medicinsk kontroll inför tävling</span></div><span class="chip" data-ton="${klara === PCME.length ? 'ok' : 'gul'}">${klara}/${PCME.length}</span></div>
+    return `<div class="kort in" style="--i:${i}"><div class="kort-rubrik"><div><h3>PCME</h3><span class="liten">Medicinsk kontroll inför tävling</span></div><span class="chip chip-tal tal" data-ton="${klara === PCME.length ? 'ok' : 'gul'}">${klara}/${PCME.length}</span></div>
       <div class="lg-matare" aria-hidden="true"><i style="--v:${klara / PCME.length * 100}%"></i></div>
       ${insiktHtml(`${klara} av ${PCME.length} klara · ${PCME.filter((x) => x[3] === 'gul').length} bokas nästa år · ${PCME.filter((x) => x[3] === 'tom').length} ingår i screeningen`, 'skold')}
       <ul class="lista pcme-lista">${PCME.map(([t, n, ic, ton]) => `<li><span class="ikonruta" style="width:34px;height:34px;border-radius:11px">${ik(ic)}</span><div><b>${t}</b><small>${n}${ton === 'gul' ? ' · bokas nästa år' : ton === 'tom' ? ' · ingår i screeningen' : ''}</small></div><span class="status" data-ton="${ton}">${ton === 'ok' ? ik('bock') : ton === 'gul' ? ik('kalender') : ''}</span></li>`).join('')}</ul></div>`;
@@ -1003,7 +1003,9 @@
         <div class="sc-med-las">${ik('las')}<b>Visas efter läkarens granskning</b><small>Ett normalt värde bevisar inte att man är frisk och ett avvikande värde är ingen diagnos.</small></div></div>
 
       <div class="kort in" style="--i:8;margin-top:12px"><div class="kort-rubrik"><h3>Ditt paket</h3><span class="liten">${elit() ? 'Med uppföljning online' : 'Hälsokartläggning'}</span></div>
-        <div class="paketrad"><span ${!elit() ? 'data-vald' : ''}>Bas<small>Riskprofil</small></span><span>Bas+<small>Fördjupad</small></span><span ${elit() ? 'data-vald' : ''}>Bas++<small>Mest komplett</small></span></div>
+        <div class="pk-rad" role="group" aria-label="Paket">${[['bas', 'Bas', 'Riskprofil', 0], ['plus', 'Bas+', 'Fördjupad', 1], ['plusplus', 'Bas++', 'Mest komplett', 2]].map(([k, t, u, n]) => `<button type="button" class="pk" data-g="paket" data-v="${k}" data-steg="${n}" aria-pressed="${(st.paket || (elit() ? 'plusplus' : 'bas')) === k}">
+          ${n ? '<span class="pk-ram" aria-hidden="true"><i></i></span>' : ''}<span class="pk-sken" aria-hidden="true"></span>${n === 2 ? '<em class="pk-premium">Premium</em>' : ''}
+          <b class="pk-namn">${t.replace(/(\+\+?)$/, '<span class="pk-plus">$1</span>')}</b><small>${u}</small><span class="pk-bock" aria-hidden="true">${ik('bock')}</span></button>`).join('')}</div>
         <div class="notis" style="margin-top:12px">${ik('info')}<span>Rapporten skapas automatiskt av dina svar och testvärden, kontrolleras av specialist och är ingen diagnos – vi hänvisar vidare när något behöver följas upp.</span></div></div>
       <p class="exempel in" style="--i:9;margin-top:16px">Exempeldata i prototypen</p>`;
   }
@@ -1788,6 +1790,7 @@
     'lopp-spela': (b) => { if (karta3dNu) return karta3dNu.spela(b, $('[data-lp-live]', arkLager)); const svg = $('.lp-kartram .lp-karta', arkLager); if (svg) spelaRunda(svg, exempelRunda(loppNu()), loppNu(), b); },
     'bel-nollstall': () => { const s0 = loppSt(); if (s0.upplast) delete s0.upplast[loppNu().id]; spara(); loppArk('karta', { bara: true }); toast('Belöningarna är låsta igen – spela upp rundan'); },
     'bel-kod': (b) => { const k = b.dataset.kod; try { navigator.clipboard?.writeText(k); } catch (err) { /* ingen urklippstavla */ } b.classList.add('kopierad'); setTimeout(() => b.classList.remove('kopierad'), 1200); toast(`Koden ${k} är kopierad`); },
+    paket: (b) => { st.paket = b.dataset.v; spara(); $$('.pk', b.parentElement).forEach((x) => x.setAttribute('aria-pressed', x === b)); summa(); },
     'lopp-garmin': () => toast('Kopplingen till klockan öppnas i nästa version'),
     'lopp-val': (b) => { const l = LOPP.find((x) => x.id === b.dataset.v); if (!l) return; const s0 = loppSt(); s0.id = l.id; s0.mal = Math.round(l.km * (elit() ? 260 : 330) / 60) * 60; spara();
       loppArk('karta'); toast(`${l.namn} är ditt lopp`); if (flik === 'idag') setTimeout(() => { const k = $('.lp-kort', nu); if (k) { k.outerHTML = loppKort(4); const ny = $('.lp-kort', nu); ny.classList.remove('in'); const x = $('.lp-karta', ny); if (x) fargaRunda(x, exempelRunda(l)); } }, 400); },

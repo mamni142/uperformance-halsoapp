@@ -151,3 +151,25 @@ body[data-niva="motionar"] .idag-vy .fokus-knapp { background: rgba(15, 110, 87,
 .idag-vy .tips-lista .lista li small { font-size: 13px !important; line-height: 1.4 !important; color: var(--text-2) !important; }
 /* chips och brickor: iOS-storlek */
 .idag-vy .chip { font: 600 12px var(--font-brod) !important; letter-spacing: 0 !important; }
+
+/* Kropp i iOS 18-stil */
+/* snabbvalen: en grupperad yta med kantlösa knappar, valda tonade i smärtans färg */
+.kv-snabb { gap: 4px !important; padding: 5px; border-radius: 20px; background: var(--yta); box-shadow: 0 0 0 .5px var(--kant), 0 10px 24px -18px rgba(24, 54, 83, .28); }
+body[data-niva="elit"] .kv-snabb { background: rgba(246, 244, 239, .05); }
+.kv-snabbval { min-height: 40px !important; border: 0 !important; border-radius: 14px !important; background: none !important; box-shadow: none !important; font: 500 14px var(--font-brod) !important; color: var(--text-2) !important;
+  transition: background .25s ease, color .25s ease, transform .2s cubic-bezier(.32, .72, 0, 1) !important; }
+.kv-snabbval:hover { background: var(--yta-2) !important; }
+.kv-snabbval[aria-pressed="true"] { color: var(--rod-text) !important; font-weight: 650 !important; background: rgba(229, 103, 79, .12) !important; }
+.kv-snabbval .kv-prick { top: 7px !important; right: 7px !important; box-shadow: none !important; }
+/* rubriker och kort som i resten av appen */
+:is(.kv-dagbok, .kv-sammanfattning, .kv-lista, .kv-med, .kv-zoner) h3, .skarm .kort-rubrik h3 { font: 650 17px/1.25 var(--font-rubrik) !important; letter-spacing: -.02em !important; }
+.skarm h2.kv-rubrik, .skarm .kv-rubrik h2, .skarm section > h2 { letter-spacing: -.022em; }
+.kv-scen ~ .kort, .skarm .kort { border-radius: 22px !important; }
+/* lista med testvärden: hårfina avdelare som börjar efter ikonen */
+.kv-listrad { position: relative; border-top: 0 !important; }
+.kv-listrad + .kv-listrad::before { content: ''; position: absolute; top: 0; left: 52px; right: 0; height: .5px; background: var(--kant-2); }
+.kv-listtext b { font: 600 15px var(--font-rubrik) !important; }
+.kv-listtext small { font-size: 13px !important; color: var(--text-2) !important; }
+/* raden med Bak och status: en ren glaskapsel */
+.kv-fot { border-radius: 999px !important; }
+.kv-fot .kv-vrid, .kv-fot > span, .kv-fot > div { font: 600 13px var(--font-brod) !important; }
