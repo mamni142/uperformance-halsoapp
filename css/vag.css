@@ -1,0 +1,35 @@
+/* Mjukare nivåbyte och den glittrande Skapa-knappen. Laddas sist. */
+
+/* 01 Bytet Motionär ⇄ Elit: en mjuk våg med fjädrad kant som växer lugnt ut från valet (förut en hård cirkel på 0,85 s) */
+@property --vag-r { syntax: '<length>'; inherits: false; initial-value: 0px; }
+::view-transition-group(root) { animation-duration: 1.35s !important; }
+::view-transition-new(root) {
+  -webkit-mask-image: radial-gradient(circle at var(--vx, 50%) var(--vy, 50%), #000 var(--vag-r), transparent calc(var(--vag-r) + 160px));
+  mask-image: radial-gradient(circle at var(--vx, 50%) var(--vy, 50%), #000 var(--vag-r), transparent calc(var(--vag-r) + 160px));
+  animation: vag-mjuk 1.35s cubic-bezier(.45, 0, .2, 1) both !important; clip-path: none !important; }
+::view-transition-old(root) { animation: vag-gammal 1.35s cubic-bezier(.45, 0, .2, 1) both !important; }
+@keyframes vag-mjuk { from { --vag-r: -160px; } to { --vag-r: 1500px; } }
+@keyframes vag-gammal { to { transform: scale(.985); filter: brightness(.96); } }
+
+/* 02 Skapa min profil – glittrar som Bas++: en komet runt kanten, ett ljussvep och gnistor som tänds i tur och ordning */
+.knapp-glitter { position: relative; isolation: isolate; overflow: hidden; }
+.knapp-glitter .kg-text { position: relative; z-index: 3; display: inline-flex; align-items: center; gap: 8px; }
+.knapp-glitter .kg-text svg { animation: kg-gnista-ikon 2.4s ease-in-out infinite; }
+.kg-ram { position: absolute; inset: 0; z-index: 2; border-radius: inherit; padding: 1.6px; pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.kg-ram i { position: absolute; left: 50%; top: 50%; width: 140%; aspect-ratio: 1; margin: -70% 0 0 -70%;
+  background: conic-gradient(from 0deg, transparent 0 34%, rgba(255, 255, 255, .9) 44%, #fff 46%, transparent 50% 84%, #d3e8ff 93%, #fff 95%, transparent 98%); animation: kg-snurr 3.2s linear infinite; }
+.kg-svep { position: absolute; z-index: 1; inset: -50% -30%; pointer-events: none; background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .55) 50%, transparent 60%); transform: translateX(-70%); animation: kg-svep 3.6s cubic-bezier(.4, 0, .2, 1) 1s infinite; }
+.kg-gnista { position: absolute; z-index: 2; left: var(--x); top: var(--y); width: 7px; height: 7px; margin: -3.5px; pointer-events: none; background: #fff; opacity: 0;
+  -webkit-mask: radial-gradient(circle, #000 0 18%, transparent 22%), conic-gradient(from 45deg, #000 0 2%, transparent 2% 23%, #000 23% 27%, transparent 27% 48%, #000 48% 52%, transparent 52% 73%, #000 73% 77%, transparent 77% 98%, #000 98%);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  animation: kg-glitter 2.8s ease-in-out infinite; animation-delay: var(--d); }
+.knapp-glitter { box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, .7), inset 0 -3px 8px rgba(15, 110, 87, .28), 0 14px 30px -12px rgba(15, 110, 87, .7), 0 0 30px -8px rgba(126, 224, 195, .6) !important; animation: kg-glod 3s ease-in-out infinite; }
+.knapp-glitter[disabled] .kg-ram, .knapp-glitter[disabled] .kg-svep, .knapp-glitter[disabled] .kg-gnista { display: none; }
+.knapp-glitter[disabled] { animation: none; box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .22), inset 0 0 0 .5px rgba(255, 255, 255, .1) !important; }
+@keyframes kg-snurr { to { transform: rotate(360deg); } }
+@keyframes kg-svep { 0% { transform: translateX(-70%); } 40%, 100% { transform: translateX(70%); } }
+@keyframes kg-glitter { 0%, 100% { opacity: 0; transform: scale(.3) rotate(0); } 15% { opacity: 1; transform: scale(1.15) rotate(45deg); } 35% { opacity: 0; transform: scale(.4) rotate(90deg); } }
+@keyframes kg-gnista-ikon { 0%, 100% { transform: none; } 50% { transform: rotate(18deg) scale(1.15); } }
+@keyframes kg-glod { 50% { box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, .7), inset 0 -3px 8px rgba(15, 110, 87, .28), 0 16px 34px -12px rgba(15, 110, 87, .8), 0 0 40px -6px rgba(126, 224, 195, .8); } }
+@media (prefers-reduced-motion: reduce) { .kg-ram i, .kg-svep, .kg-gnista, .knapp-glitter, .knapp-glitter .kg-text svg { animation: none !important; } }

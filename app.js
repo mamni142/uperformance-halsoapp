@@ -344,7 +344,7 @@
         ${kort('motionar', 'sol', 'Motionär', 'Ljust och lugnt', 'Hälsa, vanor och rörelse i din takt – med tydliga råd när kroppen säger ifrån.', ['Dagsform', 'Veckans rörelse', 'Kroppskarta', 'Hälsokartläggning'], 4)}
         ${kort('elit', 'blixt', 'Elit', 'Instrumentpanel', 'Belastning, tillgänglighet, skaderegister och medicinsk kontroll – som i elitlaget.', ['Beredskap', 'Belastningskvot', 'Skaderegister', 'PCME'], 5)}
       </div></div>
-      <div class="fraga-fot"><button class="knapp knapp-primar knapp-bred" data-g="skapa" ${v ? '' : 'disabled'}>Skapa min profil ${ik('gnista')}</button></div>`, { in: riktning, klass: `fraga-skarm${fortsatt ? ' fraga-fortsatt' : ''}` });
+      <div class="fraga-fot"><button class="knapp knapp-primar knapp-bred knapp-glitter" data-g="skapa" ${v ? '' : 'disabled'}><span class="kg-ram" aria-hidden="true"><i></i></span><span class="kg-svep" aria-hidden="true"></span>${Array.from({ length: 7 }, (_, i) => `<i class="kg-gnista" aria-hidden="true" style="--x:${[12, 26, 41, 58, 70, 84, 93][i]}%;--y:${[30, 72, 22, 78, 34, 66, 40][i]}%;--d:${(i * .43).toFixed(2)}s"></i>`).join('')}<span class="kg-text">Skapa min profil ${ik('gnista')}</span></button></div>`, { in: riktning, klass: `fraga-skarm${fortsatt ? ' fraga-fortsatt' : ''}` });
   }
 
   /* ---- 08 skapar profil ---- */
