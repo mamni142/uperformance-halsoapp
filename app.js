@@ -20,7 +20,7 @@
   const halsning = () => { const h = idag().getHours(); return h < 10 ? 'God morgon' : h < 17 ? 'Hej' : 'God kväll'; };
   const app = $('#app'), skarmLager = $('#skarm'), flikrad = $('#flikrad');
   // Temat: samma app med Uperformances eller längdlandslagets presentation (?tema=landslaget). Egen data per tema.
-  const TEMA = new URLSearchParams(location.search).get('tema') === 'landslaget' ? 'landslaget' : 'uperformance', LANDS = TEMA === 'landslaget';
+  const TEMA0 = new URLSearchParams(location.search).get('tema'), TEMA = TEMA0 === 'landslaget' || TEMA0 === 'imaginecare' ? TEMA0 : 'uperformance', LANDS = TEMA === 'landslaget', ICARE = TEMA === 'imaginecare';
   document.documentElement.dataset.tema = TEMA; document.body.dataset.tema = TEMA;
   if (LANDS) document.title = 'Längdlandslaget – Hälsoappen · koncept av Uperformance';
   const MATCH = LANDS ? 'Tävling' : 'Match';
@@ -39,7 +39,7 @@
   }
 
   /* ---- 02 lagring och exempeldata ---- */
-  const NYCKEL = LANDS ? 'up-halsa-landslaget-v1' : 'up-halsa-v1';
+  const NYCKEL = LANDS ? 'up-halsa-landslaget-v1' : ICARE ? 'up-halsa-imaginecare-v1' : 'up-halsa-v1';
   const nytt = () => ({ version: 1, profil: null, svar: { namn: '', fodd: 1992, kon: '', pass: '', ont: [], mal: [] }, checkin: [], pass: [], skador: [], dela: { team: true, medicin: true } });
   let st = (() => { try { const s = JSON.parse(localStorage.getItem(NYCKEL)); return s && s.version === 1 ? s : nytt(); } catch (err) { return nytt(); } })();
   const spara = () => { try { localStorage.setItem(NYCKEL, JSON.stringify(st)); } catch (err) { /* privat läge */ } };
@@ -228,7 +228,7 @@
         <svg viewBox="0 0 396 396"><path class="splash-spar" d="M198,10c103.9,0,188,84,188,187.5s-84.1,187.5-188,187.5S10,301,10,197.5,94.1,10,198,10Z"/><path class="splash-ring" d="M198,10c103.9,0,188,84,188,187.5s-84.1,187.5-188,187.5S10,301,10,197.5,94.1,10,198,10Z"/>
         ${LANDS ? flingaSvg() : ''}<path class="splash-u${LANDS ? ' ls-dold' : ''}" d="M177.5,127.8v88.6c0,7.3,1.6,13,4.7,17.3,3.3,4.1,8.4,6.2,15.5,6.2s12.4-2.1,15.8-6.2c3.4-4.3,5.1-10.1,5.1-17.3v-88.6h49.1v88.6c0,14.9-3.1,27.8-9.3,38.4-6.2,10.5-14.7,18.4-25.5,23.8-10.8,5.3-22.9,8-36.2,8s-25.2-2.7-35.5-8c-10.2-5.3-18.2-13.2-24-23.8-5.8-10.5-8.7-23.3-8.7-38.4v-88.6h49.1-.1Z"/></svg>
       </div>
-      <div class="splash-ord">${LANDS ? '<b class="ls-ordmarke" aria-label="Längdlandslaget">Längdlandslaget</b>' : '<svg viewBox="440 140 840 120" class="ordmarke" aria-label="Uperformance"><use href="#logo" width="1274.2" height="395"/></svg>'}<p>${(LANDS ? 'Koncept av Uperformance' : 'Hälsa med elitstandard').split('').map((t, i) => `<span style="--k:${i}">${t === ' ' ? '&nbsp;' : t}</span>`).join('')}</p></div>
+      <div class="splash-ord">${ICARE ? '<b class="ls-ordmarke ic-ordmarke" aria-label="ImagineCare">ImagineCare</b>' : LANDS ? '<b class="ls-ordmarke" aria-label="Längdlandslaget">Längdlandslaget</b>' : '<svg viewBox="440 140 840 120" class="ordmarke" aria-label="Uperformance"><use href="#logo" width="1274.2" height="395"/></svg>'}<p>${(LANDS || ICARE ? 'Koncept av Uperformance' : 'Hälsa med elitstandard').split('').map((t, i) => `<span style="--k:${i}">${t === ' ' ? '&nbsp;' : t}</span>`).join('')}</p></div>
       <div class="intro-laddar" aria-hidden="true"><i></i></div>`, { in: 'tona', klass: 'splash' });
     kroppStart(); // nätet byggs medan loggan ritas
     introTakt(el);
@@ -277,13 +277,12 @@
   }
   function valkommen({ fore = false } = {}) {
     document.body.dataset.niva = 'elit';
-    return visa(`<div class="valkommen-topp in" style="--i:0">${LANDS ? '<span class="marke ls-marke"><b>LÄNGDLANDSLAGET</b><small>Koncept av Uperformance</small></span>' : '<span class="marke"><svg viewBox="0 0 1274.2 395" aria-label="Uperformance"><use href="#logo"/></svg></span>'}<span class="exempel">${LANDS ? 'Koncept' : 'Prototyp'}</span></div>
+    return visa(`<div class="valkommen-topp in" style="--i:0">${ICARE ? '<span class="marke ls-marke ic-marke"><b>IMAGINECARE</b><small>Koncept av Uperformance</small></span>' : LANDS ? '<span class="marke ls-marke"><b>LÄNGDLANDSLAGET</b><small>Koncept av Uperformance</small></span>' : '<span class="marke"><svg viewBox="0 0 1274.2 395" aria-label="Uperformance"><use href="#logo"/></svg></span>'}<span class="exempel">${LANDS || ICARE ? 'Koncept' : 'Prototyp'}</span></div>
       <div class="valkommen-kropp"><div class="bana" aria-hidden="true"></div>
-        <span class="bana-chip" style="--i:0">${ik('rorlighet')}Rörlighet</span><span class="bana-chip" style="--i:1">${ik('hantel')}Styrka</span>
-        <span class="bana-chip" style="--i:2">${ik('balans')}Balans</span><span class="bana-chip" style="--i:3">${ik('hjarta')}Kondition</span>
+        ${(ICARE ? [['hjarta', 'Blodtryck'], ['matt', 'Vikt'], ['droppe', 'Blodsocker'], ['leende', 'Mående']] : [['rorlighet', 'Rörlighet'], ['hantel', 'Styrka'], ['balans', 'Balans'], ['hjarta', 'Kondition']]).map(([i, t], n) => `<span class="bana-chip" style="--i:${n}">${ik(i)}${t}</span>`).join('')}
         <div data-kropp-plats></div></div>
-      <div class="valkommen-text"><h1 class="in" style="--i:1">${LANDS ? 'Hela säsongen. <span class="skimmer">En app.</span>' : 'Hälsa med <span class="skimmer">elitstandard.</span>'}</h1>
-        <p class="in" style="--i:2">${LANDS ? 'Kroppen, passen, vallan och loppen – för längdlandslaget. Ett koncept av Uperformance med exempeldata.' : 'Din kropp, dina värden och nästa steg – i en app. Testtillfället blir en ögonblicksbild, appen gör det till ett program.'}</p></div>
+      <div class="valkommen-text"><h1 class="in" style="--i:1">${ICARE ? 'Vården <span class="skimmer">hemma hos dig.</span>' : LANDS ? 'Hela säsongen. <span class="skimmer">En app.</span>' : 'Hälsa med <span class="skimmer">elitstandard.</span>'}</h1>
+        <p class="in" style="--i:2">${ICARE ? 'Mät blodtryck, vikt och blodsocker hemma, berätta hur du mår och chatta med vården. Ett koncept av Uperformance för ImagineCare, med exempeldata.' : LANDS ? 'Kroppen, passen, vallan och loppen – för längdlandslaget. Ett koncept av Uperformance med exempeldata.' : 'Din kropp, dina värden och nästa steg – i en app. Testtillfället blir en ögonblicksbild, appen gör det till ett program.'}</p></div>
       <div class="valkommen-fot in" style="--i:3"><button class="knapp knapp-primar knapp-bred" data-g="borja">Skapa din profil ${ik('pil')}</button>
         <span class="liten">5 frågor · ungefär en minut</span></div>`, { in: fore ? 'avslojning' : 'tona', kvar: fore ? 60000 : 1300, klass: 'valkommen',
       // fore: läggs under loggan och väntar inklippt (data-avsloj = vantar) tills introVag öppnar den; splashen tas bort av introVag
@@ -357,11 +356,11 @@
           <p>${text}</p><ul>${punkter.map((p) => `<li>${p}</li>`).join('')}</ul></button>`;
     visa(`<div class="fraga niva-fraga"><div class="fraga-topp in" style="--i:0"><button class="ikonknapp" data-g="niva-bak" aria-label="Tillbaka">${ik('bak')}</button>
       <div class="steg-rad" aria-hidden="true">${[1, 2, 3, 4, 5].map(() => '<i data-klar></i>').join('')}</div><span class="steg-tal steg-klar" aria-hidden="true">${ik('bock')}</span></div>
-      <span class="ogon in" style="--i:1">Sista steget</span><h2 class="in" style="--i:2">Hur tränar du, ${e((st.svar.namn.trim() || 'du').replace(/^./, (x) => x.toUpperCase()))}?</h2>
+      <span class="ogon in" style="--i:1">Sista steget</span><h2 class="in" style="--i:2">${ICARE ? 'Hur följer vården dig' : 'Hur tränar du'}, ${e((st.svar.namn.trim() || 'du').replace(/^./, (x) => x.toUpperCase()))}?</h2>
       <p class="under in" style="--i:3">Appen byter design och upplägg efter ditt val. Du kan ändra det när du vill.</p>
       <div class="niva-val" role="group" aria-label="Nivå">
-        ${kort('motionar', 'sol', 'Motionär', 'Ljust och lugnt', 'Hälsa, vanor och rörelse i din takt – med tydliga råd när kroppen säger ifrån.', ['Dagsform', 'Veckans rörelse', 'Kroppskarta', 'Hälsokartläggning'], 4)}
-        ${kort('elit', 'blixt', 'Elit', 'Instrumentpanel', 'Belastning, tillgänglighet, skaderegister och medicinsk kontroll – som i elitlaget.', ['Beredskap', 'Belastningskvot', 'Skaderegister', 'PCME'], 5)}
+        ${ICARE ? kort('motionar', 'hjarta', 'Egenmonitorering', 'Mät hemma', 'Du mäter i din egen takt – vården ser dina värden och hör av sig när något avviker.', ['Blodtryck', 'Vikt', 'Blodsocker', 'Mående'], 4) : kort('motionar', 'sol', 'Motionär', 'Ljust och lugnt', 'Hälsa, vanor och rörelse i din takt – med tydliga råd när kroppen säger ifrån.', ['Dagsform', 'Veckans rörelse', 'Kroppskarta', 'Hälsokartläggning'], 4)}
+        ${ICARE ? kort('elit', 'puls', 'Distansmonitorering', 'Vård i hemmet', 'Tätare mätningar med syremättnad och EKG – när vården följer dig hemma före eller efter sjukhuset.', ['Syremättnad', 'EKG', 'Symtom', 'Chatt med vården'], 5) : kort('elit', 'blixt', 'Elit', 'Instrumentpanel', 'Belastning, tillgänglighet, skaderegister och medicinsk kontroll – som i elitlaget.', ['Beredskap', 'Belastningskvot', 'Skaderegister', 'PCME'], 5)}
       </div></div>
       <div class="fraga-fot"><button class="knapp knapp-primar knapp-bred knapp-glitter" data-g="skapa" ${v ? '' : 'disabled'}><span class="kg-ram" aria-hidden="true"><i></i></span><span class="kg-svep" aria-hidden="true"></span>${Array.from({ length: 7 }, (_, i) => `<i class="kg-gnista" aria-hidden="true" style="--x:${[12, 26, 41, 58, 70, 84, 93][i]}%;--y:${[30, 72, 22, 78, 34, 66, 40][i]}%;--d:${(i * .43).toFixed(2)}s"></i>`).join('')}<span class="kg-text">Skapa min profil ${ik('gnista')}</span></button></div>`, { in: riktning, klass: `fraga-skarm${fortsatt ? ' fraga-fortsatt' : ''}` });
   }
@@ -737,6 +736,7 @@
         <button class="kort tryck nasta-steg in" style="--i:6" data-g="screening-boka"><div class="rad"><span class="ikonruta" data-ton="is">${ik('kalender')}</span><div style="flex:1;min-width:0"><span class="ogon utan">Nästa steg</span>
           <h3>Fyll i förscreeningen</h3><p class="liten">12 frågor inför din hälsokartläggning</p></div>${ik('hoger')}</div><div class="nasta-framsteg"><div class="matare"><i style="--v:42%"></i></div><small class="tal">5 av 12</small></div></button>`;
     }
+    if (ICARE) return icIdag();
     return `<div class="idag-vy">${idagTopp()}${veckoRemsa()}${hjalte}${LANDS ? sasongKort(2) : ''}${elit() ? matchKort(2) : ''}${snabbcheck(elit() ? 3 : 2)}${schemaKort(elit() ? 3 : 2)}${LANDS ? vallaKort(elit() ? 3 : 2) : ''}${fokusKort(elit() ? 4 : 3)}${loppKort(elit() ? 4 : 3)}${verktygKort(elit() ? 4 : 3)}${bento}${efter}
       <p class="exempel in" style="--i:8">Exempeldata i prototypen</p></div>`;
   }
@@ -757,6 +757,90 @@
       <div class="lg-matare" aria-hidden="true"><i style="--v:${klara / PCME.length * 100}%"></i></div>
       ${insiktHtml(`${klara} av ${PCME.length} klara · ${PCME.filter((x) => x[3] === 'gul').length} bokas nästa år · ${PCME.filter((x) => x[3] === 'tom').length} ingår i screeningen`, 'skold')}
       <ul class="lista pcme-lista">${PCME.map(([t, n, ic, ton]) => `<li><span class="ikonruta" style="width:34px;height:34px;border-radius:11px">${ik(ic)}</span><div><b>${t}</b><small>${n}${ton === 'gul' ? ' · bokas nästa år' : ton === 'tom' ? ' · ingår i screeningen' : ''}</small></div><span class="status" data-ton="${ton}">${ton === 'ok' ? ik('bock') : ton === 'gul' ? ik('kalender') : ''}</span></li>`).join('')}</ul></div>`;
+  }
+
+  /* ---- 09b ImagineCare (koncept, ?tema=imaginecare): egenmonitorering och distansmonitorering ----
+     Patienten mäter hemma (blodtryck, vikt, blodsocker, symtom vid KOL, mående; i distansläget även syremättnad och EKG) och chattar med vården.
+     Gränserna är EXEMPEL – i en riktig tjänst sätter vårdgivaren dem per patient. Ingen diagnos: avvikande värden markeras och vården bedömer. */
+  const IC_TYP = {
+    bt: { namn: 'Blodtryck', ikon: 'hjarta', ton: 'rod', enhet: 'mmHg', falt: [['sys', 'Övre (systoliskt)', 90, 220, 128], ['dia', 'Undre (diastoliskt)', 50, 130, 82], ['puls', 'Puls', 35, 180, 68]] },
+    vikt: { namn: 'Vikt', ikon: 'matt', ton: 'is', enhet: 'kg', falt: [['kg', 'Vikt i kg', 30, 250, 78.4, .1]] },
+    socker: { namn: 'Blodsocker', ikon: 'droppe', ton: 'gul', enhet: 'mmol/l', falt: [['mmol', 'mmol/l', 1, 30, 6.1, .1]] },
+    syre: { namn: 'Syremättnad', ikon: 'lunga', ton: 'is', enhet: '%', falt: [['spo2', 'Syremättnad (SpO₂) %', 70, 100, 96], ['puls', 'Puls', 35, 180, 72]] },
+  };
+  const IC_KOL = ['Är du mer andfådd än vanligt?', 'Hostar du mer än vanligt?', 'Har slemmet ändrat färg eller ökat?', 'Har du feber eller känner dig sjuk?'];
+  const icMat = () => (st.mat ||= icExempel());
+  function icExempel() { const ut = []; for (let i = 13; i >= 1; i--) { const d = dagStr(dagar(-i)), w = i * 1.7;
+    ut.push({ typ: 'bt', datum: d, v: { sys: Math.round(126 + Math.sin(w) * 7 + (i === 4 ? 16 : 0)), dia: Math.round(81 + Math.sin(w + 1) * 4 + (i === 4 ? 9 : 0)), puls: Math.round(68 + Math.sin(w * .7) * 5) }, exempel: true });
+    if (i % 2) ut.push({ typ: 'vikt', datum: d, v: { kg: +(78.6 + Math.sin(w * .5) * .5).toFixed(1) }, exempel: true });
+    ut.push({ typ: 'socker', datum: d, v: { mmol: +(6.2 + Math.sin(w * 1.3) * .9).toFixed(1) }, exempel: true });
+    if (i % 3 === 0) ut.push({ typ: 'syre', datum: d, v: { spo2: 95 + (i % 2), puls: 71 }, exempel: true }); } return ut; }
+  const icSenast = (typ) => icMat().filter((x) => x.typ === typ).slice(-1)[0];
+  // Exempelgränser – vårdgivaren sätter de riktiga per patient
+  function icFlagga(m) { if (!m) return null; const v = m.v;
+    if (m.typ === 'bt') return v.sys >= 180 || v.dia >= 110 ? ['rod', 'Mycket högt – kontakta vården'] : v.sys >= 140 || v.dia >= 90 ? ['gul', 'Över målnivån'] : v.sys < 95 ? ['gul', 'Lägre än vanligt'] : null;
+    if (m.typ === 'socker') return v.mmol < 4 ? ['gul', 'Lågt'] : v.mmol > 12 ? ['rod', 'Högt'] : v.mmol > 10 ? ['gul', 'Över målnivån'] : null;
+    if (m.typ === 'syre') return v.spo2 < 88 ? ['rod', 'Lågt – kontakta vården'] : v.spo2 < 92 ? ['gul', 'Lägre än vanligt'] : null;
+    if (m.typ === 'vikt') { const tre = icMat().filter((x) => x.typ === 'vikt' && x !== m && (new Date(m.datum) - new Date(x.datum)) / 864e5 <= 3).map((x) => x.v.kg);
+      return tre.length && m.v.kg - Math.min(...tre) >= 2 ? ['gul', '+2 kg på tre dagar'] : null; }
+    if (m.typ === 'kol') return v.ja >= 2 ? ['gul', `${v.ja} av 4 symtom`] : null; return null; }
+  const icVarde = (m) => !m ? '–' : m.typ === 'bt' ? `${m.v.sys}/${m.v.dia}` : m.typ === 'vikt' ? fmt(m.v.kg, 1) : m.typ === 'socker' ? fmt(m.v.mmol, 1) : m.typ === 'syre' ? `${m.v.spo2}` : `${m.v.ja} av 4`;
+  const icDag = (m) => { if (!m) return ''; const d = Math.round((idag() - new Date(m.datum + 'T12:00')) / 864e5); return d <= 0 ? 'Idag' : d === 1 ? 'Igår' : `${d} dagar sedan`; };
+  function icSpark(typ, nyckel) { const v = icMat().filter((x) => x.typ === typ).slice(-10).map((x) => x.v[nyckel]); if (v.length < 2) return '';
+    const mn = Math.min(...v), mx = Math.max(...v), sp = mx - mn || 1, p = v.map((x, i) => `${(i / (v.length - 1) * 100).toFixed(1)},${(26 - (x - mn) / sp * 22).toFixed(1)}`);
+    return `<svg class="ic-spark" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><polyline points="${p.join(' ')}"/><circle cx="100" cy="${p[p.length - 1].split(',')[1]}" r="2.6"/></svg>`; }
+  const IC_INSIKT = ['Små steg räknas: en kort promenad efter maten hjälper både blodtryck och blodsocker.', 'Mät blodtrycket i lugn och ro – sitt still i fem minuter först, och mät helst samma tid varje dag.',
+    'Väg dig på morgonen efter toalettbesöket, innan frukost – då blir värdena lättast att jämföra.', 'Det är bättre att vara lite fysiskt aktiv än inget alls.', 'Skriv till vården i chatten om du undrar något – du behöver inte vänta till nästa besök.'];
+  function icIdag() {
+    const ins = IC_INSIKT[idag().getDate() % IC_INSIKT.length], dist = elit();
+    const akt = [['bt', 'Registrera blodtryck'], ['vikt', 'Registrera vikt'], ['socker', 'Registrera blodsocker'], ...(dist ? [['syre', 'Mät syremättnad'], ['ekg', 'Ta ett EKG']] : []), ['kol', 'Frågor om KOL'], ['maende', 'Självskatta ditt mående']];
+    const gjort = (t) => t === 'maende' ? senasteCheckin()?.datum === dagStr(idag()) : icMat().some((x) => x.typ === t && x.datum === dagStr(idag()));
+    const rad = ([t, namn], n) => { const def = IC_TYP[t], kl = gjort(t), ik0 = def?.ikon || { kol: 'lunga', maende: 'leende', ekg: 'puls' }[t];
+      return `<button class="ic-akt tryck" data-g="${t === 'maende' ? 'checkin' : 'ic-mat'}" data-v="${t}" style="--n:${n}" ${kl ? 'data-klar' : ''}><span class="ic-akt-ikon">${ik(ik0)}</span><span class="ic-akt-text"><b>${namn}</b>${kl ? '<small>Klart idag</small>' : ''}</span>${ik(kl ? 'bock' : 'hoger')}</button>`; };
+    const tile = (t, nyckel) => { const m = icSenast(t), f = icFlagga(m), def = IC_TYP[t];
+      return `<button class="ic-varde tryck" data-g="ic-mat" data-v="${t}" ${f ? `data-flagga="${f[0]}"` : ''}><span class="ic-varde-topp">${ik(def.ikon)}<span>${def.namn}</span></span><b class="tal">${icVarde(m)}<small> ${def.enhet}</small></b>${icSpark(t, nyckel)}<small class="ic-varde-fot">${f ? `${ik('varning')}${f[1]}` : e(icDag(m))}</small></button>`; };
+    const sista = (st.icChatt || IC_CHATT0)[(st.icChatt || IC_CHATT0).length - 1];
+    return `<div class="idag-vy ic-vy">${idagTopp()}${veckoRemsa()}
+      <section class="kort ic-insikt in" style="--i:1"><span class="ic-insikt-ikon">${ik('gnista')}</span><div><span class="ogon utan">En insikt för dagen</span><p>${e(ins)}</p></div></section>
+      <section class="kort ic-aktiviteter in" style="--i:2"><div class="kort-rubrik"><div><span class="ogon utan">${dist ? 'Distansmonitorering' : 'Egenmonitorering'}</span><h3 style="margin-top:4px">Mina aktiviteter</h3></div><span class="chip">${akt.filter(([t]) => gjort(t)).length} av ${akt.length}</span></div>
+        <div class="ic-akt-lista">${akt.map(rad).join('')}</div></section>
+      <section class="ic-varden in" style="--i:3"><div class="sektion-rubrik"><h3>Mina värden</h3><span class="exempel">Exempel</span></div>
+        <div class="ic-varden-rutnat">${tile('bt', 'sys')}${tile('vikt', 'kg')}${tile('socker', 'mmol')}${dist ? tile('syre', 'spo2') : `<button class="ic-varde tryck" data-g="checkin"><span class="ic-varde-topp">${ik('leende')}<span>Mående</span></span><b class="tal">${senasteCheckin() ? dagsform(senasteCheckin()) : '–'}<small> /100</small></b><small class="ic-varde-fot">${senasteCheckin() ? 'Senaste självskattningen' : 'Inte skattat än'}</small></button>`}</div>
+        <p class="ic-varden-fot">${ik('info')}<span>Avvikande värden markeras och syns för din vårdkontakt. Gränserna här är exempel – vården sätter dina egna.</span></p></section>
+      <button class="kort ic-chatt-kort tryck in" style="--i:4" data-g="ic-chatt"><span class="profilbild ic-sk">SK</span><span class="ic-chatt-text"><span class="ogon utan">Din vårdkontakt · exempel</span><b>Sjuksköterska Karin</b><small>${e(sista.t)}</small></span><span class="ic-chatt-knapp">${ik('pil')}</span></button>
+      <p class="exempel in" style="--i:8">Koncept av Uperformance · exempeldata</p></div>`;
+  }
+  // Mätarket: ett fält per värde med − och +, sparas som en mätning; avvikelser markeras direkt
+  function icMatArk(typ) {
+    if (typ === 'kol') return ark(`<div class="ark-rubrik jg-ark-rubrik"><span class="ikonruta" data-ton="is">${ik('lunga')}</span><div><span class="ogon utan">Symtom</span><h2>Frågor om KOL</h2></div><button class="ikonknapp" data-stang-ark aria-label="Stäng">${ik('stang')}</button></div>
+      <form class="ic-form" data-ic-form="kol">${IC_KOL.map((q, i) => `<div class="ic-fraga"><b>${q}</b><div class="ic-jn" role="group"><button type="button" data-g="ic-jn" data-i="${i}" data-v="1">Ja</button><button type="button" data-g="ic-jn" data-i="${i}" data-v="0">Nej</button></div></div>`).join('')}
+        <button class="knapp knapp-primar knapp-bred" type="button" data-g="ic-spara" data-v="kol" disabled>Skicka till vården</button></form>
+      <p class="vt-fot">${ik('info')}<span>Svaren hjälper vården att se tidiga tecken på en försämring. Vid svår andnöd – ring 112.</span></p>`);
+    if (typ === 'ekg') return ark(`<div class="ark-rubrik jg-ark-rubrik"><span class="ikonruta" data-ton="rod">${ik('puls')}</span><div><span class="ogon utan">Distansmonitorering</span><h2>Ta ett EKG</h2></div><button class="ikonknapp" data-stang-ark aria-label="Stäng">${ik('stang')}</button></div>
+      <div class="kort ic-ekg" data-lage="redo"><svg viewBox="0 0 300 80" preserveAspectRatio="none" aria-hidden="true"><path class="ic-ekg-linje" pathLength="1" d="M0 40 ${Array.from({ length: 10 }, (_, k) => { const x = k * 30; return `L${x + 8} 40 L${x + 10} 36 L${x + 12} 40 L${x + 14} 42 L${x + 15} 12 L${x + 17} 64 L${x + 19} 40 L${x + 24} 40 L${x + 26} 33 L${x + 28} 40 L${x + 30} 40`; }).join(' ')}"/></svg>
+        <b class="ic-ekg-tid tal" data-ic-ekg>30</b><small>sekunder · håll fingrarna stilla på elektroderna</small></div>
+      <button class="knapp knapp-primar knapp-bred" data-g="ic-ekg-start">${ik('spela')}Starta mätningen</button>
+      <p class="vt-fot">${ik('info')}<span>Prototyp: i tjänsten kommer kurvan från en EKG-mätare och skickas till vården för bedömning – appen tolkar den inte.</span></p>`);
+    const def = IC_TYP[typ], m = icSenast(typ);
+    ark(`<div class="ark-rubrik jg-ark-rubrik"><span class="ikonruta" data-ton="${def.ton}">${ik(def.ikon)}</span><div><span class="ogon utan">Registrera</span><h2>${def.namn}</h2></div><button class="ikonknapp" data-stang-ark aria-label="Stäng">${ik('stang')}</button></div>
+      <form class="ic-form" data-ic-form="${typ}">${def.falt.map(([k, t, mn, mx, std, steg = 1]) => `<label class="ic-falt"><span>${t}</span><span class="ic-steg"><button type="button" data-g="ic-steg" data-k="${k}" data-d="-${steg}" aria-label="Minska">−</button>
+          <input class="tal" inputmode="decimal" data-ic="${k}" data-min="${mn}" data-max="${mx}" data-steg="${steg}" value="${fmt(m ? m.v[k] ?? std : std, steg < 1 ? 1 : 0)}"><button type="button" data-g="ic-steg" data-k="${k}" data-d="${steg}" aria-label="Öka">+</button></span></label>`).join('')}
+        <button class="knapp knapp-primar knapp-bred" type="button" data-g="ic-spara" data-v="${typ}">${ik('bock')}Spara och skicka till vården</button></form>
+      ${m ? `<p class="ic-senast">${ik('klocka')}Senast: ${icVarde(m)} ${def.enhet} · ${e(icDag(m).toLowerCase())}${m.exempel ? ' · exempel' : ''}</p>` : ''}
+      <p class="vt-fot">${ik('info')}<span>${typ === 'bt' ? 'Sitt still i fem minuter innan du mäter, med armen i hjärthöjd.' : typ === 'vikt' ? 'Väg dig på morgonen, innan frukost. Ökar vikten 2 kg på tre dagar markeras det för vården.' : typ === 'socker' ? 'Tvätta händerna före mätningen.' : 'Varma händer och stilla i en minut ger säkrast värde.'} Gränserna för markering är exempel.</span></p>`);
+  }
+  const IC_CHATT0 = [{ av: 'vard', t: 'Hej! Jag ser att blodtrycket var lite högre i torsdags. Hur har du mått sedan dess?', exempel: true }, { av: 'jag', t: 'Hej Karin, bättre nu. Jag hade sovit dåligt den natten.', exempel: true },
+    { av: 'vard', t: 'Bra att höra. Fortsätt mäta som vanligt, så tittar jag på värdena igen på måndag.', exempel: true }];
+  function icChattArk() { const c = (st.icChatt ||= IC_CHATT0.slice());
+    ark(`<div class="ark-rubrik jg-ark-rubrik"><span class="profilbild ic-sk">SK</span><div><span class="ogon utan">Din vårdkontakt · exempel</span><h2>Sjuksköterska Karin</h2></div><button class="ikonknapp" data-stang-ark aria-label="Stäng">${ik('stang')}</button></div>
+      <div class="ic-trad" data-ic-trad>${c.map((m) => `<p class="ic-bubbla" data-av="${m.av}">${e(m.t)}</p>`).join('')}</div>
+      <form class="ic-skriv" data-ic-skriv><input class="falt" placeholder="Skriv till vården …" maxlength="400" data-ic-text><button class="ikonknapp" type="submit" aria-label="Skicka">${ik('pil')}</button></form>
+      <p class="vt-fot">${ik('las')}<span>Prototyp: meddelandena stannar i telefonen. I tjänsten går chatten till din vårdkontakt, som svarar under vårdens öppettider. Vid akut sjukdom – ring 112.</span></p>`,
+      { efter: (a) => { const t = $('[data-ic-trad]', a); t.scrollTop = t.scrollHeight;
+        $('[data-ic-skriv]', a).addEventListener('submit', (ev) => { ev.preventDefault(); const f = $('[data-ic-text]', a), v = f.value.trim(); if (!v) return; c.push({ av: 'jag', t: v }); spara(); f.value = '';
+          t.insertAdjacentHTML('beforeend', `<p class="ic-bubbla" data-av="jag">${e(v)}</p><p class="ic-bubbla ic-skriver" data-av="vard"><i></i><i></i><i></i></p>`); t.scrollTop = t.scrollHeight;
+          setTimeout(() => { $('.ic-skriver', t)?.remove(); const svar = 'Tack för ditt meddelande! Jag läser det och återkommer i dag. (exempelsvar)'; c.push({ av: 'vard', t: svar, exempel: true }); spara();
+            t.insertAdjacentHTML('beforeend', `<p class="ic-bubbla" data-av="vard">${e(svar)}</p>`); t.scrollTop = t.scrollHeight; }, 1800); }); } });
   }
 
   /* ---- 10 Kropp: Ont · Testvärden (mot din baslinje) · Medicinskt ---- */
@@ -2147,6 +2231,20 @@
       const ny = document.createElement('div'); ny.innerHTML = sparKort(0); const n = ny.firstElementChild;
       for (const c of ['.ls-spar-text', '.ls-spar-lista']) { const gammal = $(c, k), nytt = $(c, n); nytt.dataset.byte = ''; gammal.replaceWith(nytt); } },
     'ls-visa': (b) => { const sk = b.closest('.skarm'); sk?.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); setTimeout(() => kropp?.markera?.(b.dataset.id), 380); },
+    'ic-mat': (b) => icMatArk(b.dataset.v),
+    'ic-chatt': () => icChattArk(),
+    'ic-steg': (b) => { const f = $(`[data-ic="${b.dataset.k}"]`, b.closest('form')); if (!f) return; const steg = +f.dataset.steg, n = +String(f.value).replace(',', '.') || 0;
+      f.value = fmt(klamp(n + +b.dataset.d, +f.dataset.min, +f.dataset.max), steg < 1 ? 1 : 0); summa(); },
+    'ic-jn': (b) => { const g = b.parentElement; $$('button', g).forEach((x) => x.setAttribute('aria-pressed', x === b)); const f = b.closest('form');
+      $('[data-g="ic-spara"]', f).disabled = $$('.ic-jn', f).some((x) => !$('[aria-pressed="true"]', x)); },
+    'ic-spara': (b) => { const typ = b.dataset.v, f = b.closest('form'); let v = {};
+      if (typ === 'kol') v.ja = $$('.ic-jn [aria-pressed="true"]', f).filter((x) => x.dataset.v === '1').length;
+      else for (const inp of $$('[data-ic]', f)) { const n = +String(inp.value).replace(',', '.'); if (!(n >= +inp.dataset.min && n <= +inp.dataset.max)) { inp.focus(); return toast('Kontrollera värdet'); } v[inp.dataset.ic] = n; }
+      const m = { typ, datum: dagStr(idag()), v }; icMat().push(m); spara(); const fl = icFlagga(m); stangArk();
+      toast(fl ? `Skickat till vården · ${fl[1].toLowerCase()} – din vårdkontakt ser det` : 'Skickat till vården'); if (!fl) konfetti(); hem('idag', { in: 'mjuk' }); },
+    'ic-ekg-start': (b) => { const k = $('.ic-ekg', arkLager); if (!k || k.dataset.lage === 'gar') return; k.dataset.lage = 'gar'; b.disabled = true; let s0 = 30;
+      const tick = setInterval(() => { if (!k.isConnected) return clearInterval(tick); s0--; $('[data-ic-ekg]', k).textContent = s0;
+        if (s0 <= 0) { clearInterval(tick); k.dataset.lage = 'klar'; $('[data-ic-ekg]', k).textContent = 'Klart'; icMat().push({ typ: 'ekg', datum: dagStr(idag()), v: { sek: 30 } }); spara(); toast('EKG:t är skickat till vården för bedömning'); } }, 1000); },
     verktyg: (b) => verktygArk(b.dataset.v || ''),
     'vt-preset': (b) => { if (vtTid) return toast('Pausa eller börja om först'); st.intervall = +b.dataset.v; spara(); const inne = $('.vt-inne', arkLager); if (inne) { inne.innerHTML = vtIntervall(st.intervall); } },
     'vt-start': (b) => { const a = b.closest('.vt-timer'); if (!a) return;

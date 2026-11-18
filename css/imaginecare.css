@@ -1,0 +1,99 @@
+/* ImagineCare (koncept av Uperformance, ?tema=imaginecare): teal och vitt som i deras app – egenmonitorering och distansmonitorering.
+   Laddas sist. Bara transform/opacitet i det som rör sig hela tiden. */
+body[data-tema="imaginecare"] { --ic: #3aa58e; --ic-djup: #1f7f6b; --ic-ljus: #e5f4ef; --ic-mork: #0d3b33; --vt-a: #3aa58e; --vt-a2: #7fd3bf; --vt-text: #fff; }
+body[data-tema="imaginecare"][data-niva="motionar"] { --accent-text: #1f7f6b; }
+
+/* 01 Introt och första sidorna: djup teal i stället för natt */
+body[data-tema="imaginecare"]:not([data-sida]) .skarm { background: radial-gradient(120% 70% at 50% 0%, #1f7f6b 0%, #145a4d 45%, #0b2f29 100%) !important; }
+body[data-tema="imaginecare"] .intro-norrsken { opacity: .35 !important; filter: hue-rotate(-20deg); }
+.ic-ordmarke { background: linear-gradient(100deg, #fff 0 40%, #bff0e2 52%, #fff 64%) !important; background-size: 300% 100% !important; -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
+body[data-tema="imaginecare"] .splash-ring { stroke: #7fd3bf !important; }
+body[data-tema="imaginecare"] .ic-marke small { color: #7fd3bf; }
+body[data-tema="imaginecare"] .skimmer { background: linear-gradient(100deg, #bff0e2, #7fd3bf, #fff, #bff0e2) !important; background-size: 300% 100% !important; -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
+
+/* 02 Knappar, flikraden och plus i teal */
+body[data-tema="imaginecare"] .knapp-primar:not([disabled]), body[data-tema="imaginecare"] .app .flikrad .flik-plus { background: linear-gradient(180deg, #4cbca2, #2f9a82) !important; color: #fff !important; }
+body[data-tema="imaginecare"] .flikrad .flik-plus::before { background: radial-gradient(circle, rgba(58, 165, 142, .4), rgba(58, 165, 142, 0) 68%) !important; }
+body[data-tema="imaginecare"] { --fl-vald: #1f7f6b; --fl-droppe: rgba(58, 165, 142, .16); }
+body[data-tema="imaginecare"][data-niva="elit"] { --fl-vald: #7fd3bf; --fl-droppe: rgba(58, 165, 142, .24); }
+body[data-tema="imaginecare"] .vecka-dag[aria-current], body[data-tema="imaginecare"] .vecka-dag[data-idag] b { color: #fff; }
+
+/* 03 Idag: teal sidhuvud kant i kant som i deras app, vita kort under */
+body[data-tema="imaginecare"] .ic-vy > .valkomst { position: relative; isolation: isolate; color: #fff; }
+body[data-tema="imaginecare"] .ic-vy > .valkomst > .himmel, body[data-tema="imaginecare"] .ic-vy > .valkomst > [class^="himmel"] { display: none !important; }
+body[data-tema="imaginecare"] .ic-vy > .valkomst::before { content: ''; position: absolute; z-index: -1; left: calc(var(--sida, 20px) * -1); right: calc(var(--sida, 20px) * -1);
+  top: calc((var(--topp, 54px) + 16px) * -1); bottom: -14px; border-radius: 0 0 28px 28px; background: radial-gradient(90% 80% at 85% 0%, #5cc7ad, transparent 60%), linear-gradient(170deg, #3aa58e, #23806c); }
+body[data-tema="imaginecare"] .ic-vy > .valkomst::after { display: none !important; }
+body[data-tema="imaginecare"] .ic-vy .ios-titel, body[data-tema="imaginecare"] .ic-vy .ios-titel-text { color: #fff !important; -webkit-text-fill-color: #fff !important; background: none !important; }
+body[data-tema="imaginecare"] .ic-vy .ios-datum, body[data-tema="imaginecare"] .ic-vy .ios-under { color: rgba(255, 255, 255, .86) !important; }
+body[data-tema="imaginecare"] .ic-vy .ios-g { background: rgba(255, 255, 255, .16) !important; color: #fff !important; box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .3) !important; }
+body[data-tema="imaginecare"] .ic-vy .ios-g small, body[data-tema="imaginecare"] .ic-vy .ios-g b { color: #fff !important; }
+body[data-tema="imaginecare"] .ic-vy .vecka { margin-top: 26px; }
+
+/* 04 En insikt för dagen */
+.ic-insikt { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: start; }
+.ic-insikt-ikon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; color: #fff; background: linear-gradient(160deg, #4cbca2, #2f9a82); }
+.ic-insikt-ikon svg { width: 20px; height: 20px; } .ic-insikt p { margin: 4px 0 0; font: 500 15px/1.4 var(--font-brod); }
+
+/* 05 Mina aktiviteter: en rad per mätning, som i deras app */
+.ic-akt-lista { display: grid; margin-top: 10px; }
+.ic-akt { position: relative; display: grid; grid-template-columns: 40px 1fr 16px; align-items: center; gap: 12px; min-height: 58px; padding: 8px 2px; border: 0; background: none; color: var(--text); text-align: left; cursor: pointer;
+  animation: vt-in .45s both calc(.15s + var(--n) * 45ms); }
+.ic-akt + .ic-akt::before { content: ''; position: absolute; top: 0; left: 54px; right: 0; height: .5px; background: var(--kant); }
+.ic-akt-ikon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; color: var(--ic-djup); background: var(--ic-ljus); }
+body[data-niva="elit"] .ic-akt-ikon { color: #7fd3bf; background: rgba(58, 165, 142, .16); }
+.ic-akt-ikon svg { width: 21px; height: 21px; } .ic-akt-text { display: grid; } .ic-akt-text b { font: 600 15.5px var(--font-rubrik); } .ic-akt-text small { font-size: 12px; color: var(--ic); }
+.ic-akt > svg { width: 14px; height: 14px; color: var(--text-3); } .ic-akt[data-klar] > svg { color: var(--ic); width: 18px; height: 18px; }
+.ic-akt[data-klar] .ic-akt-ikon { color: #fff; background: var(--ic); }
+.ic-akt:active, .ic-varde:active, .ic-chatt-kort:active { transform: scale(.98); }
+
+/* 06 Mina värden: fyra rutor med senaste värdet, kurva och markering */
+.ic-varden-rutnat { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ic-varde { position: relative; display: grid; gap: 4px; padding: 14px; min-height: 118px; border: 0; border-radius: 22px; text-align: left; color: var(--text); background: var(--yta); box-shadow: var(--kort-skugga, inset 0 0 0 .5px var(--kant)); cursor: pointer; overflow: hidden; }
+.ic-varde-topp { display: flex; align-items: center; gap: 6px; font: 600 12.5px var(--font-rubrik); color: var(--ic-djup); } body[data-niva="elit"] .ic-varde-topp { color: #7fd3bf; }
+.ic-varde-topp svg { width: 15px; height: 15px; } .ic-varde > b { font: 600 26px/1.1 var(--font-siffror); letter-spacing: -.02em; } .ic-varde > b small { font-size: 12px; font-weight: 500; color: var(--text-3); }
+.ic-varde-fot { display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: var(--text-3); } .ic-varde-fot svg { width: 13px; height: 13px; }
+.ic-varde[data-flagga="gul"] { box-shadow: inset 0 0 0 1.5px rgba(240, 170, 40, .55); } .ic-varde[data-flagga="gul"] .ic-varde-fot { color: #b77a00; }
+.ic-varde[data-flagga="rod"] { box-shadow: inset 0 0 0 1.5px rgba(230, 70, 50, .6); } .ic-varde[data-flagga="rod"] .ic-varde-fot { color: #d4442b; }
+body[data-niva="elit"] .ic-varde[data-flagga="gul"] .ic-varde-fot { color: #ffc65a; }
+.ic-spark { width: 100%; height: 28px; overflow: visible; } .ic-spark polyline { fill: none; stroke: var(--ic); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.ic-spark circle { fill: var(--ic); } .ic-varde[data-flagga] .ic-spark polyline, .ic-varde[data-flagga] .ic-spark circle { stroke: #f0aa28; fill: none; } .ic-varde[data-flagga] .ic-spark circle { fill: #f0aa28; }
+.ic-varden-fot { display: grid; grid-template-columns: 16px 1fr; gap: 6px; margin: 10px 2px 0; font-size: 12px; line-height: 1.4; color: var(--text-3); } .ic-varden-fot svg { width: 14px; height: 14px; }
+
+/* 07 Chatten med vården */
+.ic-chatt-kort { display: grid; grid-template-columns: 44px 1fr 38px; align-items: center; gap: 12px; width: 100%; text-align: left; border: 0; color: var(--text); cursor: pointer; }
+.ic-sk { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: #fff !important; background: linear-gradient(160deg, #4cbca2, #23806c) !important; font: 700 14px var(--font-rubrik); }
+.ic-chatt-text { display: grid; min-width: 0; } .ic-chatt-text b { font: 600 15px var(--font-rubrik); }
+.ic-chatt-text small { font-size: 12.5px; color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ic-chatt-knapp { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; color: #fff; background: var(--ic); } .ic-chatt-knapp svg { width: 16px; height: 16px; }
+.ic-trad { display: grid; gap: 8px; max-height: 46vh; overflow-y: auto; padding: 4px 2px 10px; }
+.ic-bubbla { max-width: 82%; margin: 0; padding: 10px 14px; border-radius: 20px; font-size: 14.5px; line-height: 1.4; animation: vt-in .35s both; }
+.ic-bubbla[data-av="vard"] { justify-self: start; border-bottom-left-radius: 6px; background: color-mix(in srgb, var(--text) 7%, transparent); }
+.ic-bubbla[data-av="jag"] { justify-self: end; border-bottom-right-radius: 6px; color: #fff; background: linear-gradient(160deg, #4cbca2, #2f9a82); }
+.ic-skriver { display: flex; gap: 4px; } .ic-skriver i { width: 7px; height: 7px; border-radius: 50%; background: var(--text-3); animation: ic-prick 1s ease-in-out infinite; }
+.ic-skriver i:nth-child(2) { animation-delay: .15s; } .ic-skriver i:nth-child(3) { animation-delay: .3s; }
+@keyframes ic-prick { 50% { transform: translateY(-4px); opacity: .5; } }
+.ic-skriv { display: grid; grid-template-columns: 1fr 44px; gap: 8px; margin-top: 6px; } .ic-skriv .falt { height: 44px; border-radius: 22px !important; }
+.ic-skriv .ikonknapp { color: #fff; background: var(--ic) !important; }
+
+/* 08 Mätarket */
+.ic-form { display: grid; gap: 12px; }
+.ic-falt { display: grid; gap: 6px; } .ic-falt > span:first-child { font: 600 13px var(--font-brod); color: var(--text-2); }
+.ic-steg { display: grid; grid-template-columns: 52px 1fr 52px; gap: 8px; align-items: center; }
+.ic-steg button { height: 52px; border: 0; border-radius: 16px; font: 500 24px var(--font-rubrik); color: var(--ic-djup); background: var(--ic-ljus); cursor: pointer; transition: transform .15s; }
+body[data-niva="elit"] .ic-steg button { color: #7fd3bf; background: rgba(58, 165, 142, .16); } .ic-steg button:active { transform: scale(.92); }
+.ic-steg input { height: 52px; width: 100%; border: 0; border-radius: 16px; text-align: center; font: 600 26px var(--font-siffror); color: var(--text); background: color-mix(in srgb, var(--text) 6%, transparent); }
+.ic-senast { display: flex; align-items: center; gap: 6px; margin: 10px 2px 0; font-size: 12.5px; color: var(--text-3); } .ic-senast svg { width: 14px; height: 14px; }
+.ic-fraga { display: grid; gap: 8px; padding: 10px 0; border-bottom: .5px solid var(--kant); } .ic-fraga b { font: 600 15px var(--font-rubrik); }
+.ic-jn { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ic-jn button { height: 42px; border: 0; border-radius: 14px; font: 600 14px var(--font-rubrik); color: var(--text-2); background: color-mix(in srgb, var(--text) 6%, transparent); cursor: pointer; transition: background .25s, color .25s; }
+.ic-jn button[aria-pressed="true"] { color: #fff; background: var(--ic); }
+.ic-ekg { display: grid; justify-items: center; gap: 4px; padding: 18px; text-align: center; }
+.ic-ekg svg { width: 100%; height: 80px; } .ic-ekg-linje { fill: none; stroke: var(--ic); stroke-width: 2; stroke-linejoin: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.ic-ekg[data-lage="gar"] .ic-ekg-linje { animation: ic-ekg 30s linear forwards; } .ic-ekg[data-lage="klar"] .ic-ekg-linje { stroke-dashoffset: 0; }
+@keyframes ic-ekg { to { stroke-dashoffset: 0; } }
+.ic-ekg-tid { font: 600 40px/1 var(--font-siffror); } .ic-ekg small { font-size: 12px; color: var(--text-3); }
+@media (prefers-reduced-motion: reduce) { .ic-akt, .ic-bubbla, .ic-skriver i { animation: none !important; } }
+
+/* kortet för vårdkontakten håller raden (kortets egen layout skrev över rutnätet) */
+.kort.ic-chatt-kort { display: grid !important; grid-template-columns: 44px minmax(0, 1fr) 38px !important; align-items: center !important; }
