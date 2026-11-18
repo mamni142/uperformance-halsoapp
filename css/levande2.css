@@ -1,0 +1,39 @@
+/* Levande detaljer i iOS 18-stil + rättningar. Laddas sist. Loopar bara transform/opacitet. */
+
+/* 01 Frågebytena i introt: den gamla frågan är helt borta innan den nya kommer (förut syntes båda en stund) */
+.skarm.fraga-skarm[data-ut="fram"], .skarm.fraga-skarm[data-ut="bak"] { animation-duration: .18s !important; animation-timing-function: cubic-bezier(.4, 0, 1, 1) !important; }
+.fraga-fortsatt[data-in="fram"] .in:not(.fraga-topp), .fraga-fortsatt[data-in="bak"] .in:not(.fraga-topp) { animation-delay: calc(var(--i, 0) * 40ms + 190ms) !important; animation-duration: .5s !important; }
+
+/* 02 Smärtnivåns ord: tonfärgad text, ingen kapsel */
+.kv-niva-ord { min-height: 0 !important; padding: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; border: 0 !important;
+  font: 650 15px var(--font-brod) !important; letter-spacing: 0 !important; text-transform: none !important; }
+
+/* 03 Smileysarna lever: de andas i tur och ordning, blinkar ibland, glansen glider, studsar vid tryck */
+.humor-ikon { display: inline-grid; animation: hu-anda 4.2s ease-in-out infinite; animation-delay: calc(var(--n, 0) * -.8s); }
+@keyframes hu-anda { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-2px) scale(1.03); } }
+.humor-svg { overflow: visible; filter: drop-shadow(0 6px 10px rgba(11, 21, 32, .14)); }
+.hu-ogon { transform-box: fill-box; transform-origin: center; animation: hu-blink 6s ease-in-out infinite; animation-delay: calc(var(--n, 0) * 1.1s + 1s); }
+@keyframes hu-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+.hu-mun { transform-box: fill-box; transform-origin: center; }
+.snabb-val button:hover .hu-mun, .snabb-val button:focus-visible .hu-mun { animation: hu-le .6s cubic-bezier(.2, 1.4, .35, 1); }
+@keyframes hu-le { 50% { transform: scale(1.15, 1.2); } }
+.hu-glans { animation: hu-glans 5s ease-in-out infinite; animation-delay: calc(var(--n, 0) * .4s); }
+@keyframes hu-glans { 50% { opacity: .65; transform: translate(1px, .5px) rotate(-20deg); } }
+.snabb-val button { transition: transform .35s cubic-bezier(.2, 1.4, .35, 1) !important; }
+.snabb-val button:active { transform: scale(.86) !important; }
+.snabb-val button small { transition: color .2s; }
+
+/* 04 Belastningsmätaren: visaren sveper in med fjäder och darrar lätt som en riktig mätare, spetsen lyser */
+.visare.ac-svep { transform-box: view-box; transform-origin: 115px 116px; animation: ac-in 1.5s cubic-bezier(.2, 1.3, .35, 1) .45s both; }
+@keyframes ac-in { from { transform: rotate(-90deg); } to { transform: rotate(var(--v)); } }
+.ac-darr { transform-box: view-box; transform-origin: 115px 116px; animation: ac-darr 2.8s ease-in-out 2s infinite; }
+@keyframes ac-darr { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(1.4deg); } 60% { transform: rotate(-.9deg); } }
+.ac-spets { fill: #fff; filter: drop-shadow(0 0 4px rgba(126, 224, 195, .95)); animation: ac-spets 2s ease-in-out infinite; }
+@keyframes ac-spets { 50% { opacity: .55; } }
+.acwr .zon-lag, .acwr .zon-ok, .acwr .zon-hog { stroke-linecap: round; }
+.acwr .zon-ok { filter: drop-shadow(0 0 6px rgba(126, 224, 195, .45)); }
+
+@media (prefers-reduced-motion: reduce) { .humor-ikon, .hu-ogon, .hu-glans, .ac-darr, .ac-spets { animation: none !important; } .visare.ac-svep { animation: none; } }
+.idag-vy .acwr .visare .ac-spets, .acwr2 .visare .ac-spets { fill: #7ee0c3 !important; stroke: none !important; }
+/* statussymbolen får alltid sin storlek (en äldre regel gjorde den till en liten ring) */
+body[data-niva] :is(span.chip[data-ton], .mh-status, .tg-status, .match-status, .h3-status)::before { width: 14px !important; height: 14px !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; margin: 0 !important; }

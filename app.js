@@ -509,7 +509,7 @@
       : '<ellipse cx="18.5" cy="20.5" rx="2.1" ry="2.6" fill="#0b1520"/><ellipse cx="29.5" cy="20.5" rx="2.1" ry="2.6" fill="#0b1520"/>';
     const kinder = ogon === 'glad' ? '<ellipse cx="13.5" cy="27" rx="3" ry="2" fill="#ff8f8f" opacity=".35"/><ellipse cx="34.5" cy="27" rx="3" ry="2" fill="#ff8f8f" opacity=".35"/>' : '';
     return `<svg class="humor-svg" viewBox="0 0 48 48" aria-hidden="true"><defs><radialGradient id="hu-${k}" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="${ljus}"/><stop offset="1" stop-color="${mork}"/></radialGradient></defs>
-      <circle cx="24" cy="24" r="22" fill="url(#hu-${k})"/><ellipse cx="17" cy="11" rx="8" ry="4.5" fill="#fff" opacity=".45" transform="rotate(-20 17 11)"/>${kinder}${ogonSvg}${mun}</svg>`;
+      <circle cx="24" cy="24" r="22" fill="url(#hu-${k})"/><ellipse class="hu-glans" cx="17" cy="11" rx="8" ry="4.5" fill="#fff" opacity=".45" transform="rotate(-20 17 11)"/>${kinder}<g class="hu-ogon">${ogonSvg}</g><g class="hu-mun">${mun}</g></svg>`;
   }
   function elitHud(df, kvot, somn, ord, ton) {
     // Beredskap i iOS 26-stil: en 270°-båge med gradient och glödande knopp, talet stort, en smart rad om vad som drar upp/ned,
@@ -544,7 +544,7 @@
         <div class="h3-skala" aria-hidden="true"><span>0</span><span>100</span></div></div>
       <p class="h3-insikt">${ik('gnista')}<span>${e(insikt)}</span></p>
       <div class="h3-delar">${delar.map((x) => `<div class="h3-del"><span class="h3-del-topp">${ik(x.i)}${x.t}</span><b class="tal">${x.nuV}<small>/10</small></b>
-        <span class="h3-del-fot">${spark(x.v)}<em data-ton="${Math.abs(x.d) < .5 ? 'is' : x.bra > 0 ? 'ok' : 'gul'}">${Math.abs(x.d) < .5 ? '±0' : `${x.d > 0 ? '+' : '−'}${fmt(Math.abs(x.d), 1)}`}</em></span></div>`).join('')}</div>
+        <span class="h3-del-fot">${spark(x.v)}<em class="lg-delta" data-ton="${Math.abs(x.d) < .5 ? 'is' : x.bra > 0 ? 'ok' : 'gul'}" data-rikt="${Math.abs(x.d) < .5 ? 'lika' : x.d > 0 ? 'upp' : 'ner'}">${Math.abs(x.d) < .5 ? '±0' : fmt(Math.abs(x.d), 1)}</em></span></div>`).join('')}</div>
       <small class="h3-not">Förändring mot ditt snitt de senaste 7 dagarna</small></section>`;
   }
 
@@ -626,7 +626,7 @@
     const lapp = (v) => { const [x, y] = P(T(v), 116); return `<text class="zon-etikett" x="${x.toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="middle">${fmt(v, 1)}</text>`; };
     const vinkel = T(kvot) * 180 - 90;
     return `<svg viewBox="0 0 230 130" aria-hidden="true">${bage(0, T(.8) - .012, 'zon-lag')}${bage(T(.8) + .012, T(1.3) - .012, 'zon-ok')}${bage(T(1.3) + .012, 1, 'zon-hog')}
-      ${lapp(.8)}${lapp(1.3)}<g class="visare" style="transform:rotate(${vinkel}deg)"><path d="M112.5 116 L115 40 L117.5 116 Z"/><circle cx="115" cy="116" r="9" class="nav"/><circle cx="115" cy="116" r="3.5" class="nav-mitt"/></g></svg>`;
+      ${lapp(.8)}${lapp(1.3)}<g class="visare ac-svep" style="--v:${vinkel}deg;transform:rotate(${vinkel}deg)"><g class="ac-darr"><path d="M112.5 116 L115 40 L117.5 116 Z"/><circle class="ac-spets" cx="115" cy="42" r="3.2"/></g><circle cx="115" cy="116" r="9" class="nav"/><circle cx="115" cy="116" r="3.5" class="nav-mitt"/></g></svg>`;
   }
   // Motionärens dagsform i iOS 26-stil (som Aktivitet/Fitness): tre ringar med rund ände och glans vid huvudet,
   // värdena i en lista bredvid med förändring mot snittet, en smart rad och en fotnot.
