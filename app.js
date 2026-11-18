@@ -1456,7 +1456,7 @@
       <div class="lp-kartram"><canvas class="lp-3d" role="img" aria-label="Karta i 3D över ${e(l.namn)} med rundan färgad efter farten"></canvas><div class="lp-live" data-lp-live><b class="tal">${fmt(l.km, 1)}</b><small>km</small><span class="lp-zon">Exempelpass · schematisk bana</span></div>
         <span class="lp-skiss">Schematisk bana</span>${sponsorRemsa(l)}</div>
       <div class="lp-legend">${FART.map(([max, k, t], n) => `<span data-z="${k}"><i></i>${t}<small>${n === 0 ? `< 7` : n === 3 ? '13+' : `${FART[n - 1][0]}–${max}`} km/h</small></span>`).join('')}</div>
-      <button class="knapp knapp-sek knapp-bred lp-spela" data-g="lopp-spela">${ik('uppdatera')}Spela upp rundan</button>
+      <button class="knapp knapp-sek knapp-bred lp-spela" data-g="lopp-spela">${ik('spela')}Spela upp rundan</button>
       <dl class="lp-fakta"><div><dt>Tid</dt><dd class="tal">${tidText(f.sek)}</dd></div><div><dt>Snittempo</dt><dd class="tal">${tempoText(f.tempo)}<small>/km</small></dd></div><div><dt>Snabbast</dt><dd class="tal">km ${f.snabb + 1}</dd></div></dl>
       <div class="lp-andel" aria-label="Andel av rundan per fart">${FART.map(([, k, t], n) => `<i data-z="${k}" style="--a:${(f.andel[n] * 100).toFixed(1)}%" title="${t} ${Math.round(f.andel[n] * 100)} %"></i>`).join('')}</div>
       <div class="lp-andel-text">${FART.map(([, k, t], n) => f.andel[n] > 0 ? `<span data-z="${k}"><i></i>${t} ${Math.round(f.andel[n] * 100)} %</span>` : '').join('')}</div>
@@ -1584,7 +1584,7 @@
         const glod = g.createRadialGradient(a, b, 0, a, b, 16); glod.addColorStop(0, F[z[1]]); glod.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = glod; g.globalAlpha = .7; g.beginPath(); g.arc(a, b, 16, 0, 6.283); g.fill(); g.globalAlpha = 1;
         g.beginPath(); g.arc(a, b, 5, 0, 6.283); g.fillStyle = '#fff'; g.fill(); g.lineWidth = 3; g.strokeStyle = F[z[1]]; g.stroke();
         spel.info && (spel.info.innerHTML = `<b class="tal">${fmt(sp * l.km, 1)}</b><small>km</small><span class="lp-zon" data-z="${z[1]}">${z[2]} · ${fmt(v[i], 1)} km/h</span>`);
-        if (sp >= 1) { const k = spel.knapp; spel = null; if (k) k.innerHTML = `${ik('uppdatera')}Spela upp igen`; } }
+        if (sp >= 1) { const k = spel.knapp; spel = null; if (k) k.innerHTML = `${ik('spela')}Spela upp igen`; } }
       // dimma mot horisonten
       const dm = g.createLinearGradient(0, 0, 0, H * .35); dm.addColorStop(0, `${P.dimma}1)`); dm.addColorStop(1, `${P.dimma}0)`); g.fillStyle = dm; g.fillRect(0, 0, W, H * .35);
     }

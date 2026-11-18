@@ -39,3 +39,30 @@
 .splash-ord p { letter-spacing: .26em; }
 
 @media (prefers-reduced-motion: reduce) { .lp-km::after, .lp-andel::after, .idag-vy .mini-staplar::after, .lp-andel-text i { animation: none; display: none; } .splash-mark svg { animation: none; } }
+
+/* 05 Lopp-arket i iOS 18-stil */
+/* uppspelningen: en tonad kapsel med spela-symbol */
+.lp-spela { min-height: 48px !important; color: var(--accent-text) !important; background: rgba(126, 224, 195, .16) !important; box-shadow: none !important; font-weight: 650 !important; }
+.lp-spela svg { width: 16px !important; height: 16px !important; }
+body[data-niva="motionar"] .lp-spela { background: rgba(15, 110, 87, .1) !important; }
+/* fartförklaringen: en tunn kapsel i stället för fyra rutor */
+.lp-legend { display: flex !important; justify-content: space-between; gap: 0 !important; padding: 8px 12px; border-radius: 999px; background: var(--yta-2); }
+.lp-legend span { display: inline-flex !important; align-items: center; gap: 6px !important; padding: 0 !important; background: none !important; box-shadow: none !important; font: 600 .78rem var(--font-rubrik) !important; }
+.lp-legend i { width: 9px !important; height: 9px !important; border-radius: 50% !important; }
+.lp-legend small { display: none !important; }
+/* siffrorna som i Fitness: etikett i tonfärg, stort tal */
+.lp-fakta div { padding: 12px 13px !important; border-radius: 18px !important; background: var(--yta-2) !important; }
+.lp-fakta dt { font: 600 .74rem var(--font-rubrik) !important; letter-spacing: 0 !important; text-transform: none !important; color: var(--accent-text) !important; }
+.lp-fakta div:nth-child(2) dt { color: #2a7fe0 !important; } .lp-fakta div:nth-child(3) dt { color: #e07f0f !important; }
+body[data-niva="elit"] .lp-fakta div:nth-child(2) dt { color: #7ab8ff !important; } body[data-niva="elit"] .lp-fakta div:nth-child(3) dt { color: #ffb347 !important; }
+.lp-fakta dd { font: 700 1.3rem/1.1 var(--font-rubrik) !important; letter-spacing: -.02em; margin-top: 6px !important; }
+/* belöningarna: en grupperad lista med hårfina avdelare, loggorna som appikoner */
+.lp-bel-lista { gap: 0 !important; border-radius: 18px; overflow: hidden; background: var(--yta); box-shadow: 0 0 0 .5px var(--kant); }
+.lp-bel-rad { border-radius: 0 !important; box-shadow: none !important; background: none !important; position: relative; padding: 12px 14px !important; }
+.lp-bel-rad + .lp-bel-rad::before { content: ''; position: absolute; top: 0; left: 76px; right: 0; height: .5px; background: var(--kant-2); }
+.lp-bel-rad[data-upplast] { background: linear-gradient(90deg, rgba(126, 224, 195, .1), transparent 70%) !important; }
+.lp-bel-logga { width: 50px !important; height: 50px !important; border-radius: 13px !important; box-shadow: inset 0 0 0 .5px rgba(11, 21, 32, .1), 0 4px 10px -6px rgba(11, 21, 32, .3) !important; }
+.lp-bel-logga img { max-width: 38px !important; max-height: 20px !important; }
+.lp-bel-las { background: none !important; padding: 0 !important; font-size: .76rem !important; }
+.lp-bel-kod { border-style: solid !important; border-color: transparent !important; background: rgba(126, 224, 195, .16) !important; border-radius: 999px !important; padding: 7px 13px !important; }
+.lp-bel { background: var(--yta-2) !important; border-color: var(--kant) !important; }
