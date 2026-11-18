@@ -355,12 +355,12 @@
       p.ont.length ? `${p.ont.length} ${p.ont.length === 1 ? 'område' : 'områden'} på kroppskartan` : 'Kroppskartan – inga besvär',
       `Upplägg för ${p.niva === 'elit' ? 'elit' : 'motionär'}`, 'Din dagsform och veckans rörelse'];
     const el = visa(`<div class="skapar-kropp"><div data-kropp-plats></div></div>
-      <div class="skapar-procent in" style="--i:0"><b class="tal" data-procent>0</b><small>%</small></div><h2 class="in" style="--i:1">Vi skapar din profil</h2>
+      <div class="skapar-procent in" style="--i:0"><svg class="skapar-ring" viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="sk-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a7d2ff"/><stop offset="1" stop-color="#7ee0c3"/></linearGradient></defs><circle class="sk-spar" cx="60" cy="60" r="50"/><circle class="sk-bage" cx="60" cy="60" r="50" pathLength="1" data-sk-bage/></svg><span class="skapar-tal"><b class="tal" data-procent>0</b><small>%</small></span></div><h2 class="in" style="--i:1">Vi skapar din profil</h2>
       <div class="skapar-matare in" style="--i:1" aria-hidden="true"><i></i></div>
       <ul class="skapar-lista">${rader.map((r, i) => `<li class="in" style="--i:${i + 2}"><span class="snurr"></span>${e(r)}</li>`).join('')}</ul>`, { in: 'tona', klass: 'skapar' });
     const skanning = kropp?.skanna ? kropp.skanna(3600) : vanta(3600);
     const li = $$('.skapar-lista li', el);
-    const pr = $('[data-procent]', el), mat = $('.skapar-matare i', el), satt = (v) => { pr.textContent = v; mat.style.transform = `scaleX(${v / 100})`; };
+    const pr = $('[data-procent]', el), mat = $('.skapar-matare i', el), bage = $('[data-sk-bage]', el), satt = (v) => { pr.textContent = v; mat.style.transform = `scaleX(${v / 100})`; bage.style.strokeDashoffset = 1 - v / 100; };
     for (let i = 0; i < li.length; i++) { li[i].dataset.pagar = ''; const fran = Math.round(i / li.length * 100), till = Math.round((i + 1) / li.length * 100);
       for (let k = 1; k <= 8; k++) { await vanta(100); satt(Math.round(fran + (till - fran) * k / 8)); } delete li[i].dataset.pagar; li[i].dataset.klar = ''; summa(); }
     await skanning;

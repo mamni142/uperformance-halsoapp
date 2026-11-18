@@ -118,3 +118,17 @@ body[data-niva="elit"] .jg-mal-lista { background: rgba(246, 244, 239, .05); }
 body[data-niva="elit"] .lp-s-logga, body[data-niva="elit"] .lp-s-polestar .lp-s-logga { filter: brightness(0) invert(1) !important; opacity: .82; }
 body[data-niva="elit"] .lp-s-polestar { filter: none; color: rgba(246, 244, 239, .82); }
 .lp-s-polestar .lp-s-logga { filter: none !important; }
+
+/* Siffror och text som i iOS 18: SF Pro Rounded för tal och SF Pro Text för brödtext på Apple-enheter
+   (andra enheter behåller Poppins/Manrope), lika breda siffror överallt, enheter mindre och dämpade. */
+:root { --font-siffror: ui-rounded, 'SF Pro Rounded', -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+  --font-rubrik: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+  --font-brod: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif; }
+/* Inter (närmast SF Pro där Apples typsnitt saknas): SF-lika siffror och rak 1:a, tät spärr i rubriker som SF Display */
+body { font-feature-settings: 'cv05' 1, 'cv08' 1, 'ss03' 1; }
+h1, h2, h3, .bento-tal, .lp-fakta dd { letter-spacing: -.022em; }
+:root :is(.tal, [data-rakna], [data-procent], .bento-tal, .lp-fakta dd, .lp-tempo b, .lp-prognos b, .lp-delar b, .lp-p-kort b.tal, .jg-mal-tal b, .tg-tal b, .lp-live b, .lp-bel-rakna b, .skapar-tal b, .stor-niva) {
+  font-family: var(--font-siffror) !important; font-variant-numeric: tabular-nums !important; font-feature-settings: 'tnum' 1, 'ss01' 1; }
+:root .idag-vy .bento-tal { font-family: var(--font-siffror) !important; }
+:root :is(.bento-tal, .lp-fakta dd, .lp-tempo b, .jg-mal-tal b, .tg-tal b, .skapar-tal b) small { font-family: var(--font-brod) !important; font-weight: 600 !important; color: var(--text-3) !important; letter-spacing: 0 !important; }
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }

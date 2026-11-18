@@ -1,0 +1,41 @@
+/* "Vi skapar din profil" i iOS 18-stil: framstegsring som i Fitness, stegen som en grupperad lista med iOS-snurra och bockar. Laddas sist. */
+.skarm.skapar { padding-left: 20px !important; padding-right: 20px !important; }
+.skapar-kropp { height: 360px !important; }
+.skapar-kropp::after { content: ''; position: absolute; left: 50%; bottom: 6%; width: 70%; height: 60px; transform: translateX(-50%); border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(126, 224, 195, .35), transparent); filter: blur(6px); animation: sk-golv 2.4s ease-in-out infinite; }
+@keyframes sk-golv { 50% { opacity: .55; transform: translateX(-50%) scale(.92); } }
+
+/* ringen med procenten i mitten */
+.skapar-procent { position: relative; display: grid !important; place-items: center; width: 104px; height: 104px; margin: -14px auto 6px !important; }
+.skapar-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.sk-spar { fill: none; stroke: var(--spar, rgba(11, 21, 32, .08)); stroke-width: 11; }
+.sk-bage { fill: none; stroke: url(#sk-grad); stroke-width: 11; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .12s linear;
+  filter: drop-shadow(0 0 6px rgba(126, 224, 195, .45)); }
+.skapar-tal { position: relative; display: flex; align-items: baseline; gap: 1px; }
+.skapar-tal b { font: 700 1.9rem/1 var(--font-rubrik) !important; letter-spacing: -.04em !important; }
+.skapar-tal small { font: 700 .8rem var(--font-rubrik); color: var(--accent-text); }
+.skapar-matare { display: none !important; }
+.skapar h2 { font: 700 1.55rem/1.2 var(--font-rubrik) !important; letter-spacing: -.025em; margin-top: 4px !important; }
+/* klar: ringen fylls, talet blir en bock (intro.css har bocken i ::after) */
+.skapar[data-klar] .sk-bage { stroke-dashoffset: 0 !important; transition: stroke-dashoffset .4s ease; }
+.skapar[data-klar] .skapar-procent::after { width: 56px !important; height: 56px !important; margin: -28px !important; }
+
+/* stegen: en grupperad lista med hårfina avdelare */
+.skapar-lista { gap: 0 !important; margin-top: 18px !important; border-radius: 20px; overflow: hidden; background: var(--yta); box-shadow: 0 0 0 .5px var(--kant), 0 12px 28px -20px rgba(24, 54, 83, .3); }
+body[data-niva="elit"] .skapar-lista { background: rgba(246, 244, 239, .05); }
+.skapar-lista li { position: relative; min-height: 50px !important; margin: 0 !important; padding: 0 16px !important; border: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important;
+  transform: none !important; opacity: .45; font: 500 .92rem var(--font-brod); transition: opacity .35s ease !important; }
+.skapar-lista li + li::before { content: ''; position: absolute; top: 0; left: 50px; right: 0; height: .5px; background: var(--kant-2); }
+.skapar-lista li[data-pagar], .skapar-lista li[data-klar] { opacity: 1; }
+.skapar-lista li[data-pagar] { font-weight: 600; }
+/* iOS-snurran: åtta streck som tonar runt, i steg */
+.skapar-lista .snurr { width: 22px !important; height: 22px !important; border: 0 !important; border-radius: 50% !important;
+  background: repeating-conic-gradient(from 0deg, var(--text-3) 0 8deg, transparent 8deg 45deg) !important;
+  -webkit-mask: radial-gradient(circle, transparent 5.5px, #000 6px, #000 10.5px, transparent 11px); mask: radial-gradient(circle, transparent 5.5px, #000 6px, #000 10.5px, transparent 11px); opacity: .35; }
+.skapar-lista li[data-pagar] .snurr { opacity: 1; animation: sk-snurr .8s steps(8) infinite !important; }
+.skapar-lista li[data-klar] .snurr { -webkit-mask: none; mask: none; opacity: 1; animation: sk-bock .45s cubic-bezier(.2, 1.4, .35, 1) both !important;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b1520' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center / 14px no-repeat, linear-gradient(160deg, #a6f0d9, #5fd3b0) !important; }
+@keyframes sk-snurr { to { transform: rotate(360deg); } }
+@keyframes sk-bock { from { transform: scale(.4); opacity: 0; } }
+.skapar-summa span { background: var(--yta) !important; box-shadow: 0 0 0 .5px var(--kant) !important; }
+@media (prefers-reduced-motion: reduce) { .skapar-kropp::after, .skapar-lista li[data-pagar] .snurr, .skapar-lista li[data-klar] .snurr { animation: none !important; } }
