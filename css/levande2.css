@@ -71,3 +71,12 @@ body[data-tema="landslaget"] .ac-knopp-g[data-zon="ok"] { --ac-k: #ffcd00; } bod
 .ac-knopp-g .ac-knopp-mitt { r: 4.6; }
 .ac-knopp-g .ac-sken { opacity: .18; }
 .acwr .zon-etikett, .acwr2 .zon-etikett { font-size: 8.5px !important; }
+
+/* En sammanhängande båge med mjuka övergångar mellan zonerna (inga glapp där knoppen kan hamna), ren vit knopp utan sken */
+.ac-bage { fill: none; stroke-width: 10; stroke-linecap: round; }
+.ac-st-lag { stop-color: #6f8fb4; } .ac-st-ok { stop-color: #5fe0b8; } .ac-st-hog { stop-color: #ffb35c; } .ac-st-hog2 { stop-color: #ff6b4a; }
+body[data-niva="motionar"] .ac-st-ok { stop-color: #1fb383; } body[data-niva="motionar"] .ac-st-lag { stop-color: #9fb6d2; }
+body[data-tema="landslaget"] .ac-st-ok { stop-color: #ffcd00; } body[data-tema="landslaget"] .ac-st-lag { stop-color: #4a78b8; }
+.acwr .zon-lag, .acwr .zon-ok, .acwr .zon-hog, .acwr2 path[class^="zon-"] { display: none; }
+.ac-knopp-g .ac-knopp { fill: #fff !important; stroke: none !important; filter: drop-shadow(0 1.5px 3px rgba(0, 0, 0, .45)) drop-shadow(0 0 1px rgba(0, 0, 0, .25)); }
+.ac-knopp-g .ac-knopp-mitt { r: 3.4; }
