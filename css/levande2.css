@@ -37,3 +37,19 @@
 .idag-vy .acwr .visare .ac-spets, .acwr2 .visare .ac-spets { fill: #7ee0c3 !important; stroke: none !important; }
 /* statussymbolen får alltid sin storlek (en äldre regel gjorde den till en liten ring) */
 body[data-niva] :is(span.chip[data-ton], .mh-status, .tg-status, .match-status, .h3-status)::before { width: 14px !important; height: 14px !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; margin: 0 !important; }
+
+/* 01b Frågebytet som iOS-navigering (ersätter 01): gammal fråga glider undan åt sidan och tonar, ny glider in från andra sidan – samma fjäderkurva,
+   så långa rörelser att de aldrig ligger ovanpå varandra. Toppraden och Nästa står still. */
+.skarm.fraga-skarm[data-ut="fram"] { animation: fr-ut-fram .4s cubic-bezier(.32, .72, 0, 1) both !important; }
+.skarm.fraga-skarm[data-ut="bak"] { animation: fr-ut-bak .4s cubic-bezier(.32, .72, 0, 1) both !important; }
+@keyframes fr-ut-fram { to { transform: translateX(-34%); opacity: 0; } }
+@keyframes fr-ut-bak { to { transform: translateX(34%); opacity: 0; } }
+.fraga-fortsatt[data-in="fram"] .in:not(.fraga-topp, .fraga-fot) { animation: fr-in-fram .52s cubic-bezier(.32, .72, 0, 1) both !important; animation-delay: calc(min(var(--i, 0), 6) * 28ms + 40ms) !important; }
+.fraga-fortsatt[data-in="bak"] .in:not(.fraga-topp, .fraga-fot) { animation: fr-in-bak .52s cubic-bezier(.32, .72, 0, 1) both !important; animation-delay: calc(min(var(--i, 0), 6) * 28ms + 40ms) !important; }
+@keyframes fr-in-fram { from { transform: translateX(46%); opacity: 0; } 40% { opacity: 1; } }
+@keyframes fr-in-bak { from { transform: translateX(-46%); opacity: 0; } 40% { opacity: 1; } }
+.fraga-fortsatt .fraga-fot, .fraga-fortsatt .fraga-fot.in { animation: none !important; }
+.skarm.fraga-skarm { overflow-x: hidden; }
+@media (prefers-reduced-motion: reduce) { .skarm.fraga-skarm[data-ut], .fraga-fortsatt .in { animation: none !important; } }
+@keyframes fr-ut-fram { 35% { opacity: 0; } to { transform: translateX(-34%); opacity: 0; } }
+@keyframes fr-ut-bak { 35% { opacity: 0; } to { transform: translateX(34%); opacity: 0; } }
