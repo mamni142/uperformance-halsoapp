@@ -207,3 +207,6 @@ body[data-niva] .sc-trappa-kort .trappsteg { border-radius: 0 !important; backgr
 :root body :is(.tal, .bento-tal, [data-procent], .lp-fakta dd, .lp-tempo b, .lp-prognos b, .tg-tal b, .jg-mal-tal b, .stor-niva, .lp-live b, .skapar-tal b, .mh .tal, .h3-del .tal) {
   font-weight: 600 !important; letter-spacing: -.018em !important; }
 :root body :is(.tal, .bento-tal, [data-procent], .lp-fakta dd, .tg-tal b, .jg-mal-tal b, .stor-niva, .lp-live b, .skapar-tal) > small { font-size: .5em !important; font-weight: 500 !important; margin-left: .12em !important; }
+/* stora tal (från 20 px) i medium – mjukt och lugnt som Fitness siffror; små tal halvfeta så att de syns */
+:root body :is(.bento-tal, .mh .tal, .lp-fakta dd, .lp-tempo b, .lp-prognos b, .tg-tal b, .jg-mal-tal b, .stor-niva, .skapar-tal b, .h3-del .tal, .h3-mitt .tal, .jg-poang-ring .tal, .jg-fakta dd, .sc-ring .tal, .lp-kort-tal b, .belastning-tal b, .tavla-siffror b, .ts-kort h3 .tal) { font-weight: 500 !important; }
+:root body .jg-rakna b { font-weight: 600 !important; }
