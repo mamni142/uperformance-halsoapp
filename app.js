@@ -736,7 +736,7 @@
         <button class="kort tryck nasta-steg in" style="--i:6" data-g="screening-boka"><div class="rad"><span class="ikonruta" data-ton="is">${ik('kalender')}</span><div style="flex:1;min-width:0"><span class="ogon utan">Nästa steg</span>
           <h3>Fyll i förscreeningen</h3><p class="liten">12 frågor inför din hälsokartläggning</p></div>${ik('hoger')}</div><div class="nasta-framsteg"><div class="matare"><i style="--v:42%"></i></div><small class="tal">5 av 12</small></div></button>`;
     }
-    return `<div class="idag-vy">${idagTopp()}${veckoRemsa()}${hjalte}${LANDS ? sasongKort(2) : ''}${elit() ? matchKort(2) : ''}${snabbcheck(elit() ? 3 : 2)}${schemaKort(elit() ? 3 : 2)}${LANDS ? vallaKort(elit() ? 3 : 2) : ''}${fokusKort(elit() ? 4 : 3)}${loppKort(elit() ? 4 : 3)}${bento}${efter}
+    return `<div class="idag-vy">${idagTopp()}${veckoRemsa()}${hjalte}${LANDS ? sasongKort(2) : ''}${elit() ? matchKort(2) : ''}${snabbcheck(elit() ? 3 : 2)}${schemaKort(elit() ? 3 : 2)}${LANDS ? vallaKort(elit() ? 3 : 2) : ''}${fokusKort(elit() ? 4 : 3)}${loppKort(elit() ? 4 : 3)}${verktygKort(elit() ? 4 : 3)}${bento}${efter}
       <p class="exempel in" style="--i:8">Exempeldata i prototypen</p></div>`;
   }
   function skadeKort(s, i) {
@@ -1176,8 +1176,8 @@
         <p class="jg-flode-fot">${ik('skold')}Hälsodata och medicinsk data hålls isär.</p>
       </div>
 
-      ${rub(5, 'Kopplingar', '<span class="chip" data-ton="is">Kommer</span>')}
-      <div class="jg-kopplingar in" style="--i:6">${[['puls', 'Klocka', 'Puls, sömn och steg'], ['matt', 'Våg', 'Vikt och sammansättning'], ['hjarta', 'Pulsband', 'Belastning på passet']].map(([i, t, u], n) => `<div class="jg-koppling" style="--n:${n}"><span class="ikonruta" data-ton="is">${ik(i)}</span><b>${t}</b><small>${u}</small></div>`).join('')}</div>
+      ${rub(5, 'Kopplingar', st.halsa?.kopplad ? '<span class="chip" data-ton="ok">Apple Hälsa kopplad</span>' : '<span class="chip" data-ton="is">Prototyp</span>')}
+      <div class="jg-kopplingar in" style="--i:6">${[['hjarta', 'Apple Hälsa', st.halsa?.kopplad ? 'Kopplad · exempeldata' : 'Steg, puls, sömn, pass'], ['klocka', 'Klockor', 'Watch, Garmin, Polar'], ['matt', 'Våg', 'Vikt via Hälsa']].map(([i, t, u], n) => `<button class="jg-koppling tryck" data-g="verktyg" data-v="halsa" style="--n:${n}"><span class="ikonruta" data-ton="${n ? 'is' : 'rod'}">${ik(i)}</span><b>${t}</b><small>${u}</small></button>`).join('')}</div>
 
       ${rub(6, 'Ditt team')}
       <div class="kort jg-team in" style="--i:7">${LANDS ? '<span class="profilbild">MT</span><div><b>Medicinska teamet</b><small>Landslagets stab · exempel</small></div>' : '<span class="profilbild">DR</span><div><b>Dale Reese</b><small>Testansvarig · Uperformance</small></div>'}<span class="chip" data-ton="ok"><i class="online"></i>Ditt team</span></div>
@@ -1874,10 +1874,166 @@
     const plan0 = planFor(idag()), visaPlan = plan0 && !pass.length && !hoppad(ds);
     const val = [...(visaPlan ? [['ts-checka', typIkon(plan0.typ), 'ok', 'Checka in dagens pass', `${plan0.typ} · ${plan0.min} min kl ${plan0.tid}`, false]] : []), ['checkin', 'puls', '', 'Check-in', ci ? `Gjord · dagsform ${dagsform(ci)}` : 'Sömn, energi, ömhet', !!ci],
       ['pass-ny', elit() ? 'boll' : 'sko', 'is', elit() ? 'Träning eller match' : 'Träningspass', pass.length ? `${pass.length} idag · ${pass.reduce((s, x) => s + x.min, 0)} min` : 'Tid och ansträngning', pass.length > 0],
-      ['lopp-ark', 'plats', 'is', 'Lopp och rundor', `${loppNu().namn} · rundan på karta`, false], ['ont-ny', 'plaster', 'rod', elit() ? 'Ont eller skada' : 'Ont någonstans', 'Tryck på kroppen', false],
+      ['lopp-ark', 'plats', 'is', 'Lopp och rundor', `${loppNu().namn} · rundan på karta`, false], ['verktyg', 'gnista', 'is', 'Verktyg', LANDS ? 'Köldeffekt, intervaller, pulszoner' : 'Pulszoner, intervaller, andning', false], ['ont-ny', 'plaster', 'rod', elit() ? 'Ont eller skada' : 'Ont någonstans', 'Tryck på kroppen', false],
       ...(visaPlan ? [] : [['screening-boka', 'dokument', 'gul', 'Förscreening', 'Inför testdagen', false]])];
     ark(`<div class="ark-rubrik jg-ark-rubrik"><span class="ikonruta">${ik('plus')}</span><div><span class="ogon utan">Logga</span><h2>Vad vill du lägga in?</h2></div><button class="ikonknapp" data-stang-ark aria-label="Stäng">${ik('stang')}</button></div>
       <div class="snabbval jg-snabbval">${val.map(([g, i, ton, t, u, klar], n) => `<button data-g="${g}" style="--n:${n}" ${klar ? 'data-klar' : ''}><span class="jg-sv-topp"><span class="ikonruta" data-ton="${ton}">${ik(i)}</span><span class="jg-sv-pil">${ik(klar ? 'bock' : 'pil')}</span></span><span><b>${t}</b><small>${e(u)}</small></span></button>`).join('')}</div>`);
+  }
+
+  /* ---- 13b verktyg: pulszoner, intervalltimer, andning, vätska, köldeffekt (landslaget) och kopplingen till Apple Hälsa ----
+     Allmänna formler och riktlinjer (märkta), ingen diagnos. Apple Hälsa är en prototyp: i iPhone-appen frågar iOS om tillstånd (HealthKit),
+     här visas exempeldata. Klockor som Garmin, Polar, Suunto och Coros når appen via sina egna appar som skriver till Apple Hälsa. */
+  const VT_LISTA = () => [
+    ['puls', 'Pulszoner', LANDS ? 'Intensitetszoner I1–I5' : 'Fem zoner efter din puls', 'rod', 'hjarta'],
+    ['intervall', 'Intervalltimer', LANDS ? '4 × 8 min, stakning, spurter' : '4 × 4 min, 30/15, backar', 'is', 'timglas'],
+    ...(LANDS ? [['kyla', 'Köldeffekt', 'Kyla, vind och klädsel', 'is', 'sno'], ['valla', 'Vallaguide', 'Glid och fäste efter snön', 'gul', 'droppe']]
+      : [['tempo', 'Tempo och prognos', 'Tid, tempo per km och lopp', 'gul', 'klocka']]),
+    ['andning', 'Andning', LANDS ? 'Lugna ned före start' : 'Box-andning, 1–3 min', 'ok', 'lunga'],
+    ['vatska', 'Vätska', 'Dagens glas', 'is', 'droppe'],
+    ['halsa', 'Apple Hälsa', st.halsa?.kopplad ? 'Kopplad · exempeldata' : 'Koppla iPhone och klocka', 'rod', 'hjarta'],
+  ];
+  // Exempel från Apple Hälsa (prototyp) – märks alltid som exempel
+  const HALSA_EX = () => (LANDS ? { steg: 11240, vila: 41, hrv: 92, somn: [8, 5], vo2: 78, energi: 1180 } : { steg: 8412, vila: 54, hrv: 61, somn: [7, 32], vo2: 46, energi: 540 });
+  const HALSA_LAS = [['steg', 'Steg', 'sko'], ['puls', 'Puls och vilopuls', 'hjarta'], ['hrv', 'Pulsvariabilitet (HRV)', 'puls'], ['somn', 'Sömn', 'mane'], ['vo2', 'VO₂max', 'lunga'], ['pass', 'Träningspass', 'blixt'], ['energi', 'Aktiv energi', 'flamma']];
+  const HALSA_SKRIV = [['pass', 'Träningspass', 'blixt'], ['mindful', 'Mindfulness (andningen)', 'lunga'], ['vatten', 'Vatten', 'droppe']];
+  const halsa = () => (st.halsa ||= { kopplad: false, las: Object.fromEntries(HALSA_LAS.map(([k]) => [k, true])), skriv: Object.fromEntries(HALSA_SKRIV.map(([k]) => [k, true])) });
+  let vtLoop = 0, vtTid = null, vtLjud = null;
+  const vtStopp = () => { cancelAnimationFrame(vtLoop); vtLoop = 0; vtTid = null; };
+  const mmss = (sek) => `${Math.floor(sek / 60)}:${String(Math.floor(sek % 60)).padStart(2, '0')}`;
+  function vtPip(hog) { try { vtLjud ||= new (window.AudioContext || window.webkitAudioContext)(); const o = vtLjud.createOscillator(), g = vtLjud.createGain(), t = vtLjud.currentTime;
+    o.frequency.value = hog ? 880 : 620; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.18, t + .02); g.gain.exponentialRampToValueAtTime(.001, t + .35); o.connect(g).connect(vtLjud.destination); o.start(t); o.stop(t + .4); } catch (err) { /* inget ljud */ }
+    navigator.vibrate?.(hog ? [90, 60, 90] : 60); }
+
+  function verktygArk(vy = '') {
+    vtStopp(); if (vy === 'tempo') return loppArk('verktyg');
+    const L = VT_LISTA(), t = L.find((x) => x[0] === vy);
+    const huvud = t ? `<div class="ark-rubrik jg-ark-rubrik vt-huvud"><button class="ikonknapp vt-bak" data-g="verktyg" data-v="" aria-label="Alla verktyg">${ik('bak')}</button><div><span class="ogon utan">Verktyg</span><h2>${t[1]}</h2></div><button class="ikonknapp" data-stang-ark aria-label="Stäng">${ik('stang')}</button></div>`
+      : `<div class="ark-rubrik jg-ark-rubrik"><span class="ikonruta" data-ton="is">${ik('gnista')}</span><div><span class="ogon utan">${LANDS ? 'För längdåkare' : 'För din träning'}</span><h2>Verktyg</h2></div><button class="ikonknapp" data-stang-ark aria-label="Stäng">${ik('stang')}</button></div>`;
+    const inne = !t ? `<div class="vt-rutnat">${L.map(([k, n, u, ton, i], j) => `<button class="vt-ruta tryck" data-g="verktyg" data-v="${k}" style="--n:${j}"><span class="ikonruta" data-ton="${ton}">${ik(i)}</span><b>${n}</b><small>${e(u)}</small>${k === 'halsa' && st.halsa?.kopplad ? '<i class="vt-ruta-prick"></i>' : ''}</button>`).join('')}</div>
+      <p class="vt-fot">${ik('info')}<span>Verktygen räknar med allmänna formler och riktlinjer – ingen diagnos. Ditt team kan ge dig personliga värden efter testerna.</span></p>`
+      : vy === 'puls' ? vtPuls() : vy === 'intervall' ? vtIntervall() : vy === 'kyla' ? vtKyla() : vy === 'andning' ? vtAndning() : vy === 'vatska' ? vtVatska() : vy === 'valla' ? vallaKort(0) : vtHalsa();
+    ark(`${huvud}<div class="vt-inne" data-vy="${vy}">${inne}</div>`, { efter: (a) => vtEfter(a, vy) });
+  }
+  function vtEfter(a, vy) {
+    if (vy === 'puls') $$('[data-vt-puls]', a).forEach((f) => f.addEventListener('input', () => vtPulsRita(a)));
+    if (vy === 'kyla') $$('[data-vt-kyla]', a).forEach((f) => f.addEventListener('input', () => vtKylaRita(a)));
+  }
+
+  // Pulszoner: maxpuls efter ålder (Tanaka: 208 − 0,7 × ålder) eller ditt testade värde; med vilopuls räknas zonerna på pulsreserven (Karvonen).
+  const ZONER = () => (LANDS ? [['I1', 'Lugn distans', .5, .6], ['I2', 'Distans', .6, .7], ['I3', 'Tempo', .7, .8], ['I4', 'Tröskel och intervaller', .8, .9], ['I5', 'Max och spurt', .9, 1]]
+    : [['1', 'Återhämtning', .5, .6], ['2', 'Lugn kondition', .6, .7], ['3', 'Tempo', .7, .8], ['4', 'Tröskel', .8, .9], ['5', 'Max', .9, 1]]);
+  function vtPuls() {
+    const p = st.puls || {}, h = st.halsa?.kopplad ? HALSA_EX() : null;
+    return `<div class="kort vt-kort"><div class="vt-falt2"><label><span>Maxpuls</span><input class="falt" type="number" inputmode="numeric" min="120" max="230" placeholder="${Math.round(208 - .7 * alder())}" value="${p.max || ''}" data-vt-puls="max"><small>Tom = räknad på din ålder (${alder()} år)</small></label>
+        <label><span>Vilopuls</span><input class="falt" type="number" inputmode="numeric" min="30" max="110" placeholder="valfri" value="${p.vila || ''}" data-vt-puls="vila"><small>${h ? `Apple Hälsa: ${h.vila} slag/min · exempel` : 'Ger zoner på pulsreserven'}</small></label></div>
+      <div data-vt-puls-ut>${vtPulsUt(p.max, p.vila)}</div></div>
+      <p class="vt-fot">${ik('info')}<span>Maxpuls efter ålder (208 − 0,7 × ålder) är ett snitt – ett maxtest ger ditt riktiga värde. Med vilopuls räknas zonerna på pulsreserven (Karvonen).</span></p>`;
+  }
+  function vtPulsUt(max0, vila0) {
+    const max = +max0 || Math.round(208 - .7 * alder()), vila = +vila0 || 0, bpm = (x) => Math.round(vila ? vila + (max - vila) * x : max * x);
+    return `<div class="vt-max"><b class="tal">${max}</b><small>slag/min max${vila ? ` · vila ${vila}` : ''}</small></div>
+      <ol class="vt-zoner">${ZONER().map(([n, t, a, b], k) => `<li style="--k:${k};--b:${40 + k * 15}%" data-z="${k}"><span class="vt-zon-nr">${n}</span><span class="vt-zon-namn"><b>${t}</b><small>${Math.round(a * 100)}–${Math.round(b * 100)} %</small></span><span class="vt-zon-stapel"><i></i></span><b class="vt-zon-bpm tal">${bpm(a)}–${bpm(b)}</b></li>`).join('')}</ol>`;
+  }
+  function vtPulsRita(a) { const max = $('[data-vt-puls="max"]', a).value, vila = $('[data-vt-puls="vila"]', a).value;
+    st.puls = { max: +max >= 120 && +max <= 230 ? +max : 0, vila: +vila >= 30 && +vila <= 110 ? +vila : 0 }; spara(); $('[data-vt-puls-ut]', a).innerHTML = vtPulsUt(st.puls.max, st.puls.vila); }
+
+  // Intervalltimer: arbete/vila med ring, varv och pip + vibration vid varje byte
+  const INTERVALL = () => (LANDS ? [['4 × 8 min', 4, 480, 120, 'Tröskel i I3–I4'], ['Stakning 6 × 3 min', 6, 180, 90, 'Överkroppen, I4'], ['Spurter 10 × 30 s', 10, 30, 90, 'Fart och teknik, I5']]
+    : [['4 × 4 min', 4, 240, 180, 'Kondition i zon 4'], ['30/15 × 10', 10, 30, 15, 'Korta snabba intervaller'], ['Backar 8 × 1 min', 8, 60, 90, 'Styrka i benen']]);
+  function vtIntervall(val = st.intervall ?? 0) {
+    const [namn, varv, arb, vila, om] = INTERVALL()[val] || INTERVALL()[0];
+    return `<div class="vt-val" role="group" aria-label="Upplägg">${INTERVALL().map(([n], k) => `<button type="button" data-g="vt-preset" data-v="${k}" aria-pressed="${k === val}">${n}</button>`).join('')}</div>
+      <div class="kort vt-kort vt-timer" data-fas="redo"><div class="vt-ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="vt-ring-spar" cx="60" cy="60" r="52"/><circle class="vt-ring-bage" cx="60" cy="60" r="52" pathLength="100"/></svg>
+        <div class="vt-ring-text"><span class="vt-fas" data-vt-fas>Redo</span><b class="tal" data-vt-tid>${mmss(arb)}</b><small data-vt-varv>${varv} varv · ${mmss(arb)} arbete · ${mmss(vila)} vila</small></div></div>
+        <p class="vt-om">${e(om)} · totalt ${Math.round((varv * arb + (varv - 1) * vila) / 60)} min</p>
+        <div class="vt-knappar"><button class="knapp knapp-primar" data-g="vt-start">${ik('spela')}<span>Starta</span></button><button class="knapp knapp-sek" data-g="vt-nollst">${ik('uppdatera')}Börja om</button></div></div>
+      <p class="vt-fot">${ik('info')}<span>Pip och vibration vid varje byte. Telefonen kan ligga i fickan – skärmen behöver vara på i prototypen.</span></p>`;
+  }
+  function vtTick() {
+    const a = $('.vt-timer', arkLager); if (!a || arkLager.hidden || !vtTid) return vtStopp();
+    if (!vtTid.paus) { const kvar = (vtTid.slut - performance.now()) / 1000;
+      if (kvar <= 0) { if (vtTid.fas === 'arbete' && vtTid.varv < vtTid.p[1]) { vtTid.fas = 'vila'; vtTid.slut = performance.now() + vtTid.p[3] * 1000; vtPip(false); }
+        else if (vtTid.fas === 'vila') { vtTid.fas = 'arbete'; vtTid.varv++; vtTid.slut = performance.now() + vtTid.p[2] * 1000; vtPip(true); }
+        else { vtTid.fas = 'klar'; vtPip(true); a.dataset.fas = 'klar'; $('[data-vt-fas]', a).textContent = 'Klart'; $('[data-vt-tid]', a).textContent = 'Bra jobbat'; $('[data-vt-varv]', a).textContent = `${vtTid.p[1]} varv · ${vtTid.p[0]}`;
+          a.style.setProperty('--p', 1); $('[data-g="vt-start"] span', a).textContent = 'Kör igen'; vtLoggPass(); konfetti(); vtLoop = 0; vtTid = null; return; } }
+      const tot = vtTid.fas === 'arbete' ? vtTid.p[2] : vtTid.p[3], k = Math.max(0, (vtTid.slut - performance.now()) / 1000);
+      a.dataset.fas = vtTid.fas; a.style.setProperty('--p', (1 - k / tot).toFixed(4));
+      const tx = mmss(Math.ceil(k)), tEl = $('[data-vt-tid]', a); if (tEl.textContent !== tx) tEl.textContent = tx;
+      const fx = vtTid.fas === 'arbete' ? 'Arbete' : 'Vila', vx = `Varv ${vtTid.varv} av ${vtTid.p[1]}`; if ($('[data-vt-fas]', a).textContent !== fx) $('[data-vt-fas]', a).textContent = fx; if ($('[data-vt-varv]', a).textContent !== vx) $('[data-vt-varv]', a).textContent = vx; }
+    vtLoop = requestAnimationFrame(vtTick);
+  }
+  function vtLoggPass() { const p = INTERVALL()[st.intervall ?? 0], min = Math.round((p[1] * p[2] + (p[1] - 1) * p[3]) / 60);
+    st.pass.push({ datum: dagStr(idag()), typ: LANDS ? 'Intervaller' : 'Intervaller', min, rpe: 8, plan: false, verktyg: true }); spara();
+    toast(st.halsa?.kopplad && st.halsa.skriv?.pass ? `Passet är sparat · ${min} min – och skickas till Apple Hälsa (prototyp)` : `Passet är sparat · ${min} min`); }
+
+  // Andning: box-andning 4–4–4–4 (in, håll, ut, håll) med en cirkel som växer och krymper
+  function vtAndning() {
+    return `<div class="kort vt-kort vt-andning" data-lage="redo"><div class="vt-and-scen"><span class="vt-and-ring"></span><span class="vt-and-cirkel"></span><div class="vt-and-text"><b data-vt-and>Redo</b><small data-vt-and-tid>4 sekunder per steg</small></div></div>
+      <div class="vt-val" role="group" aria-label="Längd">${[1, 2, 3].map((m) => `<button type="button" data-g="vt-andning" data-v="${m}">${m} min</button>`).join('')}</div></div>
+      <p class="vt-fot">${ik('info')}<span>${LANDS ? 'Lugn andning före start och efter tuffa intervaller – in genom näsan, ut genom munnen.' : 'Andas in, håll, andas ut, håll – fyra sekunder var. Bra för att varva ned.'}${st.halsa?.kopplad ? ' Minuterna kan sparas som mindfulness i Apple Hälsa (prototyp).' : ''}</span></p>`;
+  }
+  function vtAndStart(a, min) {
+    const steg = ['Andas in', 'Håll', 'Andas ut', 'Håll'], t0 = performance.now(), slut = t0 + min * 60000; a.dataset.lage = 'gar'; let sist = -1;
+    vtTid = { andning: true };
+    const tick = () => { if (!a.isConnected || arkLager.hidden || !vtTid?.andning) return; const nu0 = performance.now();
+      if (nu0 >= slut) { a.dataset.lage = 'klar'; $('[data-vt-and]', a).textContent = 'Klart'; $('[data-vt-and-tid]', a).textContent = `${min} min lugn andning`; vtTid = null;
+        st.mindful = (st.mindful || 0) + min; spara(); toast(st.halsa?.kopplad && st.halsa.skriv?.mindful ? `${min} min sparas som mindfulness i Apple Hälsa (prototyp)` : `${min} min lugn andning`); return; }
+      const sek = (nu0 - t0) / 1000, i = Math.floor(sek / 4) % 4;
+      if (i !== sist) { sist = i; a.dataset.steg = i; $('[data-vt-and]', a).textContent = steg[i]; navigator.vibrate?.(20); }
+      $('[data-vt-and-tid]', a).textContent = `${4 - Math.floor(sek % 4)} · ${mmss(Math.ceil((slut - nu0) / 1000))} kvar`;
+      vtLoop = requestAnimationFrame(tick); };
+    tick();
+  }
+
+  // Vätska: glas à 250 ml mot ett dagsmål (2 liter + en halv liter per träningstimme – allmän riktlinje)
+  function vtVatska() {
+    const d = dagStr(idag()), ml = (st.vatska ||= {})[d] || 0, passMin = st.pass.filter((x) => x.datum === d).reduce((s0, x) => s0 + x.min, 0), mal = Math.round((2000 + passMin / 60 * 500) / 250) * 250;
+    return `<div class="kort vt-kort vt-vatska" style="--v:${Math.min(1, ml / mal).toFixed(3)}"><div class="vt-glas" aria-hidden="true"><span class="vt-glas-vatten"><i></i></span></div>
+      <div class="vt-vatska-text"><b class="tal">${fmt(ml / 1000, 2)}<small> / ${fmt(mal / 1000, 2)} l</small></b><span>${ml >= mal ? 'Dagens mål är nått' : `${Math.ceil((mal - ml) / 250)} glas kvar idag`}</span>
+        <div class="vt-knappar"><button class="knapp knapp-primar" data-g="vt-vatten" data-v="250">${ik('plus')}Ett glas</button><button class="ikonknapp" data-g="vt-vatten" data-v="-250" aria-label="Ta bort ett glas" ${ml ? '' : 'disabled'}>−</button></div></div></div>
+      <p class="vt-fot">${ik('info')}<span>${LANDS ? 'Kall, torr luft tar mycket vätska – drick även när du inte är törstig. ' : ''}Målet är en allmän riktlinje: 2 liter plus en halv liter per träningstimme idag${passMin ? ` (${passMin} min)` : ''}.${st.halsa?.kopplad && st.halsa.skriv?.vatten ? ' Glasen skickas till Apple Hälsa (prototyp).' : ''}</span></p>`;
+  }
+
+  // Köldeffekt (landslaget): SMHI:s formel för vindens avkylning, risk och klädsel – och FIS gräns för tävlingsstart
+  function vtKyla() { const k = st.kyla || { t: -12, v: 4 };
+    return `<div class="kort vt-kort vt-kyla"><label class="vt-reglage"><span>Temperatur <b data-vt-kyla-t>${k.t} °C</b></span><input type="range" min="-35" max="5" step="1" value="${k.t}" data-vt-kyla="t"></label>
+      <label class="vt-reglage"><span>Vind <b data-vt-kyla-v>${k.v} m/s</b></span><input type="range" min="0" max="15" step="1" value="${k.v}" data-vt-kyla="v"></label>
+      <div data-vt-kyla-ut>${vtKylaUt(k.t, k.v)}</div></div>
+      <p class="vt-fot">${ik('info')}<span>Köldeffekten räknas med SMHI:s formel för vindens avkylning. Enligt FIS tävlingsregler skjuts en längdtävling upp när det är kallare än −20 °C på banans kallaste punkt.</span></p>`; }
+  function vtKylaUt(T, v) {
+    const te = v < 1.3 ? T : 13.12 + .6215 * T - 13.956 * v ** .16 + .4867 * T * v ** .16, r = Math.round(te);
+    const [ton, namn, rad] = r > -10 ? ['ok', 'Kyligt', 'Vanlig vinterklädsel – mössa och tunna handskar.'] : r > -25 ? ['gul', 'Kallt', 'Skydda ansikte och fingrar, vindtätt ytterlager.']
+      : r > -40 ? ['rod', 'Mycket kallt', 'Risk för förfrysning på bar hud – täck kinder och näsa, korta passet.'] : ['rod', 'Extremt kallt', 'Bar hud fryser snabbt – träna inomhus.'];
+    return `<div class="vt-kyla-ut" data-ton="${ton}"><div><small>Känns som</small><b class="tal">${r}°</b></div><div><span class="vt-kyla-niva">${namn}</span><p>${rad}</p></div></div>
+      ${T < -20 ? `<p class="vt-fis">${ik('varning')}<span>Under −20 °C – en FIS-tävling skulle skjutas upp.</span></p>` : ''}
+      <ol class="vt-lager">${[['Närmast', r > -10 ? 'Tunt underställ i ull eller syntet' : 'Underställ i ull'], ['Mitten', r > -10 ? 'Tunn mellanjacka' : r > -25 ? 'Fleece eller tunn dun' : 'Varm mellanjacka'], ['Ytterst', r > -25 ? 'Vindtät tävlingsdräkt eller jacka' : 'Vindtätt med extra skydd på bålen']].map(([a, b], k) => `<li style="--k:${k}"><b>${a}</b><span>${b}</span></li>`).join('')}</ol>`;
+  }
+  function vtKylaRita(a) { const t = +$('[data-vt-kyla="t"]', a).value, v = +$('[data-vt-kyla="v"]', a).value; st.kyla = { t, v }; spara();
+    $('[data-vt-kyla-t]', a).textContent = `${t} °C`; $('[data-vt-kyla-v]', a).textContent = `${v} m/s`; $('[data-vt-kyla-ut]', a).innerHTML = vtKylaUt(t, v); }
+
+  // Apple Hälsa: vilka data som läses och skrivs (som iOS tillståndsark), sedan dagens värden från telefonen och klockan
+  function vtHalsa() {
+    const h = halsa(), x = HALSA_EX(), rad = (lista, typ) => lista.map(([k, t, i]) => `<button class="vt-halsa-rad" role="switch" aria-checked="${h[typ][k] !== false}" data-g="vt-halsa-typ" data-typ="${typ}" data-k="${k}"><span class="ikonruta" data-ton="rod">${ik(i)}</span><span>${t}</span><i class="vt-brytare"></i></button>`).join('');
+    const klockor = [['Apple Watch', 'Direkt i Apple Hälsa'], ['Garmin', 'Via Garmin Connect → Apple Hälsa'], ['Polar', 'Via Polar Flow → Apple Hälsa'], ['Suunto och Coros', 'Via deras appar → Apple Hälsa'], ['Strava', 'Pass via Apple Hälsa']];
+    return `${h.kopplad ? `<div class="kort vt-kort vt-halsa-nu"><div class="vt-halsa-topp"><span class="vt-halsa-ikon">${ik('hjarta')}</span><div><b>Kopplad till Apple Hälsa</b><small>Senast synkad nyss · exempeldata</small></div><span class="exempel">Exempel</span></div>
+        <dl class="vt-halsa-tal"><div><dt>Steg</dt><dd class="tal">${fmt(x.steg)}</dd></div><div><dt>Vilopuls</dt><dd class="tal">${x.vila}<small> slag/min</small></dd></div><div><dt>HRV</dt><dd class="tal">${x.hrv}<small> ms</small></dd></div>
+          <div><dt>Sömn</dt><dd class="tal">${x.somn[0]}<small> h </small>${x.somn[1]}<small> min</small></dd></div><div><dt>VO₂max</dt><dd class="tal">${x.vo2}</dd></div><div><dt>Aktiv energi</dt><dd class="tal">${fmt(x.energi)}<small> kcal</small></dd></div></dl>
+        <p class="vt-halsa-anv">${ik('gnista')}<span>Vilopulsen och HRV vägs in i ${elit() ? 'beredskapen' : 'dagsformen'}, sömnen i check-in och passen i ${elit() ? 'belastningen (ACWR)' : 'veckans rörelse'}.</span></p></div>`
+      : `<div class="kort vt-kort vt-halsa-intro"><span class="vt-halsa-ikon stor">${ik('hjarta')}</span><b>Låt appen läsa från Apple Hälsa</b><p>Steg, puls, sömn och pass kommer in automatiskt från iPhone och klockan – du slipper skriva in dem. Du väljer själv vad som delas och kan ändra det när som helst i Hälsa-appen.</p></div>`}
+      <h4 class="vt-rubrik">Läsa från Hälsa</h4><div class="vt-halsa-lista">${rad(HALSA_LAS, 'las')}</div>
+      <h4 class="vt-rubrik">Skriva till Hälsa</h4><div class="vt-halsa-lista">${rad(HALSA_SKRIV, 'skriv')}</div>
+      <h4 class="vt-rubrik">Klockor och appar</h4><ul class="vt-klockor">${klockor.map(([t, u]) => `<li><span class="ikonruta" data-ton="is">${ik('klocka')}</span><span><b>${t}</b><small>${u}</small></span></li>`).join('')}</ul>
+      <button class="knapp ${h.kopplad ? 'knapp-sek' : 'knapp-primar'} knapp-bred vt-halsa-knapp" data-g="vt-halsa-koppla">${ik(h.kopplad ? 'stang' : 'hjarta')}${h.kopplad ? 'Koppla från Apple Hälsa' : 'Koppla Apple Hälsa'}</button>
+      <p class="vt-fot">${ik('las')}<span>Prototyp: i iPhone-appen frågar iOS om tillstånd för varje typ (HealthKit) och datan stannar på telefonen tills du delar den med ditt team. Här visas exempeldata.</span></p>`;
+  }
+
+  // Idag: verktygen ett tryck bort och – när Apple Hälsa är kopplad – dagens värden från telefonen
+  function verktygKort(i) {
+    const L = VT_LISTA().filter(([k]) => k !== 'halsa').slice(0, 4), h = st.halsa?.kopplad ? HALSA_EX() : null;
+    return `<section class="kort vt-idag in" style="--i:${i}"><div class="kort-rubrik"><div><span class="ogon utan">${LANDS ? 'För längdåkare' : 'För din träning'}</span><h3 style="margin-top:4px">Verktyg</h3></div><button class="knapp-text" data-g="verktyg" data-v="">Alla${ik('hoger')}</button></div>
+      <div class="vt-idag-rad">${L.map(([k, n, , ton, ic], j) => `<button class="vt-idag-knapp tryck" data-g="verktyg" data-v="${k}" style="--n:${j}"><span class="ikonruta" data-ton="${ton}">${ik(ic)}</span><span>${n}</span></button>`).join('')}</div>
+      ${h ? `<button class="vt-idag-halsa tryck" data-g="verktyg" data-v="halsa"><span class="vt-halsa-ikon">${ik('hjarta')}</span><span class="vt-idag-tal"><span><b class="tal">${fmt(h.steg)}</b><small>steg</small></span><span><b class="tal">${h.vila}</b><small>vilopuls</small></span><span><b class="tal">${h.hrv}</b><small>HRV ms</small></span><span><b class="tal">${h.somn[0]}:${String(h.somn[1]).padStart(2, '0')}</b><small>sömn</small></span></span><span class="exempel">Exempel</span></button>`
+        : `<button class="vt-idag-halsa tryck" data-g="verktyg" data-v="halsa"><span class="vt-halsa-ikon">${ik('hjarta')}</span><span class="vt-idag-koppla"><b>Koppla Apple Hälsa</b><small>Steg, puls, sömn och pass in automatiskt</small></span>${ik('hoger')}</button>`}</section>`;
   }
 
   /* ---- 14 händelser ---- */
@@ -1990,6 +2146,19 @@
       const ny = document.createElement('div'); ny.innerHTML = sparKort(0); const n = ny.firstElementChild;
       for (const c of ['.ls-spar-text', '.ls-spar-lista']) { const gammal = $(c, k), nytt = $(c, n); nytt.dataset.byte = ''; gammal.replaceWith(nytt); } },
     'ls-visa': (b) => { const sk = b.closest('.skarm'); sk?.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); setTimeout(() => kropp?.markera?.(b.dataset.id), 380); },
+    verktyg: (b) => verktygArk(b.dataset.v || ''),
+    'vt-preset': (b) => { if (vtTid) return toast('Pausa eller börja om först'); st.intervall = +b.dataset.v; spara(); const inne = $('.vt-inne', arkLager); if (inne) { inne.innerHTML = vtIntervall(st.intervall); } },
+    'vt-start': (b) => { const a = b.closest('.vt-timer'); if (!a) return;
+      if (vtTid && !vtTid.andning) { vtTid.paus = !vtTid.paus; if (vtTid.paus) vtTid.kvar = vtTid.slut - performance.now(); else vtTid.slut = performance.now() + vtTid.kvar; a.dataset.paus = vtTid.paus ? '' : null; if (!vtTid.paus) delete a.dataset.paus;
+        $('span', b).textContent = vtTid.paus ? 'Fortsätt' : 'Pausa'; return; }
+      const p = INTERVALL()[st.intervall ?? 0]; vtTid = { p, fas: 'arbete', varv: 1, slut: performance.now() + p[2] * 1000, paus: false }; vtPip(true);
+      $('span', b).textContent = 'Pausa'; cancelAnimationFrame(vtLoop); vtLoop = requestAnimationFrame(vtTick); },
+    'vt-nollst': () => { vtStopp(); const inne = $('.vt-inne', arkLager); if (inne) inne.innerHTML = vtIntervall(st.intervall ?? 0); },
+    'vt-andning': (b) => { const a = b.closest('.vt-andning'); if (!a) return; vtStopp(); $$('[data-g="vt-andning"]', a).forEach((x) => x.setAttribute('aria-pressed', x === b)); vtAndStart(a, +b.dataset.v); },
+    'vt-vatten': (b) => { const d = dagStr(idag()); (st.vatska ||= {})[d] = Math.max(0, (st.vatska[d] || 0) + +b.dataset.v); spara(); const inne = $('.vt-inne', arkLager); if (inne) inne.innerHTML = vtVatska(); },
+    'vt-halsa-typ': (b) => { const h = halsa(), on = b.getAttribute('aria-checked') !== 'true'; h[b.dataset.typ][b.dataset.k] = on; b.setAttribute('aria-checked', on); spara(); },
+    'vt-halsa-koppla': () => { const h = halsa(); h.kopplad = !h.kopplad; spara(); verktygArk('halsa');
+      toast(h.kopplad ? 'Apple Hälsa är kopplad – exempeldata i prototypen' : 'Apple Hälsa är frånkopplad'); if (h.kopplad) konfetti(); if (flik === 'idag' || flik === 'jag') hem(flik, { in: 'mjuk' }); },
     valla: (b) => { st.valla = +b.dataset.v; spara(); const k = b.closest('.ls-valla'); if (!k) return; const ny = document.createElement('div'); ny.innerHTML = vallaKort(0); const n = ny.firstElementChild; n.classList.remove('in'); k.replaceWith(n); summa(); },
     'lopp-garmin': () => toast('Kopplingen till klockan öppnas i nästa version'),
     'lopp-val': (b) => { const l = LOPP.find((x) => x.id === b.dataset.v); if (!l) return; const s0 = loppSt(); s0.id = l.id; s0.mal = Math.round(l.km * (LANDS ? (elit() ? 165 : 330) : elit() ? 260 : 330) / 60) * 60; spara();
