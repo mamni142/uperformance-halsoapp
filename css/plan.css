@@ -1,0 +1,62 @@
+/* Din plan – vad, varför, råd från teamet, gör så här, följ upp, när du ska söka vård. Laddas sist. */
+.pl-kort { position: relative; margin: 14px 0 6px; padding: 16px; border-radius: 22px; background: linear-gradient(160deg, rgba(126, 224, 195, .1), rgba(167, 210, 255, .05) 60%), var(--yta-2);
+  border: 1px solid rgba(126, 224, 195, .2); overflow: hidden; animation: pl-in .5s cubic-bezier(.2, .8, .2, 1) both .1s; }
+.pl-kort::before { content: ''; position: absolute; right: -60px; top: -60px; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, rgba(126, 224, 195, .18), transparent 65%); pointer-events: none; }
+.pl-ok { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: center; }
+.pl-ok b { display: block; font: 650 .95rem var(--font-rubrik); } .pl-ok small { font-size: .8rem; color: var(--text-2); }
+.pl-topp { display: flex; justify-content: space-between; align-items: center; }
+.pl-exempel { min-height: 22px !important; padding: 0 9px !important; font-size: .68rem !important; }
+.pl-vad { margin: 8px 0 14px; font: 700 1.16rem/1.25 var(--font-rubrik); letter-spacing: -.015em; }
+.pl-steg { display: grid; gap: 0; position: relative; }
+.pl-del { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; position: relative; padding-bottom: 16px; animation: pl-in .5s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--n) * 70ms + .2s); }
+.pl-del:not(:last-child)::before { content: ''; position: absolute; left: 13.5px; top: 30px; bottom: 2px; width: 1.5px; border-radius: 1px; background: linear-gradient(var(--accent), rgba(126, 224, 195, .1)); }
+.pl-nr { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; font: 700 .8rem/1 var(--font-rubrik); color: #0b1520; background: linear-gradient(160deg, #a6f0d9, var(--accent));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 4px 10px -4px rgba(15, 110, 87, .7); }
+.pl-del > div > b { display: block; margin: 4px 0 8px; font: 650 .92rem var(--font-rubrik); }
+.pl-skal { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 8px; margin: 0 0 8px; padding: 10px 12px; border-radius: 14px; background: var(--yta); font-size: .82rem; line-height: 1.45; color: var(--text-2); }
+.pl-skal > svg { width: 18px; height: 18px; margin-top: 1px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; color: var(--is-text); }
+.pl-skal[data-ton="gul"] > svg { color: var(--gul-text); } .pl-skal[data-ton="rod"] > svg { color: var(--rod-text); } .pl-skal[data-ton="ok"] > svg { color: var(--accent-text); }
+.pl-skal span b { display: block; margin-bottom: 2px; font: 650 .86rem var(--font-rubrik); color: var(--text); }
+.pl-rad { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 10px; margin: 0; padding: 12px; border-radius: 16px; background: var(--yta); font-size: .86rem; line-height: 1.5; color: var(--text);
+  box-shadow: inset 3px 0 0 var(--accent); }
+.pl-avatar { width: 36px !important; height: 36px !important; font-size: .74rem !important; }
+.pl-rad small { display: block; margin-bottom: 3px; font: 600 .7rem var(--font-brod); letter-spacing: .04em; color: var(--accent-text); text-transform: uppercase; }
+.pl-gor { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.pl-gor li { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 10px; align-items: center; padding: 8px 10px; border-radius: 14px; background: var(--yta); }
+.pl-gor li b { display: block; font: 650 .86rem var(--font-rubrik); } .pl-gor li small { font-size: .76rem; color: var(--text-2); }
+.pl-bock { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--kant-2); color: transparent; transition: background .3s, border-color .3s, transform .3s cubic-bezier(.2, 1.4, .35, 1); }
+.pl-bock svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+.pl-bock[aria-pressed="true"] { background: linear-gradient(160deg, #a6f0d9, var(--accent)); border-color: transparent; color: #0b1520; transform: scale(1.08); }
+.pl-bock:active { transform: scale(.88); }
+.pl-gor li:has(.pl-bock[aria-pressed="true"]) b { text-decoration: line-through; text-decoration-color: var(--text-3); color: var(--text-2); }
+.pl-undvik, .pl-folj { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; margin: 8px 0 0; font-size: .8rem; line-height: 1.45; color: var(--text-2); }
+.pl-undvik svg, .pl-folj svg, .pl-flagga svg, .pl-vard summary svg { width: 16px; height: 16px; margin-top: 1px; fill: none; stroke: currentColor; stroke-width: 2; }
+.pl-undvik svg { color: var(--gul-text); } .pl-folj { margin-top: 0; } .pl-folj svg { color: var(--is-text); }
+.pl-verktyg { display: grid; gap: 8px; margin-top: 4px; }
+.pl-verktyg .knapp { min-height: 46px; padding: 0 12px; font-size: 15px !important; }
+.pl-verktyg-rad { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.pl-verktyg-rad .knapp { min-width: 0; padding: 0 10px; font-size: 13.5px !important; line-height: 1.15 !important; white-space: normal; text-align: left; }
+.pl-verktyg-rad .knapp svg { flex: none; }
+.pl-kort, .pl-del > div, .pl-steg { min-width: 0; }
+.pl-vard { margin-top: 12px; border-radius: 16px; background: var(--yta); padding: 0 12px; }
+.pl-vard summary { display: flex; align-items: center; gap: 8px; min-height: 44px; list-style: none; cursor: pointer; font: 650 .86rem var(--font-rubrik); }
+.pl-vard summary::-webkit-details-marker { display: none; }
+.pl-vard summary::after { content: ''; margin-left: auto; width: 8px; height: 8px; border-right: 2px solid var(--text-3); border-bottom: 2px solid var(--text-3); transform: rotate(45deg); transition: transform .3s; }
+.pl-vard[open] summary::after { transform: rotate(-135deg); }
+.pl-vard ul { margin: 0 0 6px; padding-left: 18px; font-size: .82rem; line-height: 1.6; color: var(--text-2); }
+.pl-vard p { margin: 0 0 12px; font-size: .76rem; color: var(--text-3); }
+.pl-flagga { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 8px; margin: 10px 0 0; padding: 10px 12px; border-radius: 14px; font-size: .82rem; color: var(--rod-text); background: rgba(229, 103, 79, .1); border: 1px solid rgba(229, 103, 79, .25); }
+@keyframes pl-in { from { opacity: 0; transform: translateY(8px); } }
+@media (prefers-reduced-motion: reduce) { .pl-kort, .pl-del { animation: none; } }
+
+/* Testdagens knappar i iOS 18-stil: tonade kapslar med ikon, ingen glans eller glöd */
+.sc-knappar { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+.sc-knappar .knapp { min-height: 44px !important; padding: 0 14px !important; gap: 7px !important; justify-content: center !important; font: 600 15px/20px var(--font-rubrik) !important; letter-spacing: -.01em; border-radius: 999px !important;
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important; transition: transform .2s cubic-bezier(.32, .72, 0, 1), background .2s, opacity .2s !important; }
+.sc-knappar .knapp svg { display: block !important; width: 17px !important; height: 17px !important; flex: none; }
+.sc-knappar .knapp-primar { color: var(--accent-text) !important; background: rgba(126, 224, 195, .16) !important; box-shadow: none !important; border: 0 !important; }
+.sc-knappar .knapp-primar::after, .sc-knappar .knapp-primar::before { display: none !important; }
+.sc-knappar .knapp-sek { color: var(--text) !important; background: rgba(246, 244, 239, .08) !important; box-shadow: none !important; }
+body[data-niva="motionar"] .sc-knappar .knapp-primar { background: rgba(15, 110, 87, .1) !important; }
+body[data-niva="motionar"] .sc-knappar .knapp-sek { background: rgba(11, 21, 32, .06) !important; }
+.sc-knappar .knapp:active { transform: scale(.96) !important; opacity: .75; }

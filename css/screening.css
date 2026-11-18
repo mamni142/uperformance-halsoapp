@@ -1,0 +1,168 @@
+/* screening – designteamet (2026-11-18). Laddas efter app.css och vinner över den.
+   Screening-fliken (vyScreening) och formulärarket (formularArk). Rytm: 12 px mellan delar i ett kort, 16 px i hjälten, 12 px mellan kort.
+   Avsnitt: 01 hjälten · 02 förbered · 03 resan · 04 formulärkortet · 05 stationerna (schema) · 06 normvärden · 07 grundformen/trappan
+   · 08 medicinskt + paketet · 09 formulärarket · 10 elitläget (instrumentpanel) · 11 minskad rörelse */
+
+/* ---- 01 hjälten ---- */
+.sc-hjalte { padding: 20px; border-radius: 28px; }
+.sc-rad { grid-template-columns: 96px minmax(0, 1fr); gap: 16px; }
+.sc-ring .bage { animation: sc-ring-in 1.6s var(--mjuk) .3s both; }
+@keyframes sc-ring-in { from { stroke-dashoffset: 251.3; } }
+.sc-ring .varde b { font-size: 2rem; }
+.sc-ring .varde small { font-size: .62rem; margin-top: 2px; }
+.sc-text h2 { font-size: 1.28rem; margin-top: 6px; }
+.sc-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.sc-meta span { display: inline-flex; align-items: center; gap: 5px; min-height: 26px; padding: 0 10px; border-radius: 999px; font-size: .72rem; font-weight: 700;
+  color: var(--text-2); background: var(--yta-2); border: 1px solid var(--kant); white-space: nowrap; }
+.sc-meta svg { width: 13px; height: 13px; color: var(--accent-text); }
+.sc-knappar { grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.sc-knappar .knapp { min-height: 48px; padding: 0 12px; gap: 8px; justify-content: center; white-space: nowrap; font-size: .86rem; }
+.sc-knappar .knapp svg { width: 18px; height: 18px; }
+
+/* ---- 02 förbered ---- */
+.sc-forbered { margin-top: 16px; padding: 14px 14px 4px; border-radius: 20px; }
+.sc-forbered .matare > i { transition: width .6s var(--mjuk); }
+.bock-rad { grid-template-columns: 24px 20px minmax(0, 1fr); gap: 12px; min-height: 44px; padding: 8px 0; transition: transform .2s var(--mjuk); }
+.bock-rad:active { transform: scale(.985); }
+.bock-rad > span:last-child { transition: color .3s var(--mjuk); }
+.bock-rad > svg { width: 18px; height: 18px; justify-self: center; }
+.bock-rad[aria-pressed="true"] > svg { color: var(--accent-text); }
+
+/* ---- 03 resan: den aktiva pricken pulserar med en ring (transform/opacity, inte box-shadow) ---- */
+.sc-resa { gap: 4px; padding: 18px 6px 16px; border-radius: var(--radie); }
+.sc-resa-linje { top: 39px; }
+.sc-steg-prick { position: relative; width: 44px; height: 44px; margin-bottom: 6px; transition: background .4s var(--mjuk), border-color .4s var(--mjuk); }
+.sc-steg[data-lage="nu"] .sc-steg-prick { animation: none; box-shadow: 0 0 0 5px rgba(126, 224, 195, .14); background: var(--yta-tat); }
+.sc-steg[data-lage="nu"] .sc-steg-prick::after { content: ''; position: absolute; inset: -2px; border-radius: 50%; border: 2px solid var(--accent); opacity: 0;
+  animation: sc-puls 2.6s var(--mjuk) infinite; pointer-events: none; }
+@keyframes sc-puls { 0% { transform: scale(1); opacity: .55; } 80%, 100% { transform: scale(1.55); opacity: 0; } }
+.sc-steg b { font-size: .74rem; line-height: 1.2; }
+.sc-steg small { line-height: 1.25; }
+
+/* ---- 04 formulärkortet ---- */
+.sc-formular { grid-template-columns: 62px minmax(0, 1fr) 20px; gap: 16px; text-align: left; width: 100%; transition: transform .25s var(--mjuk); }
+.sc-formular:active { transform: scale(.985); }
+.sc-formular > svg { justify-self: end; transition: transform .3s var(--fjader); }
+.sc-formular:hover > svg { transform: translateX(3px); }
+
+/* ---- 05 stationerna: schema med tidslinje (ersätter karusellen – inget kort klipps i kanten) ---- */
+.sc-schema { padding: 18px; }
+.sc-tidslinje { display: flex; gap: 4px; height: 26px; margin-bottom: 16px; }
+.sc-tidslinje i { position: relative; flex: var(--w) 1 0; display: grid; place-items: center; border-radius: 8px; overflow: hidden;
+  background: rgba(126, 224, 195, .18); transform-origin: left; animation: sc-vax .9s var(--mjuk) both; }
+.sc-tidslinje i:nth-child(2) { animation-delay: .12s; } .sc-tidslinje i:nth-child(3) { animation-delay: .24s; }
+.sc-tidslinje i[data-ton="is"] { background: rgba(167, 210, 255, .24); }
+.sc-tidslinje i[data-ton="gul"] { background: rgba(240, 181, 69, .22); }
+.sc-tidslinje b { font: 700 .7rem/1 var(--font-rubrik); color: var(--text-2); }
+@keyframes sc-vax { from { transform: scaleX(0); opacity: 0; } }
+.sc-stationer { list-style: none; margin: 0; padding: 0; display: grid; }
+.sc-stationer > * { flex-basis: auto; }
+.sc-station { position: relative; display: grid; grid-template-columns: 40px 32px minmax(0, 1fr); gap: 12px; align-items: start; min-height: 0; padding: 0 0 16px; }
+.sc-station:last-child { padding-bottom: 0; }
+/* den lodräta linjen mellan bokstäverna */
+.sc-station::before { content: ''; position: absolute; left: 67px; top: 34px; bottom: 2px; width: 2px; border-radius: 2px; background: var(--kant-2); }
+.sc-station:last-child::before { display: none; }
+.sc-tid { padding-top: 8px; font: 700 .72rem/1 var(--font-rubrik); color: var(--text-3); letter-spacing: .02em; }
+.sc-bokstav { position: relative; z-index: 1; width: 32px; height: 32px; border-radius: 11px; font-size: .88rem; }
+.sc-station.sc-slut .sc-bokstav { background: var(--yta-2); border: 1px solid var(--kant-2); color: var(--accent-text); }
+.sc-station.sc-slut .sc-bokstav svg { width: 15px; height: 15px; }
+.sc-station-text { display: grid; gap: 8px; padding-top: 5px; }
+.sc-station-topp { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.sc-station h4 { font-size: .96rem; line-height: 1.25; }
+.sc-station.sc-slut .sc-station-text { gap: 2px; }
+.sc-station.sc-slut small { font-size: .72rem; color: var(--text-3); font-weight: 600; }
+.sc-langd { flex: none; font-size: .72rem; font-weight: 700; color: var(--text-3); }
+.sc-delar span { padding: 4px 10px; }
+.sc-las { gap: 6px; }
+
+/* ---- 06 normvärden: förklaringen överst i stället för en etikett som krockar med första raden ---- */
+.sc-norm-legend { display: flex; gap: 16px; padding-bottom: 12px; margin-bottom: 2px; border-bottom: 1px solid var(--kant); font-size: .7rem; font-weight: 700; color: var(--text-3); }
+.sc-norm-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sc-norm-legend .lg-band { width: 18px; height: 8px; border-radius: 4px; background: rgba(167, 210, 255, .45); }
+.sc-norm-legend .lg-prick { width: 10px; height: 10px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2.5px var(--accent); }
+.sc-norm .norm-rad { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; padding: 12px 0; }
+.sc-norm .norm-rad:first-of-type { border-top: 0; padding-top: 14px; }
+.sc-norm .norm-rad:last-child { padding-bottom: 0; }
+.sc-norm .norm-rad > .ikonruta { width: 36px !important; height: 36px !important; border-radius: 12px !important; }
+.sc-norm .norm-rad > .ikonruta svg { width: 18px; height: 18px; }
+.sc-norm .norm-band::after { display: none; }
+.sc-norm .norm-band { background: rgba(167, 210, 255, .38); }
+body[data-niva="motionar"] .sc-norm .norm-band { background: rgba(29, 95, 158, .14); }
+.sc-norm .norm-skala { height: 8px; margin-top: 10px; }
+.sc-norm .norm-skala i { width: 14px; height: 14px; margin: -7px 0 0 -7px; box-shadow: 0 0 0 3px var(--accent), 0 2px 8px rgba(0, 0, 0, .25); animation-timing-function: var(--mjuk); }
+.sc-norm .norm-mitt small { margin-top: 8px; }
+
+/* ---- 07 grundformen/trappan: lika breda steg (symmetri), mätare per förmåga, entré nerifrån ---- */
+.sc-trappa-kort { padding: 18px; }
+.sc-trappa-kort .trappa { gap: 8px; perspective: none; }
+.sc-trappa-kort .trappsteg { margin-inline: 0; grid-template-columns: 28px minmax(0, 1fr) 36px; gap: 12px; padding: 12px 14px; border-radius: 16px;
+  background: var(--yta-2); transform: none; animation: sc-steg-in .6s var(--mjuk) both; animation-delay: calc(var(--n) * -60ms + 640ms); }
+.sc-trappa-kort .trappsteg em { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; font-size: .74rem; color: var(--text-2);
+  background: var(--yta); border: 1px solid var(--kant); }
+.sc-trappa-kort .trappsteg:last-child em { color: #0b1520; background: linear-gradient(160deg, #a7f0db, var(--accent)); border-color: transparent; }
+.trapp-text { display: grid; gap: 2px; min-width: 0; }
+.trapp-text b { font-size: .86rem; }
+.trapp-text small { line-height: 1.3; }
+.trapp-matare { display: block; height: 5px; margin-top: 7px; border-radius: 99px; background: var(--spar); overflow: hidden; }
+.trapp-matare i { display: block; height: 100%; width: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--is), var(--accent));
+  transform: scaleX(var(--s)); transform-origin: left; animation: sc-vax-matare 1s var(--mjuk) both; animation-delay: calc(var(--n) * -60ms + 820ms); }
+@keyframes sc-vax-matare { from { transform: scaleX(0); } }
+@keyframes sc-steg-in { from { opacity: 0; transform: translateY(10px); } }
+.sc-trappa-kort .trappsteg strong { justify-self: end; font-size: .96rem; }
+
+/* ---- 08 medicinskt + paketet ---- */
+.sc-med { min-height: 164px; }
+.paketrad { gap: 8px; }
+.paketrad span { min-height: 56px; border-radius: 16px; transition: transform .3s var(--mjuk); }
+
+/* ---- 09 formulärarket ---- */
+.fm-summa { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 16px; align-items: center; padding: 14px; border-radius: 20px; background: var(--yta-2); border: 1px solid var(--kant); }
+.fm-summa .ring .varde b { font-size: 1.05rem; }
+.fm-summa .ring .varde b small { font-size: .6rem; margin: 0; letter-spacing: 0; text-transform: none; }
+.fm-summa > div:last-child b { display: block; font-size: .95rem; }
+.fm-summa > div:last-child small { display: block; margin-top: 2px; font-size: .74rem; color: var(--text-3); font-weight: 600; }
+.fm-lista { list-style: none; margin: 12px 0; padding: 0; }
+.fm-lista .formular-rad { grid-template-columns: 28px minmax(0, 1fr) 72px; gap: 12px; min-height: 56px; padding: 10px 0; animation: sc-steg-in .5s var(--mjuk) both; animation-delay: calc(var(--n) * 50ms + 120ms); }
+.fm-lista .formular-rad:first-child { border-top: 0; }
+.fm-lista .status { width: 28px; height: 28px; }
+.fm-lista .status b { font: 700 .72rem/1 var(--font-rubrik); color: var(--text-3); }
+.fm-lista .status[data-ton="nu"] { border: 2px solid var(--accent); }
+.fm-lista .status[data-ton="nu"] b { color: var(--accent-text); }
+.fm-lista .formular-rad[data-nasta] small { color: var(--accent-text); font-weight: 700; }
+.fm-lista .matare { width: 72px; height: 6px; }
+.fm-lista + .notis { margin-bottom: 4px; }
+.fm-lista + .notis svg { color: var(--is-text); }
+
+/* ---- 10 elitläget: instrumentpanel – tunna linjer, versaltider, lysande data ---- */
+body[data-niva="elit"] .sc-meta span { background: rgba(246, 244, 239, .05); }
+body[data-niva="elit"] .sc-tid { color: var(--is-text); letter-spacing: .06em; }
+body[data-niva="elit"] .sc-tidslinje i { border: 1px solid rgba(126, 224, 195, .28); }
+body[data-niva="elit"] .sc-tidslinje i[data-ton="is"] { border-color: rgba(167, 210, 255, .3); }
+body[data-niva="elit"] .sc-tidslinje i[data-ton="gul"] { border-color: rgba(240, 181, 69, .3); }
+body[data-niva="elit"] .sc-station::before { background: linear-gradient(180deg, rgba(126, 224, 195, .45), rgba(167, 210, 255, .12)); }
+body[data-niva="elit"] .trapp-matare i { box-shadow: 0 0 8px rgba(126, 224, 195, .5); }
+body[data-niva="elit"] .sc-trappa-kort .trappsteg strong { text-shadow: 0 0 14px rgba(126, 224, 195, .45); }
+body[data-niva="elit"] .sc-trappa-kort .trappsteg:not(:last-child) em { background: rgba(11, 21, 32, .4); }
+body[data-niva="elit"] .norm-tal { text-shadow: 0 0 14px currentColor; }
+/* motionärsläget: varmt och lugnt – mjukare toner i schemat */
+body[data-niva="motionar"] .sc-tidslinje i { background: rgba(15, 110, 87, .12); }
+body[data-niva="motionar"] .sc-tidslinje i[data-ton="is"] { background: rgba(29, 95, 158, .12); }
+body[data-niva="motionar"] .sc-tidslinje i[data-ton="gul"] { background: rgba(240, 181, 69, .2); }
+
+/* ---- 11 minskad rörelse ---- */
+@media (prefers-reduced-motion: reduce) {
+  .sc-steg[data-lage="nu"] .sc-steg-prick::after, .sc-tidslinje i, .sc-trappa-kort .trappsteg, .trapp-matare i, .fm-lista .formular-rad, .sc-norm .norm-skala i, .sc-ring .bage { animation: none; }
+}
+
+/* rättat efter användarens bilder (2026-11-18) */
+.sc-hjalte > .sc-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 14px; }
+.sc-hjalte > .sc-meta span { justify-content: center; min-height: 34px; padding: 0 6px; white-space: nowrap; }
+.sc-tidslinje { height: 6px; gap: 3px; margin-bottom: 18px; }
+.sc-tidslinje i { border-radius: 3px; }
+.sc-tidslinje b { display: none; }
+.sc-delar { gap: 0; margin-top: 2px; }
+.sc-delar span { padding: 0; border: 0; background: none !important; font-size: .76rem; font-weight: 600; color: var(--text-2); }
+.sc-delar span + span::before { content: '·'; margin: 0 7px; color: var(--text-3); }
+.norm-rad { grid-template-columns: 40px minmax(0, 1fr); gap: 14px; }
+.norm-rad > .ikonruta { justify-self: center; width: 36px; height: 36px; }
+.norm-mitt { min-width: 0; }

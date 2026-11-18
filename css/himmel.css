@@ -1,0 +1,133 @@
+/* himmel – himlen bakom hälsningen på Idag i stil med Apples Väder (iOS 26). Dygnet styr himlen, årstiden partiklarna,
+   högtiderna ett diskret inslag. Allt ligger bakom texten (z-index 0) och tonar ut nedåt. Loopar = transform/opacitet. */
+.valkomst { position: relative; isolation: isolate; }
+.valkomst-text, .valkomst-profil { position: relative; z-index: 1; }
+.valkomst-hej .dygn { display: none; }
+.himmel3 { position: absolute; z-index: 0; left: calc(var(--sida) * -1); right: calc(var(--sida) * -1); top: calc(var(--topp) * -1 - 8px); height: calc(var(--topp) + 230px);
+  pointer-events: none; overflow: hidden; mask: linear-gradient(#000 55%, transparent); }
+/* himlen: en mjuk gradient per dygnsfas och läge */
+.hm3-gradient { position: absolute; inset: 0; animation: tona-in 1.4s var(--mjuk) both; }
+body[data-niva="motionar"] .himmel3[data-fas="dag"] .hm3-gradient { background: linear-gradient(180deg, #a9d3fb 0%, #cfe6fb 45%, rgba(246, 244, 239, 0) 100%); }
+body[data-niva="motionar"] .himmel3[data-fas="morgon"] .hm3-gradient { background: linear-gradient(180deg, #f9c6b2 0%, #fde2cf 45%, rgba(246, 244, 239, 0) 100%); }
+body[data-niva="motionar"] .himmel3[data-fas="kvall"] .hm3-gradient { background: linear-gradient(180deg, #9a9fd6 0%, #d9c4e2 48%, rgba(246, 244, 239, 0) 100%); }
+body[data-niva="motionar"] .himmel3[data-fas="natt"] .hm3-gradient { background: linear-gradient(180deg, #4a5a92 0%, #a5b0d6 48%, rgba(246, 244, 239, 0) 100%); }
+body[data-niva="elit"] .himmel3[data-fas="dag"] .hm3-gradient { background: linear-gradient(180deg, #1d4a73 0%, #163552 45%, rgba(11, 21, 32, 0) 100%); }
+body[data-niva="elit"] .himmel3[data-fas="morgon"] .hm3-gradient { background: linear-gradient(180deg, #5b3a52 0%, #2c2f4b 48%, rgba(11, 21, 32, 0) 100%); }
+body[data-niva="elit"] .himmel3[data-fas="kvall"] .hm3-gradient { background: linear-gradient(180deg, #2e2a5c 0%, #1a2440 48%, rgba(11, 21, 32, 0) 100%); }
+body[data-niva="elit"] .himmel3[data-fas="natt"] .hm3-gradient { background: linear-gradient(180deg, #0c1a33 0%, #0d1828 50%, rgba(11, 21, 32, 0) 100%); }
+/* i motionärsläget blir namnet mörkt mot den ljusa himlen, i elit vitt med ett svagt djup */
+body[data-niva="elit"] .valkomst h1 { filter: drop-shadow(0 2px 12px rgba(0, 0, 0, .35)); }
+body[data-niva="motionar"] .himmel3[data-fas="natt"] ~ .valkomst-text h1, body[data-niva="motionar"] .himmel3[data-fas="kvall"] ~ .valkomst-text h1 { filter: drop-shadow(0 1px 10px rgba(255, 255, 255, .5)); }
+
+/* solen: skiva med bländsken, mjuka strålar och linsreflexer – snett bakom namnet */
+.hm3-sol { position: absolute; left: 48%; top: calc(var(--topp) + 34px); width: 0; height: 0; }
+.himmel3[data-fas="morgon"] .hm3-sol { top: calc(var(--topp) + 92px); left: 40%; }
+.hm3-sol i { position: absolute; left: 0; top: 0; border-radius: 50%; }
+.hm3-skiva { width: 54px; height: 54px; margin: -27px; background: radial-gradient(circle, #fffef6 0 38%, #fff1bf 62%, #ffd77a 100%); box-shadow: 0 0 22px 8px rgba(255, 236, 170, .75);
+  animation: hm3-upp 1.8s var(--mjuk) .2s both; }
+.himmel3[data-fas="morgon"] .hm3-skiva { background: radial-gradient(circle, #fff6ea 0 38%, #ffd3ad 64%, #ff9e7a 100%); box-shadow: 0 0 26px 10px rgba(255, 170, 130, .6); }
+.hm3-glans { width: 300px; height: 300px; margin: -150px; background: radial-gradient(circle, rgba(255, 246, 210, .75) 0, rgba(255, 228, 160, .32) 22%, rgba(255, 220, 150, .1) 42%, transparent 66%);
+  animation: andas 9s ease-in-out infinite, tona-in 1.6s var(--mjuk) .2s both; }
+body[data-niva="elit"] .hm3-glans { background: radial-gradient(circle, rgba(255, 230, 170, .5) 0, rgba(255, 210, 140, .18) 24%, transparent 62%); }
+.hm3-stralar { width: 220px; height: 220px; margin: -110px; opacity: .38;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 246, 214, .9) 0deg 1.5deg, transparent 1.5deg 15deg);
+  mask: radial-gradient(circle, transparent 26px, #000 32px, rgba(0, 0, 0, .35) 60px, transparent 108px); animation: snurra 90s linear infinite, tona-in 2s var(--mjuk) .6s both; }
+body[data-niva="elit"] .hm3-stralar { opacity: .22; }
+@keyframes hm3-upp { from { transform: translateY(24px) scale(.85); opacity: 0; } }
+/* linsreflexer längs en diagonal från solen, som i kameran */
+.hm3-flare { position: absolute; left: 48%; top: calc(var(--topp) + 34px); width: 0; height: 0; transform: rotate(32deg); animation: tona-in 2.4s var(--mjuk) 1s both; }
+.hm3-flare i { position: absolute; border-radius: 50%; }
+.hm3-flare i:nth-child(1) { left: 70px; top: -6px; width: 12px; height: 12px; background: radial-gradient(circle, rgba(255, 255, 255, .5), transparent 70%); }
+.hm3-flare i:nth-child(2) { left: 112px; top: -12px; width: 24px; height: 24px; background: radial-gradient(circle, rgba(167, 230, 255, .28), rgba(167, 230, 255, .08) 60%, transparent 72%); border: 1px solid rgba(255, 255, 255, .14); }
+.hm3-flare i:nth-child(3) { left: 168px; top: -5px; width: 10px; height: 10px; background: radial-gradient(circle, rgba(255, 220, 170, .5), transparent 70%); }
+body[data-niva="elit"] .hm3-flare { opacity: .7; }
+/* moln: mjuka suddiga lager som driver långsamt */
+.hm3-moln { position: absolute; left: var(--x); top: calc(var(--topp) + var(--y) * 1.8 - 30px); width: var(--w); height: calc(var(--w) * .38); border-radius: 50%;
+  background: radial-gradient(60% 70% at 50% 60%, rgba(255, 255, 255, .85), rgba(255, 255, 255, 0) 72%); filter: blur(6px); opacity: .8;
+  animation: hm3-moln var(--t) ease-in-out infinite alternate; animation-delay: var(--d, 0s); }
+.hm3-moln::before { content: ''; position: absolute; left: 22%; top: -32%; width: 52%; height: 100%; border-radius: 50%; background: inherit; }
+body[data-niva="elit"] .hm3-moln { background: radial-gradient(60% 70% at 50% 60%, rgba(170, 200, 230, .22), rgba(170, 200, 230, 0) 72%); }
+.himmel3[data-fas="kvall"] .hm3-moln { opacity: .55; }
+@keyframes hm3-moln { from { transform: translateX(-24px); } to { transform: translateX(26px); } }
+/* månen och stjärnorna */
+.hm3-mane { position: absolute; left: 48%; top: calc(var(--topp) + 34px); width: 64px; height: 64px; margin: -32px; animation: hm3-upp 1.8s var(--mjuk) .2s both; }
+.hm3-mane::before { content: ''; position: absolute; inset: -70px; border-radius: 50%; background: radial-gradient(circle, rgba(210, 225, 255, .35), transparent 62%); animation: andas 10s ease-in-out infinite; }
+.hm3-mane i { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 38% 36%, #ffffff, #e6ecf6 55%, #c3cee0); box-shadow: 0 0 24px 6px rgba(210, 225, 255, .4);
+  mask: radial-gradient(circle at 72% 32%, transparent 26px, #000 27px); }
+.hm3-stjarna { position: absolute; left: var(--x); top: calc(var(--y) * 1.9); width: calc(3px * var(--s)); height: calc(3px * var(--s)); border-radius: 50%; background: #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, .85); opacity: .6; animation: hm3-glitter 4s ease-in-out infinite; animation-delay: var(--d); }
+@keyframes hm3-glitter { 0%, 100% { opacity: .2; transform: scale(.7); } 50% { opacity: .95; transform: scale(1.1); } }
+.hm3-fall { position: absolute; left: 82%; top: calc(var(--topp) + 10px); width: 80px; height: 1.5px; border-radius: 2px; background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff); opacity: 0;
+  transform: rotate(-22deg); animation: hm3-fall 11s ease-in 4s infinite; }
+@keyframes hm3-fall { 0%, 90% { opacity: 0; transform: rotate(-22deg) translateX(0); } 92% { opacity: .9; } 100% { opacity: 0; transform: rotate(-22deg) translateX(-180px); } }
+/* årstider: få, lugna partiklar */
+.hm3-sno { position: absolute; left: var(--x); top: calc(var(--topp) - 10px); width: calc(5px * var(--s)); height: calc(5px * var(--s)); border-radius: 50%;
+  background: radial-gradient(circle, #fff 40%, rgba(255, 255, 255, 0) 72%); opacity: .9; animation: hm3-sno var(--t) linear infinite; animation-delay: var(--d); }
+body[data-niva="motionar"] .himmel3[data-fas="dag"] .hm3-sno { background: radial-gradient(circle, #fff 40%, rgba(255, 255, 255, 0) 72%); filter: drop-shadow(0 0 2px rgba(100, 140, 190, .5)); }
+@keyframes hm3-sno { from { transform: translate(0, 0); } 50% { transform: translate(12px, 110px); } to { transform: translate(-8px, 230px); opacity: 0; } }
+.hm3-blad { position: absolute; left: var(--x); top: calc(var(--topp) - 14px); width: 12px; height: 8px; border-radius: 80% 0 80% 0; opacity: .8;
+  background: linear-gradient(135deg, #f3b25a, #cf6a2f); animation: hm3-blad var(--t) linear infinite; animation-delay: var(--d); }
+.hm3-blad[data-f="1"] { background: linear-gradient(135deg, #f6d27b, #d79a35); }
+.hm3-blad[data-f="2"] { background: linear-gradient(135deg, #e9876b, #b04a34); }
+.hm3-blad[data-f="blom"] { width: 8px; height: 8px; border-radius: 50% 0 50% 0; background: linear-gradient(135deg, #ffe1ea, #f6a8c0); }
+@keyframes hm3-blad { from { transform: translate(0, 0) rotate(0); } 50% { transform: translate(26px, 115px) rotate(160deg); } to { transform: translate(-10px, 240px) rotate(330deg); opacity: 0; } }
+/* högtider, diskret */
+.hm3-julstjarna { position: absolute; left: 80%; top: calc(var(--topp) + 22px); width: 26px; height: 26px; margin: -13px; background: radial-gradient(circle, #fffbe6, #ffe08a 60%, #f6b94a);
+  clip-path: polygon(50% 0, 60% 38%, 100% 50%, 60% 62%, 50% 100%, 40% 62%, 0 50%, 40% 38%); filter: drop-shadow(0 0 10px rgba(255, 224, 138, .9)); animation: andas 4s ease-in-out infinite, hm3-upp 1.6s var(--mjuk) .8s both; }
+.hm3-gnistor { position: absolute; left: var(--x); top: calc(var(--topp) + var(--y) * 1.6); }
+.hm3-gnistor i { position: absolute; width: 2px; height: 12px; border-radius: 2px; background: linear-gradient(#fff, rgba(167, 230, 255, 0)); transform-origin: 1px 0; opacity: 0;
+  animation: hm3-gnista 3.4s var(--mjuk) infinite; animation-delay: var(--d); }
+@keyframes hm3-gnista { 0% { opacity: 0; transform: rotate(var(--a)) translateY(2px) scaleY(.3); } 20% { opacity: .9; } 70% { opacity: .6; transform: rotate(var(--a)) translateY(18px) scaleY(1); } 100% { opacity: 0; transform: rotate(var(--a)) translateY(26px) scaleY(.4); } }
+.hm3-hjarta { position: absolute; left: var(--x); bottom: 10px; width: 9px; height: 9px; background: #f49aa0; transform: rotate(45deg); border-radius: 2px 0 2px 0; opacity: 0; animation: hm3-hjarta 9s ease-in-out infinite; animation-delay: var(--d); }
+.hm3-hjarta::before, .hm3-hjarta::after { content: ''; position: absolute; width: 9px; height: 9px; border-radius: 50%; background: inherit; }
+.hm3-hjarta::before { left: -4.5px; } .hm3-hjarta::after { top: -4.5px; }
+@keyframes hm3-hjarta { 0% { opacity: 0; transform: translateY(0) rotate(45deg); } 20% { opacity: .7; } 100% { opacity: 0; transform: translateY(-170px) rotate(45deg); } }
+@media (prefers-reduced-motion: reduce) { .himmel3 * { animation: none !important; } .hm3-skiva, .hm3-mane, .hm3-gradient { opacity: 1; } }
+.himmel3[data-fas="morgon"] .hm3-sol, .himmel3[data-fas="morgon"] ~ * .hm3-flare { top: calc(var(--topp) + 52px); }
+.hogtid-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: .7rem; font-weight: 800; color: #7f5500;
+  background: rgba(255, 255, 255, .55); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8), 0 0 0 .5px rgba(127, 85, 0, .2); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.hogtid-chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #f0b545; box-shadow: 0 0 6px #f0b545; }
+body[data-niva="elit"] .hogtid-chip { color: #f6d58b; background: rgba(255, 255, 255, .08); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14); }
+
+/* himlen går alltid ända upp till skärmkanten (vyns egen luft varierar) */
+.himmel3 { top: calc(var(--topp) * -1 - 60px); height: calc(var(--topp) + 290px); }
+.hm3-sol, .hm3-flare, .hm3-mane { margin-top: 52px; }
+.hm3-julstjarna, .hm3-fall { margin-top: 52px; }
+
+/* ---- Namnet som lever (2026-11-18): bokstäverna renderas fram ur oskärpa en i taget, sedan flyter en mjuk färgvåg
+   genom dem hela tiden (per bokstav förskjuten, så att vågen rör sig åt höger). "Hej," och raden under kommer in ord för ord. ---- */
+.valkomst h1.namn-levande { background: none !important; -webkit-background-clip: initial; background-clip: initial; color: var(--text); filter: none; display: flex; flex-wrap: wrap; }
+.namn-levande span { display: inline-block; white-space: pre;
+  background: linear-gradient(100deg, var(--nf1) 0%, var(--nf2) 25%, var(--nf3) 50%, var(--nf2) 75%, var(--nf1) 100%); background-size: 400% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: namn-in 1.1s cubic-bezier(.2, .8, .2, 1) both, namn-vag 7s linear infinite;
+  animation-delay: calc(var(--k) * 90ms + .25s), calc(var(--k) * -.35s); }
+body[data-niva="motionar"] .namn-levande { --nf1: #0b1520; --nf2: #0f6e57; --nf3: #2a7f9a; }
+body[data-niva="elit"] .namn-levande { --nf1: #ffffff; --nf2: #9ef0d6; --nf3: #b9dcff; }
+body[data-niva="elit"] .namn-levande span { filter: drop-shadow(0 2px 14px rgba(126, 224, 195, .25)); }
+@keyframes namn-in { 0% { opacity: 0; transform: translateY(18px) scale(.92); filter: blur(10px); } 60% { opacity: 1; filter: blur(0); } 100% { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes namn-vag { from { background-position: 0% 50%; } to { background-position: 400% 50%; } }
+body[data-niva="elit"] .namn-levande span { animation-name: namn-in-elit, namn-vag; }
+@keyframes namn-in-elit { 0% { opacity: 0; transform: translateY(18px) scale(.92); filter: blur(10px) drop-shadow(0 2px 14px rgba(126, 224, 195, 0)); } 100% { opacity: 1; transform: none; filter: blur(0) drop-shadow(0 2px 14px rgba(126, 224, 195, .25)); } }
+.hej-text { display: inline-block; animation: hej-in .9s cubic-bezier(.2, .8, .2, 1) .1s both; }
+@keyframes hej-in { from { opacity: 0; transform: translateX(-10px); filter: blur(4px); } }
+.ord-in span { display: inline-block; animation: ord-in .7s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--k) * 45ms + .7s); }
+@keyframes ord-in { from { opacity: 0; transform: translateY(8px); filter: blur(3px); } }
+.valkomst p.ord-in { font-size: .95rem; line-height: 1.45; color: var(--text-2); font-weight: 500; letter-spacing: -.005em; }
+body[data-niva="elit"] .valkomst p.ord-in { color: rgba(246, 244, 239, .82); text-shadow: 0 1px 10px rgba(0, 0, 0, .3); }
+@media (prefers-reduced-motion: reduce) { .namn-levande span, .hej-text, .ord-in span { animation: none !important; opacity: 1; filter: none; transform: none; } }
+
+/* solen/månen: snett bakom namnets högra del, fri från Dynamic Island och från texten under; mjukare strålar */
+.hm3-sol, .hm3-flare, .hm3-mane { left: 58%; margin-top: 60px; }
+.hm3-glans { width: 220px; height: 220px; margin: -110px; }
+.hm3-stralar { width: 170px; height: 170px; margin: -85px; opacity: .26; mask: radial-gradient(circle, transparent 26px, #000 31px, rgba(0, 0, 0, .25) 52px, transparent 84px); }
+body[data-niva="elit"] .hm3-stralar { opacity: .16; }
+body[data-niva="elit"] .hm3-skiva { box-shadow: 0 0 18px 6px rgba(255, 236, 170, .55); }
+body[data-niva="elit"] .hm3-glans { opacity: .75; }
+
+/* Snöväder: mulen himmel i stället för sol när det är vinter (moln tätare, ljuset dovt) */
+.himmel3[data-arstid="vinter"] .hm3-sol, .himmel3[data-arstid="vinter"] .hm3-flare { display: none; }
+body[data-niva="motionar"] .himmel3[data-arstid="vinter"]:not([data-fas="natt"]) .hm3-gradient { background: linear-gradient(180deg, #b9c6d4 0%, #d9e0e8 45%, rgba(246, 244, 239, 0) 100%); }
+body[data-niva="elit"] .himmel3[data-arstid="vinter"]:not([data-fas="natt"]) .hm3-gradient { background: linear-gradient(180deg, #2a3a4c 0%, #1c2a3a 48%, rgba(11, 21, 32, 0) 100%); }
+.himmel3[data-arstid="vinter"] .hm3-moln { opacity: .95; filter: blur(8px); }
+.himmel3[data-arstid="vinter"] .hm3-sno { width: calc(6px * var(--s)); height: calc(6px * var(--s)); }

@@ -1,0 +1,302 @@
+/* jag – designteamet (2026-11-18). Laddas efter app.css och vinner över den.
+   Jag-fliken (vyJag) och arken Mål, Logga, Check-in och Pass. Klasserna heter jg-* så att inget krockar med de äldre jag-*-reglerna i app.css.
+   En rytm: 12 px mellan kort, 24 px före en avsnittsrubrik, 12 px under den. Radier: 28 (hjälte), 22 (kort), 16 (inre rutor), 12 (små rutor).
+   Elit = instrumentpanel (nummer per avsnitt, mätarstreck, tät siffertypografi). Motionär = ljust, varmt och lugnt.
+   01 tokens · 02 rubriker · 03 hjälten · 04 utmärkelser · 05 mål · 06 upplägg · 07 dataflödet · 08 kopplingar och teamet
+   · 09 inställningar och fot · 10 arken · 11 rörelse · 12 smala skärmar · 13 minskad rörelse */
+
+/* ---- 01 tokens ---- */
+body {
+  --jg-gap: 12px; --jg-luft: 24px; --jg-r-stor: 28px; --jg-r: 22px; --jg-r-inne: 16px; --jg-r-liten: 12px;
+  --jg-inne: rgba(11, 21, 32, .035); --jg-inne-kant: rgba(11, 21, 32, .06); --jg-glod: rgba(126, 224, 195, .45);
+}
+body[data-niva="elit"] { --jg-inne: rgba(246, 244, 239, .045); --jg-inne-kant: rgba(246, 244, 239, .08); }
+
+/* ---- 02 avsnittsrubriker ---- */
+.jg-rubrik { display: flex; align-items: center; gap: 10px; min-height: 30px; margin: var(--jg-luft) 2px var(--jg-gap); }
+.jg-rubrik h3 { flex: 1; font-size: 1.08rem; letter-spacing: -.02em; }
+.jg-nr { display: none; }
+body[data-niva="elit"] .jg-nr { display: grid; place-items: center; width: 26px; height: 20px; border-radius: 6px; font: 600 .62rem/1 var(--font-rubrik); letter-spacing: .06em;
+  color: var(--accent-text); background: rgba(126, 224, 195, .08); border: 1px solid rgba(126, 224, 195, .22); }
+body[data-niva="elit"] .jg-rubrik h3 { font-size: .8rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--text-2); }
+.jg-rubrik .chip { min-height: 26px; padding: 0 10px; font-size: .7rem; }
+.jg-dampad { font-size: .76rem; font-weight: 600; color: var(--text-3); }
+.jg-rakna { font: 600 .8rem/1 var(--font-rubrik); color: var(--text-3); }
+.jg-rakna b { color: var(--text); font-size: .95rem; }
+.jg-lank { display: inline-flex; align-items: center; gap: 2px; min-height: 30px; padding: 0 4px 0 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; color: var(--accent-text);
+  transition: background .25s var(--mjuk), transform .2s var(--fjader); }
+.jg-lank svg { width: 14px; height: 14px; transition: transform .3s var(--fjader); }
+.jg-lank:active { transform: scale(.95); background: rgba(126, 224, 195, .12); }
+.jg-lank:active svg { transform: translateX(2px); }
+.jg-etikett { font: 700 .62rem/1 var(--font-rubrik); letter-spacing: .14em; text-transform: uppercase; color: var(--text-3); }
+
+/* ---- 03 hjälten ---- */
+.jg-hjalte { position: relative; overflow: hidden; display: grid; gap: 16px; padding: 24px 16px 16px; border-radius: var(--jg-r-stor); border: 1px solid var(--kant);
+  background: radial-gradient(110% 60% at 50% 0, rgba(126, 224, 195, .22), transparent 62%), radial-gradient(80% 50% at 100% 100%, rgba(167, 210, 255, .2), transparent 62%),
+    radial-gradient(70% 45% at 0 100%, rgba(240, 181, 69, .1), transparent 60%), var(--yta);
+  box-shadow: var(--skugga); isolation: isolate; }
+body[data-niva="elit"] .jg-hjalte { background: radial-gradient(110% 60% at 50% 0, rgba(58, 169, 201, .32), transparent 62%), radial-gradient(80% 50% at 100% 100%, rgba(126, 224, 195, .12), transparent 62%),
+  linear-gradient(180deg, #13263a, #0d1a27); border-color: rgba(167, 210, 255, .14); }
+/* rutnät som ett instrument (elit) eller mjukt ljus (motionär) – stilla */
+.jg-hjalte-sken { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+body[data-niva="elit"] .jg-hjalte-sken { background: repeating-linear-gradient(90deg, transparent 0 23px, rgba(167, 210, 255, .05) 23px 24px), repeating-linear-gradient(0deg, transparent 0 23px, rgba(167, 210, 255, .035) 23px 24px);
+  -webkit-mask: radial-gradient(75% 55% at 50% 22%, #000, transparent 78%); mask: radial-gradient(75% 55% at 50% 22%, #000, transparent 78%); }
+body[data-niva="motionar"] .jg-hjalte-sken { background: radial-gradient(60% 40% at 50% 18%, rgba(255, 255, 255, .9), transparent 70%); }
+
+.jg-id { display: grid; justify-items: center; text-align: center; }
+.jg-avatar { position: relative; width: 96px; height: 96px; display: grid; place-items: center; }
+.jg-avatar-ring { position: absolute; inset: 0; border-radius: 50%; padding: 2px; background: conic-gradient(from 210deg, var(--is), var(--accent), #3aa9c9, var(--is));
+  -webkit-mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.jg-avatar-ring::after { content: ''; position: absolute; inset: -8px; border-radius: 50%; border: 1px solid var(--kant); }
+.jg-avatar-bild { width: 80px; height: 80px; border-radius: 50%; display: grid; place-items: center; font: 600 2rem/1 var(--font-rubrik); letter-spacing: -.02em; color: #0b1520;
+  background: radial-gradient(circle at 32% 24%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 46%), linear-gradient(150deg, #bfe0ff, #7ee0c3 70%, #5cc9ad);
+  box-shadow: inset 0 -8px 16px rgba(15, 110, 87, .22), 0 14px 30px -14px rgba(58, 169, 201, .7); }
+body[data-niva="motionar"] .jg-avatar-bild { background: radial-gradient(circle at 32% 24%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 46%), linear-gradient(150deg, #d4e8ff, #9fe8d2 70%, #7ee0c3);
+  box-shadow: inset 0 -8px 16px rgba(15, 110, 87, .15), 0 14px 30px -16px rgba(24, 54, 83, .45); }
+.jg-avatar-niva { position: absolute; right: 0; bottom: 2px; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--yta-tat);
+  border: 1.5px solid var(--accent); color: var(--accent-text); box-shadow: 0 6px 14px -6px rgba(0, 0, 0, .45); }
+.jg-avatar-niva svg { width: 15px; height: 15px; }
+.jg-id h2 { margin-top: 12px; font-size: 1.7rem; line-height: 1.1; letter-spacing: -.04em; text-transform: capitalize; }
+.jg-meta { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px 8px; margin: 6px 0 0; font-size: .78rem; font-weight: 600; color: var(--text-3); }
+.jg-meta i { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+.jg-meta span:last-child { color: var(--accent-text); font-weight: 700; }
+
+/* hälsopoängen: mätare till vänster, text + veckans staplar till höger */
+.jg-poang { display: grid; grid-template-columns: 116px 1fr; gap: 16px; align-items: center; padding: 14px; border-radius: 22px; background: var(--jg-inne); border: 1px solid var(--jg-inne-kant); }
+body[data-niva="motionar"] .jg-poang { background: rgba(255, 255, 255, .72); border-color: rgba(11, 21, 32, .06); }
+.jg-matare { position: relative; width: 116px; height: 116px; }
+.jg-poang-ring { position: absolute; inset: 12px; }
+.jg-poang-ring .varde b { font-size: 2rem; }
+.jg-poang-ring .varde small { margin-top: 2px; font-size: .54rem; }
+.jg-streck { position: absolute; inset: 0; width: 100%; height: 100%; }
+.jg-streck line { stroke: var(--kant-2); stroke-width: 1.4; stroke-linecap: round; }
+.jg-streck line.pa { stroke: var(--accent); }
+body[data-niva="elit"] .jg-streck line.pa { filter: drop-shadow(0 0 2px rgba(126, 224, 195, .9)); }
+body[data-niva="motionar"] .jg-streck line { stroke: rgba(11, 21, 32, .1); }
+body[data-niva="motionar"] .jg-streck line.pa { stroke: #4fc3a3; }
+.jg-poang-text { display: grid; gap: 6px; min-width: 0; }
+.jg-poang-text > b { font: 600 1.05rem/1.2 var(--font-rubrik); letter-spacing: -.02em; }
+.jg-trend { display: inline-flex; align-items: center; gap: 5px; justify-self: start; min-height: 24px; padding: 0 9px; border-radius: 999px; font-size: .7rem; font-weight: 800;
+  color: var(--accent-text); background: rgba(126, 224, 195, .12); }
+.jg-trend[data-ton="gul"] { color: var(--gul-text); background: rgba(240, 181, 69, .14); }
+.jg-trend[data-ton="is"] { color: var(--is-text); background: rgba(167, 210, 255, .14); }
+.jg-trend svg { width: 13px; height: 13px; }
+.jg-vecka { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 4px; }
+.jg-vecka span { display: grid; grid-template-rows: 34px auto; justify-items: center; gap: 4px; }
+.jg-vecka i { align-self: end; width: 100%; max-width: 12px; height: var(--h); border-radius: 4px; background: linear-gradient(180deg, var(--accent), rgba(126, 224, 195, .25)); transform-origin: bottom; }
+body[data-niva="motionar"] .jg-vecka i { background: linear-gradient(180deg, #7ee0c3, #cdeee4); }
+.jg-vecka small { font: 700 .56rem/1 var(--font-rubrik); color: var(--text-3); }
+.jg-vecka [data-idag] small { color: var(--accent-text); }
+body[data-niva] .jg-vecka [data-tom] i { background: none; border: 1.5px dashed var(--kant-2); }
+.jg-vecka [data-idag] small { position: relative; }
+.jg-vecka [data-idag] small::after { content: ''; position: absolute; left: 50%; bottom: -5px; width: 3px; height: 3px; margin-left: -1.5px; border-radius: 50%; background: var(--accent); }
+
+.jg-fakta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0; }
+.jg-fakta div { display: grid; gap: 4px; justify-items: center; padding: 10px 2px; border-radius: var(--jg-r-inne); background: var(--jg-inne); border: 1px solid var(--jg-inne-kant); }
+body[data-niva="motionar"] .jg-fakta div { background: rgba(255, 255, 255, .72); }
+.jg-fakta dt { order: 2; font: 700 .58rem/1 var(--font-rubrik); letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); }
+.jg-fakta dd { margin: 0; font: 600 1.08rem/1.15 var(--font-rubrik); letter-spacing: -.02em; white-space: nowrap; }
+.jg-fakta dd small { font-size: .7rem; color: var(--text-3); }
+
+/* ---- 04 utmärkelser: 3 × 2, lika höga ---- */
+.jg-medaljer { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: auto; row-gap: 0; column-gap: var(--jg-gap); }
+.jg-medaljer > :nth-child(n + 4) { margin-top: var(--jg-gap); }
+.jg-medalj { display: grid; grid-row: span 3; grid-template-rows: subgrid; justify-items: center; align-content: start; gap: 6px; padding: 14px 6px 12px; border-radius: var(--jg-r); text-align: center;
+  background: var(--yta); border: 1px solid var(--kant); box-shadow: var(--skugga); transition: transform .25s var(--fjader), border-color .3s; }
+.jg-medalj:active { transform: scale(.95); }
+.jg-medalj b { font-size: .76rem; line-height: 1.2; letter-spacing: -.01em; text-wrap: balance; }
+.jg-medalj small { font-size: .64rem; line-height: 1.3; font-weight: 600; color: var(--text-3); text-wrap: balance; }
+.jg-skiva { position: relative; width: 58px; height: 58px; display: grid; place-items: center; }
+.jg-skiva-bage { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+.jg-skiva-bage circle { fill: none; stroke-width: 3; stroke-linecap: round; }
+.jg-skiva-bage .spar { stroke: var(--spar); }
+.jg-skiva-bage .pa { stroke: url(#g-ring); stroke-dasharray: var(--a) 100; }
+.jg-medalj:not([data-klar]) .jg-skiva-bage .pa { stroke: var(--is); opacity: .8; }
+.jg-skiva-karna { position: relative; overflow: hidden; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: var(--text-3);
+  background: var(--yta-2); border: 1px dashed var(--kant-2); }
+.jg-skiva-karna svg { width: 20px; height: 20px; }
+.jg-medalj[data-klar] .jg-skiva-karna { color: #0b1520; border: 0;
+  background: radial-gradient(circle at 32% 25%, #fff, rgba(255, 255, 255, 0) 44%), conic-gradient(from 210deg, #a7d2ff, #7ee0c3, #3aa9c9, #a7d2ff);
+  box-shadow: 0 8px 18px -8px rgba(126, 224, 195, .9), inset 0 -4px 10px rgba(15, 110, 87, .3); }
+.jg-medalj[data-klar] .jg-skiva-karna::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .75) 50%, transparent 65%); transform: translateX(-130%); }
+.jg-medalj:not([data-klar]) b { color: var(--text-2); }
+body[data-niva="elit"] .jg-medalj[data-klar] { border-color: rgba(126, 224, 195, .2); }
+
+/* ---- 05 mål ---- */
+.jg-mal-lista { display: grid; gap: var(--jg-gap); }
+.jg-mal { display: grid; grid-template-columns: 52px 1fr auto; gap: 14px; align-items: center; padding: 14px 16px; border-radius: var(--jg-r); }
+.jg-mal-ring { width: 52px; height: 52px; }
+.jg-mal-ring .varde svg { width: 20px; height: 20px; color: var(--accent-text); }
+.jg-mal-text { min-width: 0; }
+.jg-mal-text b { display: block; font: 600 .95rem/1.25 var(--font-rubrik); letter-spacing: -.015em; }
+.jg-mal-text small { display: block; margin-top: 2px; font-size: .74rem; color: var(--text-3); }
+.jg-mal-tal { display: grid; justify-items: end; gap: 2px; }
+.jg-mal-tal b { font: 600 1.25rem/1 var(--font-rubrik); letter-spacing: -.03em; }
+.jg-mal-tal b small { font-size: .8rem; color: var(--text-3); }
+.jg-mal-tal > small { font-size: .64rem; font-weight: 700; color: var(--text-3); white-space: nowrap; }
+.jg-mal[data-klar] .jg-mal-tal b { color: var(--accent-text); }
+.jg-mal-tom { grid-template-columns: 40px 1fr auto; text-align: left; border-style: dashed; }
+.jg-mal-tom > svg { width: 16px; height: 16px; color: var(--text-3); }
+
+/* ---- 06 upplägget: två skärmar sida vid sida ---- */
+.jg-upplagg { display: grid; grid-template-columns: 1fr 1fr; gap: var(--jg-gap); }
+.jg-lage { position: relative; display: grid; gap: 12px; padding: 10px 10px 14px; border-radius: var(--jg-r); text-align: left; background: var(--yta); border: 1.5px solid var(--kant);
+  box-shadow: var(--skugga); transform: perspective(600px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .4s var(--mjuk), border-color .3s, box-shadow .3s; }
+.jg-lage[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(126, 224, 195, .14), 0 16px 32px -20px rgba(126, 224, 195, .9); }
+.jg-lage:active { transform: scale(.97); }
+.jg-lage-text { padding: 0 4px; }
+.jg-lage-text b { display: block; font: 600 .98rem/1.2 var(--font-rubrik); }
+.jg-lage-text small { display: block; margin-top: 2px; font-size: .72rem; color: var(--text-3); }
+.jg-lage-bock { position: absolute; top: 18px; right: 18px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, .5); background: rgba(11, 21, 32, .25); color: #0b1520; transition: background .3s, border-color .3s, transform .35s var(--fjader); }
+.jg-lage-bock svg { width: 14px; height: 14px; opacity: 0; transform: scale(.4); transition: opacity .2s, transform .35s var(--fjader); }
+.jg-lage[aria-pressed="true"] .jg-lage-bock { background: var(--accent); border-color: var(--accent); }
+.jg-lage[aria-pressed="true"] .jg-lage-bock svg { opacity: 1; transform: none; }
+/* miniskärmen: topp, ring + rader, två rutor, flikrad */
+.jg-mini { position: relative; display: grid; grid-template-columns: 34px 1fr; grid-template-rows: 7px 34px 22px 10px; column-gap: 8px; row-gap: 7px; height: 128px; padding: 12px 10px 8px;
+  border-radius: 16px; overflow: hidden; }
+.jg-mini i { display: block; border-radius: 4px; background: currentColor; }
+.jg-mini-motionar { color: #183653; background: radial-gradient(90% 60% at 100% 0, rgba(126, 224, 195, .45), transparent 60%), #f6f4ef; box-shadow: inset 0 0 0 1px rgba(11, 21, 32, .08); }
+.jg-mini-elit { color: #f6f4ef; background: radial-gradient(90% 60% at 100% 0, rgba(58, 169, 201, .5), transparent 60%), #0e1b29; box-shadow: inset 0 0 0 1px rgba(167, 210, 255, .16); }
+.jg-mini .m-topp { grid-column: 1 / -1; width: 48%; opacity: .5; }
+.jg-mini .m-ring { grid-row: 2; width: 34px; height: 34px; border-radius: 50%; background: none; border: 4px solid #7ee0c3; border-right-color: transparent; transform: rotate(-35deg); }
+.jg-mini .m-rad { grid-column: 2; grid-row: 2; align-self: start; height: 7px; margin-top: 6px; opacity: .3; }
+.jg-mini .m-rad.m-kort { width: 62%; margin-top: 19px; opacity: .18; }
+.jg-mini .m-ruta { grid-row: 3; height: 22px; border-radius: 6px; opacity: .1; }
+.jg-mini .m-ruta + .m-ruta { grid-column: 2; }
+.jg-mini .m-ruta:first-of-type { grid-column: 1; }
+.jg-mini-elit .m-ruta { opacity: .12; box-shadow: inset 0 0 0 1px rgba(126, 224, 195, .4); }
+.jg-mini .m-flik { grid-column: 1 / -1; grid-row: 4; height: 10px; border-radius: 5px; opacity: .14; }
+
+/* ---- 07 vem ser din data ---- */
+.jg-flode { display: grid; padding: 16px; border-radius: var(--jg-r); }
+.jg-nod { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; min-height: 44px; }
+.jg-nod-ikon { width: 40px; height: 40px; }
+.jg-nod .profilbild { font-size: .9rem; box-shadow: none; }
+.jg-nod b { display: block; font-size: .9rem; }
+.jg-nod small { display: block; font-size: .72rem; color: var(--text-3); }
+.jg-nod .chip { min-height: 26px; padding: 0 10px; font-size: .7rem; }
+.jg-nod .chip svg { width: 12px; height: 12px; }
+.jg-linje { position: relative; width: 2px; height: 22px; margin: 4px 0 4px 19px; border-radius: 2px; background: var(--spar); overflow: hidden; transition: opacity .4s var(--mjuk); }
+.jg-linje i { position: absolute; left: 0; top: 0; width: 100%; height: 45%; background: linear-gradient(transparent, var(--accent), transparent); transform: translateY(-110%); }
+.jg-linje[data-las] i { background: linear-gradient(transparent, var(--is), transparent); }
+.jg-linje[data-av] { opacity: .35; }
+.jg-linje[data-av] i { visibility: hidden; }
+.jg-flode-fot { display: flex; align-items: center; gap: 8px; margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--kant); font-size: .74rem; font-weight: 600; color: var(--text-3); }
+.jg-flode-fot svg { width: 15px; height: 15px; flex: none; color: var(--is-text); }
+
+/* ---- 08 kopplingar och teamet ---- */
+.jg-kopplingar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 var(--jg-gap); }
+.jg-koppling { display: grid; grid-row: span 3; grid-template-rows: subgrid; justify-items: center; align-content: start; gap: 6px; padding: 14px 8px; border-radius: var(--jg-r); text-align: center;
+  background: var(--yta); border: 1px dashed var(--kant-2); }
+.jg-koppling b { font-size: .82rem; }
+.jg-koppling small { font-size: .64rem; line-height: 1.3; font-weight: 600; color: var(--text-3); text-wrap: balance; }
+.jg-team { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; padding: 14px 16px; border-radius: var(--jg-r); }
+.jg-team .profilbild { width: 44px; height: 44px; font-size: .9rem; box-shadow: none; }
+.jg-team b { display: block; font-size: .92rem; }
+.jg-team small { display: block; font-size: .74rem; color: var(--text-3); }
+.jg-team .chip { min-height: 28px; font-size: .72rem; }
+
+/* ---- 09 inställningar och fot ---- */
+.jg-inst { border-radius: var(--jg-r); overflow: hidden; background: var(--yta); border: 1px solid var(--kant); box-shadow: var(--skugga); }
+body[data-niva="elit"] .jg-inst { -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3); }
+.jg-inst-rad { display: grid; grid-template-columns: 32px 1fr auto; gap: 12px; align-items: center; width: 100%; min-height: 56px; padding: 10px 16px; text-align: left;
+  border-top: 1px solid var(--kant); transition: background .2s; }
+.jg-inst-rad:first-child { border-top: 0; }
+.jg-inst-rad:active { background: var(--yta-2); }
+.jg-inst-rad .ikonruta { width: 32px; height: 32px; border-radius: 10px; }
+.jg-inst-rad .ikonruta svg { width: 17px; height: 17px; }
+.jg-inst-rad b { font-size: .9rem; }
+.jg-inst-rad > svg { width: 16px; height: 16px; color: var(--text-3); transition: transform .3s var(--fjader); }
+.jg-inst-rad:active > svg { transform: translateX(3px); }
+.jg-inst-rad .vaxel { pointer-events: none; }
+.jg-tid { min-height: 26px; padding: 0 10px; font-size: .74rem; }
+.jg-fot { display: grid; justify-items: center; gap: 4px; margin-top: var(--jg-gap); }
+.jg-fot .knapp-text svg { width: 18px; height: 18px; }
+
+/* ---- 10 arken (Mål, Logga, Check-in, Pass) ---- */
+/* det dubbla handtaget: arket har redan ett eget – det som följer med innehållet döljs i alla ark */
+.ark-innehall > .ark-handtag { display: none; }
+.jg-ark-rubrik { align-items: center; margin-bottom: 14px; }
+.jg-ark-rubrik h2 { font-size: 1.3rem; line-height: 1.15; }
+.jg-ark-rubrik .ogon { margin-bottom: 4px; }
+.jg-ark-ingress { margin: -4px 0 14px; font-size: .84rem; line-height: 1.45; color: var(--text-2); }
+.jg-mal-val .val { min-height: 66px; animation: in-upp .5s var(--mjuk) both; animation-delay: calc(var(--n) * 40ms + .12s); }
+.jg-mal-val .val small { font-size: .74rem; }
+
+/* check-in och pass: ikon + namn till vänster, värdet till höger, skalan under */
+.jg-ci { margin-top: 16px; animation: in-upp .5s var(--mjuk) both; animation-delay: calc(var(--n, 0) * 40ms + .12s); }
+.jg-ci > label { align-items: center; margin-bottom: 4px; }
+.jg-ci-namn { display: inline-flex; align-items: center; gap: 10px; font: 600 .9rem/1 var(--font-rubrik); color: var(--text); letter-spacing: -.01em; }
+.jg-ci-ikon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; color: var(--accent-text); background: rgba(126, 224, 195, .1); border: 1px solid rgba(126, 224, 195, .2); }
+.jg-ci-ikon svg { width: 15px; height: 15px; }
+.jg-ci-tal { font: 600 1.05rem/1 var(--font-rubrik); color: var(--text); letter-spacing: -.02em; }
+.jg-ci-tal small { font-size: .72rem; color: var(--text-3); }
+.jg-ci-skala { display: flex; justify-content: space-between; margin-top: -2px; font-size: .7rem; font-weight: 600; color: var(--text-3); }
+.jg-ci-summa { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; padding: 12px 16px; border-radius: var(--jg-r-inne); background: var(--jg-inne); border: 1px solid var(--jg-inne-kant); }
+.jg-ci-summa > div:first-child { display: grid; gap: 4px; }
+.jg-ci-summa b { font: 600 1.6rem/1 var(--font-rubrik); letter-spacing: -.04em; }
+.jg-ci-summa .matare > i { transition: width .35s var(--mjuk); }
+
+/* passtyperna i ett jämnt rutnät (3 × 2) i stället för ojämna rader */
+.jg-typer { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.jg-typer .chip-val { justify-content: center; padding: 0 6px; animation: in-upp .45s var(--mjuk) both; animation-delay: calc(var(--n) * 30ms + .1s); }
+.jg-au { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; margin-top: 18px; padding: 12px 16px; border-radius: var(--jg-r-inne);
+  background: linear-gradient(120deg, rgba(126, 224, 195, .1), rgba(167, 210, 255, .06)); border: 1px solid rgba(126, 224, 195, .2); }
+.jg-au > div { display: grid; gap: 4px; }
+.jg-au b { font: 600 1.5rem/1 var(--font-rubrik); letter-spacing: -.03em; }
+.jg-au b small { font-size: .78rem; color: var(--text-3); }
+.jg-au-text { justify-self: end; text-align: right; font-size: .72rem; line-height: 1.4; font-weight: 600; color: var(--text-3); }
+
+/* loggaarket: fyra lika rutor, ikon och pil i samma rad */
+.jg-snabbval { gap: var(--jg-gap); }
+.jg-snabbval button { gap: 14px; min-height: 120px; padding: 14px; border-radius: var(--jg-r); animation: in-upp .5s var(--mjuk) both; animation-delay: calc(var(--n) * 45ms + .12s); }
+.jg-sv-topp { display: flex; align-items: center; justify-content: space-between; }
+.jg-sv-pil { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: var(--text-3); border: 1px solid var(--kant); transition: transform .3s var(--fjader); }
+.jg-sv-pil svg { width: 13px; height: 13px; }
+.jg-snabbval button:active .jg-sv-pil { transform: translateX(3px); }
+.jg-snabbval button[data-klar] .jg-sv-pil { color: #0b1520; background: var(--accent); border-color: var(--accent); }
+.jg-snabbval button[data-klar] small { color: var(--accent-text); }
+
+/* ---- 11 rörelse – entréer en gång, ständigt bara transform/opacity ---- */
+.jg-avatar { animation: jg-pop .8s var(--fjader) both .15s; }
+.jg-avatar-niva { animation: jg-pop .6s var(--fjader) both .6s; }
+.jg-streck line.pa { opacity: 0; animation: jg-tand .3s var(--mjuk) forwards; animation-delay: calc(var(--n) * 18ms + .35s); }
+.jg-vecka i { animation: vax-upp .8s var(--mjuk) both; animation-delay: calc(var(--n) * 55ms + .45s); }
+.jg-fakta div { animation: in-upp .55s var(--mjuk) both; }
+.jg-fakta div:nth-child(2) { animation-delay: .06s; } .jg-fakta div:nth-child(3) { animation-delay: .12s; } .jg-fakta div:nth-child(4) { animation-delay: .18s; }
+.jg-medalj { animation: jg-medalj .7s var(--fjader) both; animation-delay: calc(var(--n) * 60ms + .25s); }
+.jg-skiva-bage .pa { animation: jg-bage 1.1s var(--mjuk) both; animation-delay: calc(var(--n) * 60ms + .45s); }
+.jg-medalj[data-klar] .jg-skiva-karna::after { animation: jg-glans 1.2s var(--mjuk) both; animation-delay: calc(var(--n) * 90ms + 1s); }
+.jg-koppling { animation: in-upp .55s var(--mjuk) both; animation-delay: calc(var(--n) * 60ms + .2s); }
+/* dataflödet: en ljuspuls rinner nedåt i linjen (bara transform) */
+.jg-linje i { animation: jg-flode 2.2s var(--mjuk) infinite; }
+.jg-linje[data-las] i { animation-duration: 3s; animation-delay: .6s; }
+body[data-niva="elit"] .jg-avatar-ring::after { animation: jg-andas 5s ease-in-out infinite; }
+@keyframes jg-pop { from { opacity: 0; transform: scale(.7); } }
+@keyframes jg-tand { to { opacity: 1; } }
+@keyframes jg-medalj { from { opacity: 0; transform: translateY(12px) scale(.92); } }
+@keyframes jg-bage { from { stroke-dasharray: 0 100; } }
+@keyframes jg-glans { to { transform: translateX(130%); } }
+@keyframes jg-flode { from { transform: translateY(-110%); } to { transform: translateY(240%); } }
+@keyframes jg-andas { 50% { opacity: .35; transform: scale(1.04); } }
+
+/* ---- 12 smala skärmar (375 och smalare) ---- */
+@media (max-width: 380px) {
+  .jg-poang { grid-template-columns: 104px 1fr; gap: 12px; padding: 12px; }
+  .jg-matare { width: 104px; height: 104px; }
+  .jg-poang-ring { inset: 11px; }
+  .jg-poang-ring .varde b { font-size: 1.8rem; }
+  .jg-fakta { gap: 6px; }
+  .jg-fakta dd { font-size: 1rem; }
+  .jg-medalj { padding: 12px 4px 10px; }
+  .jg-typer .chip-val { font-size: .82rem; }
+}
+
+/* ---- 13 minskad rörelse ---- */
+@media (prefers-reduced-motion: reduce) {
+  .jg-avatar, .jg-avatar-niva, .jg-vecka i, .jg-fakta div, .jg-medalj, .jg-skiva-bage .pa, .jg-koppling, .jg-ci, .jg-typer .chip-val, .jg-snabbval button, .jg-mal-val .val { animation: none; }
+  .jg-streck line.pa { animation: none; opacity: 1; }
+  .jg-linje i, .jg-avatar-ring::after, .jg-medalj[data-klar] .jg-skiva-karna::after { animation: none; }
+  .jg-linje i { transform: translateY(60%); }
+}

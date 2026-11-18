@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b1520">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Uperformance – Hälsoappen</title>
+<meta name="description" content="Prototyp av Uperformances hälsoapp: profil på fem frågor, kroppskarta i 3D, dagsform, belastning och screening. Exempeldata.">
+<link rel="icon" href="../assets/favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="app.css?v=11">
+<link rel="stylesheet" href="css/system.css?v=13">
+<link rel="stylesheet" href="css/intro.css?v=16">
+<link rel="stylesheet" href="css/idag.css?v=12">
+<link rel="stylesheet" href="css/kroppvy.css?v=12">
+<link rel="stylesheet" href="css/screening.css?v=14">
+<link rel="stylesheet" href="css/jag.css?v=12">
+<link rel="stylesheet" href="css/himmel.css?v=12">
+<link rel="stylesheet" href="css/sno.css?v=6">
+<link rel="stylesheet" href="css/liquid.css?v=24">
+<link rel="stylesheet" href="css/traning.css?v=4">
+<link rel="stylesheet" href="css/lopp.css?v=4">
+<link rel="stylesheet" href="css/plan.css?v=4">
+<script src="kropp.js?v=12" defer></script>
+<script src="app.js?v=31" defer></script>
+</head>
+<body data-niva="elit">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="g-ring" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a7d2ff"/><stop offset=".55" stop-color="#3aa9c9"/><stop offset="1" stop-color="#7ee0c3"/></linearGradient>
+    <linearGradient id="g-varm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0b545"/><stop offset="1" stop-color="#e5674f"/></linearGradient>
+    <linearGradient id="g-yta" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7ee0c3" stop-opacity=".35"/><stop offset="1" stop-color="#7ee0c3" stop-opacity="0"/></linearGradient>
+  </defs>
+  <symbol id="logo" viewBox="0 0 1274.2 395">
+    <path fill="none" stroke="currentColor" stroke-width="20" d="M198,10c103.9,0,188,84,188,187.5s-84.1,187.5-188,187.5S10,301,10,197.5,94.1,10,198,10Z"/>
+    <path fill="currentColor" d="M177.5,127.8v88.6c0,7.3,1.6,13,4.7,17.3,3.3,4.1,8.4,6.2,15.5,6.2s12.4-2.1,15.8-6.2c3.4-4.3,5.1-10.1,5.1-17.3v-88.6h49.1v88.6c0,14.9-3.1,27.8-9.3,38.4-6.2,10.5-14.7,18.4-25.5,23.8-10.8,5.3-22.9,8-36.2,8s-25.2-2.7-35.5-8c-10.2-5.3-18.2-13.2-24-23.8-5.8-10.5-8.7-23.3-8.7-38.4v-88.6h49.1-.1Z"/>
+    <path fill="currentColor" d="M518.7,181.6c0,7.7-2.5,13.9-7.6,18.7-5.1,4.7-12.7,7.1-22.8,7.1h-18.2v38.4h-9v-90h27.2c10,0,17.6,2.4,22.7,7.1,5.1,4.7,7.7,11,7.7,18.8h0ZM488.3,199.6c14.1,0,21.1-6,21.1-18s-1.7-10.6-5-13.6c-3.3-3.1-8.7-4.6-16.1-4.6h-18.2v36.3h18.2ZM597.4,207c0,3.1,0,5.4-.3,7.1h-58.3c.3,5.3,1.5,9.9,3.9,13.6,2.3,3.8,5.4,6.7,9.1,8.6,3.8,1.9,7.9,2.8,12.4,2.8s10.7-1.4,14.7-4.2,6.7-6.7,8-11.5h9.5c-1.7,6.9-5.4,12.5-11.1,16.9-5.6,4.3-12.6,6.4-21.1,6.4s-12.5-1.5-17.8-4.4c-5.2-3-9.4-7.2-12.4-12.6-2.9-5.5-4.4-11.9-4.4-19.2s1.5-13.7,4.4-19.2,7-9.7,12.2-12.6c5.2-2.9,11.2-4.4,17.9-4.4s12.5,1.5,17.5,4.4c5.1,2.9,8.9,6.9,11.6,11.8,2.7,4.9,4.1,10.3,4.1,16.3v.2ZM588.3,206.7c0-5.2-1-9.7-3.2-13.4-2.1-3.7-5.1-6.5-8.9-8.4-3.8-1.9-7.9-2.8-12.4-2.8-6.7,0-12.4,2.1-17.1,6.4-4.7,4.3-7.3,10.3-7.9,18.2h49.5ZM622.9,187.9c2-4.4,5-7.8,9-10.2,4.1-2.4,9.1-3.6,15.1-3.6v9.4h-2.4c-6.5,0-11.8,1.8-15.7,5.3s-5.9,9.4-5.9,17.6v39.3h-9v-70.3h9v12.5h0ZM688.2,183h-16.3v62.7h-9v-62.7h-9.8v-7.6h9.8v-4.9c0-7.6,1.9-13.3,5.8-16.9,3.9-3.6,10.3-5.4,19.1-5.4v7.7c-5.8,0-10,1.1-12.4,3.3-2.3,2.2-3.5,6-3.5,11.2v4.9h16.3v7.6h0ZM733.2,246.7c-6.6,0-12.6-1.5-17.9-4.4-5.2-3-9.4-7.2-12.5-12.6-3-5.5-4.5-11.9-4.5-19.2s1.5-13.6,4.6-19.1,7.3-9.7,12.6-12.6c5.3-3,11.3-4.5,17.9-4.5s12.6,1.5,17.9,4.5c5.4,2.9,9.6,7.1,12.6,12.6,3.1,5.4,4.6,11.8,4.6,19.1s-1.5,13.6-4.6,19.1-7.3,9.7-12.7,12.7c-5.4,2.9-11.4,4.4-18,4.4h0ZM733.2,238.9c4.6,0,8.9-1,12.9-3.1,3.9-2.1,7.1-5.3,9.5-9.5,2.5-4.3,3.7-9.5,3.7-15.7s-1.2-11.4-3.6-15.6c-2.4-4.3-5.6-7.5-9.5-9.5-3.9-2.1-8.2-3.2-12.9-3.2s-8.9,1.1-12.9,3.2c-3.9,2.1-7.1,5.2-9.5,9.5-2.3,4.2-3.5,9.4-3.5,15.6s1.2,11.4,3.5,15.7c2.4,4.2,5.5,7.4,9.4,9.5s8.2,3.1,12.9,3.1h0ZM794,187.9c2-4.4,5-7.8,9-10.2,4.1-2.4,9.1-3.6,15.1-3.6v9.4h-2.4c-6.5,0-11.8,1.8-15.7,5.3s-5.9,9.4-5.9,17.6v39.3h-9v-70.3h9v12.5h0ZM915.3,174.1c8.2,0,14.9,2.6,20.1,7.9,5.2,5.1,7.9,12.7,7.9,22.5v41.2h-8.9v-40.2c0-7.6-1.8-13.5-5.5-17.5s-8.7-6.1-15.1-6.1-11.9,2.2-15.8,6.6c-3.9,4.4-5.9,10.7-5.9,19.1v38.1h-8.9v-40.2c0-7.6-1.8-13.5-5.5-17.5s-8.8-6.1-15.2-6.1-11.9,2.2-15.8,6.6c-3.9,4.4-5.9,10.7-5.9,19.1v38.1h-9v-70.3h9v12.1c2.2-4.4,5.4-7.7,9.5-9.9,4.1-2.3,8.7-3.5,13.8-3.5s11.4,1.5,16,4.4,8,7.2,10,12.9c1.9-5.6,5.1-9.8,9.7-12.7,4.6-3,9.9-4.5,15.7-4.5h-.2ZM959.2,210.4c0-7.2,1.4-13.5,4.2-18.9,2.9-5.5,6.9-9.7,12-12.6,5.1-3,10.9-4.5,17.4-4.5s12.4,1.5,17.3,4.6c4.9,3.1,8.4,7,10.6,11.8v-15.4h9v70.3h-9v-15.6c-2.2,4.8-5.8,8.8-10.7,12-4.8,3.1-10.6,4.6-17.3,4.6s-12.1-1.5-17.3-4.5c-5.1-3-9.1-7.3-12-12.7-2.8-5.5-4.2-11.8-4.2-19.1h0ZM1020.6,210.6c0-5.7-1.2-10.6-3.5-14.9-2.3-4.3-5.5-7.6-9.5-9.9-3.9-2.3-8.3-3.5-13.1-3.5s-9.4,1.1-13.4,3.3c-3.9,2.2-7.1,5.5-9.4,9.8-2.2,4.2-3.3,9.2-3.3,15.1s1.1,10.8,3.3,15.2c2.3,4.3,5.4,7.6,9.4,9.9,3.9,2.2,8.4,3.3,13.4,3.3s9.2-1.2,13.1-3.5c4-2.3,7.2-5.6,9.5-9.9,2.3-4.3,3.5-9.3,3.5-14.9h0ZM1083.1,174.1c8.4,0,15.3,2.6,20.6,7.9,5.3,5.1,8,12.7,8,22.5v41.2h-8.9v-40.2c0-7.6-1.9-13.5-5.8-17.5-3.8-4-9-6.1-15.6-6.1s-12.2,2.1-16.2,6.4c-4,4.3-6.1,10.6-6.1,18.9v38.4h-9v-70.3h9v12c2.2-4.3,5.4-7.6,9.7-9.8,4.2-2.3,9-3.5,14.3-3.5h0ZM1127.5,210.6c0-7.3,1.5-13.6,4.4-19.1s7-9.7,12.1-12.6c5.1-3,11-4.5,17.6-4.5s15.8,2.1,21.4,6.4c5.7,4.3,9.3,10.1,10.9,17.5h-9.7c-1.2-5.1-3.8-9-7.9-11.8-3.9-2.9-8.9-4.4-14.8-4.4s-9,1.1-12.7,3.2c-3.8,2.1-6.8,5.4-9,9.7-2.1,4.2-3.2,9.4-3.2,15.6s1.1,11.4,3.2,15.7c2.2,4.3,5.2,7.5,9,9.7,3.8,2.1,8,3.2,12.7,3.2s10.9-1.4,14.8-4.2c4-2.9,6.7-7,7.9-12.1h9.7c-1.6,7.2-5.3,13-10.9,17.4-5.7,4.4-12.8,6.6-21.4,6.6s-12.5-1.5-17.6-4.4c-5.1-3-9.2-7.2-12.1-12.6-2.9-5.5-4.4-11.9-4.4-19.2h0ZM1274.2,207c0,3.1,0,5.4-.3,7.1h-58.3c.3,5.3,1.5,9.9,3.9,13.6,2.3,3.8,5.4,6.7,9.1,8.6,3.8,1.9,7.9,2.8,12.4,2.8s10.7-1.4,14.7-4.2,6.7-6.7,8-11.5h9.5c-1.7,6.9-5.4,12.5-11.1,16.9-5.6,4.3-12.6,6.4-21.1,6.4s-12.5-1.5-17.8-4.4c-5.2-3-9.4-7.2-12.4-12.6-2.9-5.5-4.4-11.9-4.4-19.2s1.5-13.7,4.4-19.2,7-9.7,12.2-12.6c5.2-2.9,11.2-4.4,17.9-4.4s12.5,1.5,17.5,4.4c5.1,2.9,8.9,6.9,11.6,11.8,2.7,4.9,4.1,10.3,4.1,16.3v.2ZM1265,206.7c0-5.2-1-9.7-3.2-13.4-2.1-3.7-5.1-6.5-8.9-8.4s-7.9-2.8-12.4-2.8c-6.7,0-12.4,2.1-17.1,6.4-4.7,4.3-7.3,10.3-7.9,18.2h49.5Z"/>
+  </symbol>
+  <!-- Linjeikonerna i SF Symbols-stil (2026-11-18): viewBox 24, linjevikt 1,75 (app.css/liquid.css), rundade ändar, ritade inom 3–21 så att de är optiskt lika stora.
+       Fyllda varianter (-fylld) för flikradens valda flik, som i Apples appar. Prickar är små fyllda cirklar (fill="currentColor" stroke="none" vinner över arvet från <use>). -->
+  <symbol id="i-hem" viewBox="0 0 24 24"><path d="M3.6 10.6 12 3.9l8.4 6.7"/><path d="M5.9 9V19a1.6 1.6 0 0 0 1.6 1.6h2.9v-4.4a1.6 1.6 0 0 1 3.2 0v4.4h2.9a1.6 1.6 0 0 0 1.6-1.6V9"/></symbol>
+  <symbol id="i-hem-fylld" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M12 3.1c.33 0 .66.11.93.33l7.9 6.32a1.05 1.05 0 0 1-1.31 1.64l-.32-.26V19a2.2 2.2 0 0 1-2.2 2.2h-3.2v-4.9a1.8 1.8 0 0 0-3.6 0v4.9H7a2.2 2.2 0 0 1-2.2-2.2v-7.87l-.32.26a1.05 1.05 0 0 1-1.31-1.64l7.9-6.32c.27-.22.6-.33.93-.33z"/></symbol>
+  <symbol id="i-kropp" viewBox="0 0 24 24"><circle cx="12" cy="4.6" r="1.9"/><path d="M6.4 8.9c1.9.7 3.7 1 5.6 1s3.7-.3 5.6-1M12 9.9v4.7M12 14.6l-2.7 6M12 14.6l2.7 6"/></symbol>
+  <symbol id="i-kropp-fylld" viewBox="0 0 24 24"><circle fill="currentColor" stroke="none" cx="12" cy="4.5" r="2.35"/><path fill="currentColor" stroke="none" d="M6.7 7.85c1.8.62 3.55.9 5.3.9s3.5-.28 5.3-.9a1.15 1.15 0 0 1 .75 2.18c-.95.32-1.9.57-2.85.74v3.4l2.2 5.9a1.3 1.3 0 0 1-2.43.92L12 16.05l-2.97 4.94a1.3 1.3 0 0 1-2.43-.92l2.2-5.9v-3.4c-.95-.17-1.9-.42-2.85-.74a1.15 1.15 0 0 1 .75-2.18z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-screen" viewBox="0 0 24 24"><rect x="3.4" y="4.6" width="17.2" height="14.8" rx="3.6"/><path d="M6.6 12.4h2.1l1.4-3.1 2.4 6 1.6-4 .9 1.1h2.4"/></symbol>
+  <symbol id="i-screen-fylld" viewBox="0 0 24 24"><mask id="m-screen" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><path d="M6.6 12.4h2.1l1.4-3.1 2.4 6 1.6-4 .9 1.1h2.4" fill="none" stroke="#000" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></mask><rect fill="currentColor" stroke="none" mask="url(#m-screen)" x="2.6" y="3.8" width="18.8" height="16.4" rx="4.3"/></symbol>
+  <symbol id="i-jag" viewBox="0 0 24 24"><circle cx="12" cy="7.9" r="3.7"/><path d="M4.9 20.1c.55-3.5 3.45-5.6 7.1-5.6s6.55 2.1 7.1 5.6"/></symbol>
+  <symbol id="i-jag-fylld" viewBox="0 0 24 24"><circle fill="currentColor" stroke="none" cx="12" cy="7.8" r="4.3"/><path fill="currentColor" stroke="none" d="M12 13.6c4.05 0 7.4 2.35 7.95 6.05.1.75-.47 1.35-1.22 1.35H5.27c-.75 0-1.32-.6-1.22-1.35.55-3.7 3.9-6.05 7.95-6.05z"/></symbol>
+  <symbol id="i-pil" viewBox="0 0 24 24"><path d="M4.8 12h14.4M13.6 6.2l5.8 5.8-5.8 5.8"/></symbol>
+  <symbol id="i-bak" viewBox="0 0 24 24"><path d="M14.8 5.2 8 12l6.8 6.8"/></symbol>
+  <symbol id="i-hoger" viewBox="0 0 24 24"><path d="M9.2 5.2 16 12l-6.8 6.8"/></symbol>
+  <symbol id="i-bock" viewBox="0 0 24 24"><path d="M5.2 12.6 9.6 17l9.2-10"/></symbol>
+  <symbol id="i-stang" viewBox="0 0 24 24"><path d="M6.6 6.6l10.8 10.8M17.4 6.6 6.6 17.4"/></symbol>
+  <symbol id="i-las" viewBox="0 0 24 24"><rect x="5" y="10.4" width="14" height="10.2" rx="2.6"/><path d="M8.4 10.4V7.6a3.6 3.6 0 0 1 7.2 0v2.8"/><circle fill="currentColor" stroke="none" cx="12" cy="15.5" r="1.25"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M12 11v5.4"/><circle fill="currentColor" stroke="none" cx="12" cy="7.9" r="1.15"/></symbol>
+  <symbol id="i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.7"/><path d="M12 3v1.8M12 19.2V21M3 12h1.8M19.2 12H21M5.64 5.64l1.27 1.27M17.09 17.09l1.27 1.27M5.64 18.36l1.27-1.27M17.09 6.91l1.27-1.27"/></symbol>
+  <symbol id="i-mane" viewBox="0 0 24 24"><path d="M19.9 14.6A8.2 8.2 0 1 1 9.4 4.1a6.7 6.7 0 0 0 10.5 10.5z"/></symbol>
+  <symbol id="i-hjarta" viewBox="0 0 24 24"><path d="M12 19.9c-.3 0-8.3-4.6-8.3-10.3C3.7 7.1 5.6 5.2 8 5.2c1.75 0 3.2 1 4 2.5.8-1.5 2.25-2.5 4-2.5 2.4 0 4.3 1.9 4.3 4.4 0 5.7-8 10.3-8.3 10.3z"/></symbol>
+  <symbol id="i-puls" viewBox="0 0 24 24"><path d="M3 12.2h3.6l2-4.6 3.4 9.2 2.4-6.4 1.5 1.8H21"/></symbol>
+  <symbol id="i-blixt" viewBox="0 0 24 24"><path d="M13.4 3 5.6 13.1h5.8l-.9 7.9 7.9-10.2h-5.9z"/></symbol>
+  <symbol id="i-droppe" viewBox="0 0 24 24"><path d="M12 20.9a6.4 6.4 0 0 0 6.4-6.4c0-4-6.4-11.2-6.4-11.2S5.6 10.5 5.6 14.5a6.4 6.4 0 0 0 6.4 6.4z"/></symbol>
+  <symbol id="i-vag" viewBox="0 0 24 24"><path d="M3 9.3c2.25-1.9 4.25-1.9 6.5 0s4.25 1.9 6.5 0 3.5-1.6 5-.8M3 15.3c2.25-1.9 4.25-1.9 6.5 0s4.25 1.9 6.5 0 3.5-1.6 5-.8"/></symbol>
+  <symbol id="i-batteri" viewBox="0 0 24 24"><rect x="2.9" y="7.4" width="16.2" height="9.2" rx="2.7"/><path d="M21.2 10.6v2.8"/><rect fill="currentColor" stroke="none" x="5.2" y="9.7" width="6.6" height="4.6" rx="1.2"/></symbol>
+  <symbol id="i-leende" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M8.5 14.3c.9 1.3 2.1 2 3.5 2s2.6-.7 3.5-2"/><circle fill="currentColor" stroke="none" cx="9.2" cy="9.8" r="1.15"/><circle fill="currentColor" stroke="none" cx="14.8" cy="9.8" r="1.15"/></symbol>
+  <symbol id="i-sko" viewBox="0 0 24 24"><path d="M3.2 16.2V9.4c0-.5.45-.85.93-.73l3.07.78 1.6-2.4c.3-.45.95-.53 1.35-.17l3.25 2.9a11.5 11.5 0 0 0 6.6 2.9c.6.06 1 .55 1 1.15v2.37a1.6 1.6 0 0 1-1.6 1.6H4.8a1.6 1.6 0 0 1-1.6-1.6z"/><path d="M3.2 14.2h17.8M11 9.8l-1.3 1.4M13.4 11.6l-1.2 1.3"/></symbol>
+  <symbol id="i-hantel" viewBox="0 0 24 24"><rect x="5.2" y="6.4" width="2.8" height="11.2" rx="1.3"/><rect x="16" y="6.4" width="2.8" height="11.2" rx="1.3"/><path d="M3 9.6v4.8M21 9.6v4.8M8 12h8"/></symbol>
+  <symbol id="i-balans" viewBox="0 0 24 24"><circle cx="12" cy="4.6" r="1.9"/><path d="M4 9.9l8 1.3 8-1.3M12 11.2v3.4M12 14.6l-3 6M12 14.6l2.4 2.9 3.1-.9"/></symbol>
+  <symbol id="i-rorlighet" viewBox="0 0 24 24"><circle cx="14.8" cy="4.6" r="1.9"/><path d="M13.9 8.4 9.4 10.9l-3.6-.9M13.9 8.4l1.4 4.9 4 1.4M15.3 13.3l-4.1 7.1M9.4 10.9l-1.8 4.2-3 .6"/></symbol>
+  <symbol id="i-varning" viewBox="0 0 24 24"><path d="M10.35 4.4 3.1 17.3A1.9 1.9 0 0 0 4.75 20.1h14.5a1.9 1.9 0 0 0 1.65-2.8L13.65 4.4a1.9 1.9 0 0 0-3.3 0z"/><path d="M12 9.4v4.6"/><circle fill="currentColor" stroke="none" cx="12" cy="16.9" r="1.15"/></symbol>
+  <symbol id="i-skold" viewBox="0 0 24 24"><path d="M12 3.2 5.2 5.8v5.5c0 4.3 2.8 7.9 6.8 9.3 4-1.4 6.8-5 6.8-9.3V5.8z"/><path d="M8.9 12.1l2.2 2.2 4-4.3"/></symbol>
+  <symbol id="i-plaster" viewBox="0 0 24 24"><rect x="2.9" y="8.3" width="18.2" height="7.4" rx="3.7" transform="rotate(-45 12 12)"/><path d="M9.6 9.6l4.8 4.8"/><circle fill="currentColor" stroke="none" cx="11" cy="13" r=".85"/><circle fill="currentColor" stroke="none" cx="13" cy="11" r=".85"/></symbol>
+  <symbol id="i-kalender" viewBox="0 0 24 24"><rect x="3.6" y="5" width="16.8" height="15.6" rx="3.2"/><path d="M8 3.2v3.4M16 3.2v3.4M3.6 9.8h16.8"/><circle fill="currentColor" stroke="none" cx="8.2" cy="13.6" r="1.05"/><circle fill="currentColor" stroke="none" cx="12" cy="13.6" r="1.05"/><circle fill="currentColor" stroke="none" cx="15.8" cy="13.6" r="1.05"/><circle fill="currentColor" stroke="none" cx="8.2" cy="17" r="1.05"/><circle fill="currentColor" stroke="none" cx="12" cy="17" r="1.05"/></symbol>
+  <symbol id="i-dokument" viewBox="0 0 24 24"><path d="M13.8 3.2H7.6A2.4 2.4 0 0 0 5.2 5.6v12.8a2.4 2.4 0 0 0 2.4 2.4h8.8a2.4 2.4 0 0 0 2.4-2.4V8.2z"/><path d="M13.8 3.2v3.6a1.4 1.4 0 0 0 1.4 1.4h3.6M8.8 12.6h6.4M8.8 16.2h4.2"/></symbol>
+  <symbol id="i-lunga" viewBox="0 0 24 24"><path d="M12 3.6v7.6M12 9c-.9 1.4-1.9 2-3.2 2.1M12 9c.9 1.4 1.9 2 3.2 2.1"/><path d="M8.4 7.4C5.9 7.6 4 11.1 4 15.4c0 2.7 1.1 4.6 3.1 4.6 1.9 0 3-1.4 3-3.4v-6.2M15.6 7.4c2.5.2 4.4 3.7 4.4 8 0 2.7-1.1 4.6-3.1 4.6-1.9 0-3-1.4-3-3.4v-6.2"/></symbol>
+  <symbol id="i-provror" viewBox="0 0 24 24"><path d="M8.6 3.4h6.8M10 3.4v13.4a2 2 0 0 0 4 0V3.4M10 11.4h4"/></symbol>
+  <symbol id="i-matt" viewBox="0 0 24 24"><rect x="3" y="7.4" width="18" height="9.2" rx="2.4"/><path d="M7 7.4v2.8M10.3 7.4v4.2M13.7 7.4v2.8M17 7.4v4.2"/></symbol>
+  <symbol id="i-hjarna" viewBox="0 0 24 24"><path d="M12 5.6a2.9 2.9 0 0 0-5.3 1.4A3 3 0 0 0 4.9 12a3 3 0 0 0 1.8 4.6A2.9 2.9 0 0 0 12 18.4zM12 5.6a2.9 2.9 0 0 1 5.3 1.4 3 3 0 0 1 1.8 5 3 3 0 0 1-1.8 4.6 2.9 2.9 0 0 1-5.3 1.8"/><path d="M12 5.6v12.8M8.4 10.6c.9 0 1.7.5 2 1.3M15.6 10.6c-.9 0-1.7.5-2 1.3"/></symbol>
+  <symbol id="i-stjarna" viewBox="0 0 24 24"><path d="M12 3.6l2.5 5.2 5.7.8-4.1 4 1 5.6L12 16.5l-5.1 2.7 1-5.6-4.1-4 5.7-.8z"/></symbol>
+  <symbol id="i-mal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><circle cx="12" cy="12" r="5"/><circle fill="currentColor" stroke="none" cx="12" cy="12" r="1.5"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><path d="M3.6 16.8l5.4-5.4 3.9 3.9 7.5-7.5M15 7.8h5.4v5.4"/></symbol>
+  <symbol id="i-team" viewBox="0 0 24 24"><circle cx="9.2" cy="8.2" r="3.1"/><path d="M3.4 19.6c.55-3.1 2.9-5 5.8-5s5.25 1.9 5.8 5M15.6 5.3a3 3 0 0 1 0 5.8M17.4 14.8c1.8.6 2.9 2.2 3.3 4.8"/></symbol>
+  <symbol id="i-gnista" viewBox="0 0 24 24"><path d="M11 4.2l1.6 4.6 4.6 1.6-4.6 1.6L11 16.6l-1.6-4.6-4.6-1.6 4.6-1.6z"/><path d="M17.8 14.4l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></symbol>
+  <symbol id="i-uppdatera" viewBox="0 0 24 24"><path d="M19.6 12.2a7.6 7.6 0 1 1-2.3-5.5L19.6 9"/><path d="M19.6 4.4V9H15"/></symbol>
+  <symbol id="i-klocka" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M12 7.2V12l3.2 1.9"/></symbol>
+  <symbol id="i-timglas" viewBox="0 0 24 24"><path d="M6.8 3.4h10.4M6.8 20.6h10.4M8 3.4c0 4 8 4.9 8 8.6s-8 4.6-8 8.6M16 3.4c0 4-8 4.9-8 8.6s8 4.6 8 8.6"/></symbol>
+  <symbol id="i-plats" viewBox="0 0 24 24"><path d="M12 20.8s-6.4-5.5-6.4-10.8a6.4 6.4 0 0 1 12.8 0c0 5.3-6.4 10.8-6.4 10.8z"/><circle cx="12" cy="10" r="2.3"/></symbol>
+  <symbol id="i-boll" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M12 7.6l3.7 2.7-1.4 4.3H9.7l-1.4-4.3zM12 3.2v4.4M20.4 9.6l-4.7.7M17.2 19.1l-2.9-4.5M6.8 19.1l2.9-4.5M3.6 9.6l4.7.7"/></symbol>
+</svg>
+
+<div class="app" id="app">
+  <div class="bakgrund" aria-hidden="true"><i class="fl fl-1"></i><i class="fl fl-2"></i><i class="fl fl-3"></i><i class="korn"></i></div>
+  <!-- 3D-kroppen lever här och flyttas in i den plats ([data-kropp-plats]) som vyn har -->
+  <div class="sno-lager" id="sno" aria-hidden="true"></div>
+  <div class="kropp-scen" id="kropp-scen" aria-label="Din kropp i 3D – tryck där du har ont" role="img"></div>
+  <div class="skarm-lager" id="skarm"></div>
+  <div class="kompakt-topp" id="kompakt" aria-hidden="true"></div>
+  <nav class="flikrad" id="flikrad" aria-label="Huvudmeny" hidden>
+    <div class="flik-kapsel">
+      <span class="flik-markor" aria-hidden="true"></span>
+      <button type="button" data-flik="idag"><svg class="ik-linje" aria-hidden="true"><use href="#i-hem"/></svg><svg class="ik-fylld" aria-hidden="true"><use href="#i-hem-fylld"/></svg><span>Idag</span></button>
+      <button type="button" data-flik="kropp"><svg class="ik-linje" aria-hidden="true"><use href="#i-kropp"/></svg><svg class="ik-fylld" aria-hidden="true"><use href="#i-kropp-fylld"/></svg><span>Kropp</span></button>
+      <button type="button" class="flik-plus" data-logga aria-label="Logga"><span class="plus-glas" aria-hidden="true"><i></i></span><svg aria-hidden="true"><use href="#i-plus"/></svg></button>
+      <button type="button" data-flik="screening"><svg class="ik-linje" aria-hidden="true"><use href="#i-screen"/></svg><svg class="ik-fylld" aria-hidden="true"><use href="#i-screen-fylld"/></svg><span>Screening</span></button>
+      <button type="button" data-flik="jag"><svg class="ik-linje" aria-hidden="true"><use href="#i-jag"/></svg><svg class="ik-fylld" aria-hidden="true"><use href="#i-jag-fylld"/></svg><span>Jag</span></button>
+    </div>
+  </nav>
+  <div class="ark-lager" id="ark" hidden><div class="ark-sloja" data-stang-ark></div><section class="ark" role="dialog" aria-modal="true"><div class="ark-handtag" aria-hidden="true"></div><div class="ark-innehall"></div></section></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+</body>
+</html>

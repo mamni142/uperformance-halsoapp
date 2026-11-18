@@ -1,0 +1,720 @@
+/* liquid – Apples formspråk (iOS 26, "Liquid Glass") över hela appen, båda lägena (2026-11-18). Laddas sist och vinner.
+   L1 materialet · L2 flikraden (kapsel, glasdroppen som dyker under plus, den levande plusknappen) · L3 rubriker som i iOS
+   · L4 segment, knappar och chips som glaskapslar · L5 arket och den hoprullade rubriken · L6 kort · L7 minskad rörelse */
+
+/* ---- L1 materialet ---- */
+body[data-niva="motionar"] {
+  --lg-yta: rgba(255, 255, 255, .58); --lg-yta-tat: rgba(255, 255, 255, .82); --lg-kant: rgba(255, 255, 255, .85); --lg-kant-ut: rgba(11, 21, 32, .07);
+  --lg-glans: rgba(255, 255, 255, .9); --lg-skugga: 0 18px 40px -18px rgba(24, 54, 83, .32), 0 2px 6px rgba(24, 54, 83, .06); --lg-droppe: rgba(126, 224, 195, .26);
+}
+body[data-niva="elit"] {
+  --lg-yta: rgba(26, 42, 58, .52); --lg-yta-tat: rgba(22, 36, 50, .82); --lg-kant: rgba(255, 255, 255, .16); --lg-kant-ut: rgba(0, 0, 0, .35);
+  --lg-glans: rgba(255, 255, 255, .22); --lg-skugga: 0 22px 44px -18px rgba(0, 0, 0, .75), 0 2px 8px rgba(0, 0, 0, .25); --lg-droppe: rgba(126, 224, 195, .2);
+}
+:root { --lg-blur: blur(26px) saturate(1.9); --lg-rand: inset 0 1px 0 var(--lg-glans), inset 0 0 0 1px var(--lg-kant), 0 0 0 .5px var(--lg-kant-ut); }
+
+/* ---- L2 flikraden ---- */
+.flikrad { height: 66px; padding: 0 6px; border-radius: 999px; background: var(--lg-yta) !important; border: 0 !important;
+  -webkit-backdrop-filter: var(--lg-blur); backdrop-filter: var(--lg-blur); box-shadow: var(--lg-rand), var(--lg-skugga) !important; overflow: visible; }
+/* ljusreflexen överst i kapseln, som glas som böjer ljuset */
+.flikrad::before { content: ''; position: absolute; inset: 1px; border-radius: inherit; pointer-events: none; z-index: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .28), transparent 42%), radial-gradient(60% 120% at 15% 0, rgba(255, 255, 255, .18), transparent 60%); opacity: .9; }
+body[data-niva="elit"] .flikrad::before { background: linear-gradient(180deg, rgba(255, 255, 255, .1), transparent 45%), radial-gradient(60% 120% at 15% 0, rgba(167, 210, 255, .12), transparent 60%); }
+.flikrad button { position: relative; z-index: 2; height: 58px; border-radius: 999px; }
+.flikrad button span { font-size: .64rem; font-weight: 700; letter-spacing: 0; }
+.flikrad button[aria-current="page"] { color: var(--accent-text); }
+.flikrad button[aria-current="page"] svg { transform: translateY(-1px) scale(1.1); }
+/* glasdroppen: följer fliken, sträcks i farten, dyker under plus (z-index under plusknappen) */
+.flik-markor { z-index: 1; top: 7px; width: 66px; height: 52px; transition: none !important; will-change: transform; }
+.flik-markor::before { inset: 0; border-radius: 999px !important; background: var(--lg-droppe) !important; border: 0 !important; animation: none !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), inset 0 0 0 1px rgba(126, 224, 195, .35), inset 0 -6px 14px -8px rgba(15, 110, 87, .35), 0 6px 16px -8px rgba(15, 110, 87, .45); }
+body[data-niva="elit"] .flik-markor::before { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 0 0 1px rgba(126, 224, 195, .32), 0 0 18px -4px rgba(126, 224, 195, .45); }
+.flik-markor::after { content: ''; position: absolute; left: 18%; right: 18%; top: 3px; height: 32%; border-radius: 999px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .55), transparent); opacity: .6; }
+body[data-niva="elit"] .flik-markor::after { opacity: .25; }
+/* den levande plusknappen: andas, en ljusring som roterar, fjädrar vid tryck */
+.flikrad .flik-plus { position: relative; z-index: 3; width: 58px; height: 58px; margin: -26px auto 0; isolation: isolate;
+  background: radial-gradient(circle at 35% 28%, #d6fbef 0, #8eeacf 38%, #3fc9a3 100%) !important;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .75), inset 0 -4px 10px rgba(15, 110, 87, .35), 0 0 0 5px var(--lg-yta-tat), 0 16px 30px -12px rgba(15, 110, 87, .75) !important;
+  transition: transform .5s cubic-bezier(.34, 1.56, .64, 1); animation: plus-in .9s cubic-bezier(.34, 1.56, .64, 1) .35s both; }
+@keyframes plus-in { from { transform: scale(.3) rotate(-90deg); opacity: 0; } }
+.flikrad .flik-plus::before { content: ''; position: absolute; inset: -9px; z-index: -1; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(126, 224, 195, .45), transparent 66%); animation: plus-andas 3.4s ease-in-out infinite; }
+@keyframes plus-andas { 0%, 100% { transform: scale(.88); opacity: .55; } 50% { transform: scale(1.12); opacity: 1; } }
+.flikrad .flik-plus::after { content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from 0deg, transparent 0 62%, rgba(255, 255, 255, .85) 72%, transparent 82%);
+  mask: radial-gradient(circle, transparent calc(50% - 2.5px), #000 calc(50% - 2px)); animation: snurra 4.8s linear infinite; }
+.flikrad .flik-plus svg { position: relative; z-index: 1; width: 26px; height: 26px; transition: transform .55s cubic-bezier(.34, 1.56, .64, 1); filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .5)); }
+.flikrad .flik-plus svg use { stroke-width: 2.6; }
+.flikrad .flik-plus:hover { transform: translateY(-2px) scale(1.04); }
+.flikrad .flik-plus:active { transform: scale(.88); transition-duration: .12s; }
+.flikrad .flik-plus:active svg { transform: rotate(90deg); }
+.app[data-ark-oppet] .flikrad .flik-plus svg { transform: rotate(135deg); }
+.app[data-ark-oppet] .flikrad .flik-plus::before { animation-duration: 1.6s; }
+
+/* ---- L3 rubriker som i iOS: stora, tunga, tätt spärrade ---- */
+.hem-topp h1, .valkomst h1 { font-weight: 700; letter-spacing: -.035em; }
+.hem-topp h1 { font-size: 2.05rem; }
+.sektion-rubrik h3, .kort-rubrik h3 { font-weight: 650; letter-spacing: -.02em; }
+
+/* ---- L4 segment, knappar och chips som glaskapslar ---- */
+.segment, .kv-lage { border-radius: 999px !important; background: var(--lg-yta) !important; border: 0 !important; box-shadow: var(--lg-rand) !important;
+  -webkit-backdrop-filter: var(--lg-blur); backdrop-filter: var(--lg-blur); }
+.segment button, .kv-lage button { border-radius: 999px !important; }
+.segment-markor, .kv-lage-markor { border-radius: 999px !important; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 6px 14px -8px rgba(15, 110, 87, .6) !important; }
+.knapp { border-radius: 999px; }
+.knapp-sek { background: var(--lg-yta) !important; border: 0 !important; box-shadow: var(--lg-rand) !important; -webkit-backdrop-filter: var(--lg-blur); backdrop-filter: var(--lg-blur); }
+.knapp-primar { box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, .7), inset 0 -3px 8px rgba(15, 110, 87, .28), 0 12px 26px -12px rgba(15, 110, 87, .7) !important; }
+.ikonknapp { background: var(--lg-yta) !important; border: 0 !important; box-shadow: var(--lg-rand) !important; -webkit-backdrop-filter: var(--lg-blur); backdrop-filter: var(--lg-blur); }
+.chip:not([data-ton]) { background: var(--lg-yta); border-color: transparent; box-shadow: var(--lg-rand); }
+
+/* ---- L5 arket och den hoprullade rubriken ---- */
+.ark { border-radius: 36px 36px 0 0 !important; background: var(--lg-yta-tat) !important; -webkit-backdrop-filter: blur(34px) saturate(1.9); backdrop-filter: blur(34px) saturate(1.9);
+  box-shadow: inset 0 1px 0 var(--lg-glans), 0 -24px 60px -20px rgba(0, 0, 0, .45) !important; border-top: 0 !important; }
+.kompakt-topp { background: var(--lg-yta-tat) !important; -webkit-backdrop-filter: blur(30px) saturate(1.9); backdrop-filter: blur(30px) saturate(1.9); border-bottom: .5px solid var(--lg-kant-ut) !important; }
+
+/* ---- L6 kort: mjuk platta med en hårfin ljusrand överst (som iOS grupperade listor) ---- */
+body[data-niva="motionar"] .kort, body[data-niva="motionar"] .bento-ruta { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 0 0 .5px rgba(11, 21, 32, .06), 0 14px 32px -20px rgba(24, 54, 83, .3); border-color: transparent; }
+body[data-niva="elit"] .kort, body[data-niva="elit"] .bento-ruta { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 0 0 .5px rgba(255, 255, 255, .06), 0 20px 40px -22px rgba(0, 0, 0, .85); }
+
+/* ---- L7 minskad rörelse ---- */
+@media (prefers-reduced-motion: reduce) {
+  .flikrad .flik-plus, .flikrad .flik-plus::before, .flikrad .flik-plus::after { animation: none !important; }
+}
+
+/* Plusknappen, version 2: ingen roterande ring (den gav en skarp ljusbåge). I stället ett mjukt sken som andas,
+   en ljusreflex som vandrar långsamt inne i knappen och ett mjukt svep var åttonde sekund. Bara transform/opacitet. */
+.flikrad .flik-plus::after { display: none; }
+.flikrad .flik-plus::before { inset: -10px; background: radial-gradient(circle, rgba(126, 224, 195, .38), rgba(126, 224, 195, 0) 68%); animation: plus-andas2 4s ease-in-out infinite; }
+@keyframes plus-andas2 { 0%, 100% { transform: scale(.92); opacity: .5; } 50% { transform: scale(1.06); opacity: .95; } }
+.plus-glas { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; pointer-events: none; z-index: 0; }
+/* ljusreflexen överst till vänster som rör sig lite, som ljus i en glaskula */
+.plus-glas::before { content: ''; position: absolute; left: 10%; top: 6%; width: 56%; height: 40%; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, .75), rgba(255, 255, 255, 0)); animation: plus-reflex 6s ease-in-out infinite; }
+@keyframes plus-reflex { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(14%, 8%) scale(.92); } }
+/* ett mjukt diagonalt svep, sällan */
+.plus-glas i { position: absolute; top: -20%; bottom: -20%; left: 0; width: 45%; background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .55) 50%, rgba(255, 255, 255, 0));
+  transform: translateX(-160%) skewX(-18deg); animation: plus-svep 8s cubic-bezier(.45, 0, .2, 1) 2.2s infinite; }
+@keyframes plus-svep { 0%, 82% { transform: translateX(-160%) skewX(-18deg); } 100% { transform: translateX(330%) skewX(-18deg); } }
+.flikrad .flik-plus { background: radial-gradient(circle at 38% 30%, #c9f7e8 0, #86e6c9 40%, #38bf99 100%) !important; }
+@media (prefers-reduced-motion: reduce) { .plus-glas::before, .plus-glas i { animation: none !important; } }
+
+/* =====================================================================================================================
+   Apple-omgången 2 (2026-11-18, användaren: "fixa senaste apple design på hela appen!"): iOS 26 och HIG 2025 i båda lägena.
+   L8 tokens (typskalan, fjädrarna, radierna, materialen) · L9 typografin · L10 grupperade listor (inset grouped)
+   · L11 reglage: växlar 51 × 31, skjutreglage med kapseltumme, segment · L12 arken som flytande glas med handtag
+   · L13 navigeringsfältet och flikraden med mjuk rullkant (scroll edge) · L14 tryck med fjäder · L15 koncentriska radier
+   · L16 toasten · L17 pekytor ≥ 44 px · L18 frågorna och nivåvalet · L19 minskad rörelse
+   ===================================================================================================================== */
+
+/* ---- L8 tokens ---- */
+:root {
+  /* Apples typskala (punkter → px), Poppins för rubriker, Manrope för brödtext */
+  --ios-large: 700 34px/41px var(--font-rubrik); --ios-title1: 700 28px/34px var(--font-rubrik); --ios-title2: 700 22px/28px var(--font-rubrik);
+  --ios-title3: 600 20px/25px var(--font-rubrik); --ios-headline: 600 17px/22px var(--font-rubrik); --ios-body: 500 17px/22px var(--font-brod);
+  --ios-callout: 500 16px/21px var(--font-brod); --ios-subhead: 500 15px/20px var(--font-brod); --ios-footnote: 500 13px/18px var(--font-brod);
+  --ios-caption: 600 12px/16px var(--font-brod); --ios-caption2: 600 11px/13px var(--font-brod);
+  /* en gemensam uppsättning fjädrar: mjuk (liten översväng), snabb (tryck) och studs (växlar) */
+  --ios-fjader: linear(0, .006, .025 2.8%, .101 6.1%, .539 18.9%, .721 25.3%, .849 31.5%, .937 38.1%, .968 41.8%, .991 45.7%, 1.006 50.1%, 1.015 55%, 1.017 63.9%, 1.001 85.9%, 1);
+  --ios-snabb: cubic-bezier(.25, 1, .5, 1);
+  --ios-studs: linear(0, .028 1.4%, .113 3%, .521 9.3%, .776 14%, .917 18.3%, 1.017 23.2%, 1.064 27.6%, 1.074 31.9%, 1.05 38.5%, 1.009 47.6%, .992 56.7%, .999 75%, 1);
+  /* radierna: yttre − luft = inre (koncentriska) */
+  --r-kort: 28px; --r-hjalte: 32px; --r-inre: 11px; --r-grupp: 26px; --r-ark: 40px;
+}
+body[data-niva="motionar"] {
+  --grupp-yta: #ffffff; --grupp-tryck: rgba(11, 21, 32, .05); --har: rgba(11, 21, 32, .12); --vald-yta: rgba(126, 224, 195, .16);
+  --vaxel-av: rgba(120, 120, 128, .2); --vaxel-pa: #34c39a;
+}
+body[data-niva="elit"] {
+  --grupp-yta: rgba(30, 47, 64, .62); --grupp-tryck: rgba(246, 244, 239, .07); --har: rgba(246, 244, 239, .12); --vald-yta: rgba(126, 224, 195, .12);
+  --vaxel-av: rgba(120, 120, 128, .36); --vaxel-pa: #3fc9a3;
+}
+
+/* ---- L9 typografin ---- */
+.hem-topp h1 { font: var(--ios-large); letter-spacing: -.028em; }
+.kompakt-topp { font: var(--ios-headline) !important; line-height: 30px !important; letter-spacing: -.01em; }
+.sektion-rubrik h3, .jg-rubrik h3 { font: var(--ios-title3); letter-spacing: -.02em; }
+.kort-rubrik h3 { font: var(--ios-headline); letter-spacing: -.015em; }
+.ark h2 { font: var(--ios-title2); letter-spacing: -.022em; }
+.fraga h2 { font: var(--ios-title1); letter-spacing: -.03em; }
+.sektion-rubrik .liten, .kort-rubrik .liten { font: var(--ios-footnote); }
+.knapp { font-family: var(--font-rubrik); font-weight: 600; font-size: 17px; letter-spacing: -.01em; }
+.knapp-primar.knapp-bred { min-height: 52px; }
+.chip-val { font-size: 15px; font-weight: 600; }
+.val b, .jg-inst-rad b, .jg-mal-text b { font: var(--ios-headline); letter-spacing: -.012em; }
+.val small, .jg-inst-rad small, .jg-mal-text small { font: var(--ios-footnote); color: var(--text-3); }
+.bock-rad > span:last-child { font: var(--ios-subhead); }
+
+/* ---- L10 grupperade listor (inset grouped): en yta, rundade hörn, hårfina avdelare som börjar vid texten ---- */
+.val-lista { gap: 0 !important; border-radius: var(--r-grupp); isolation: isolate; }
+.val-lista > .val { position: relative; border: 0 !important; border-radius: 0 !important; background: var(--grupp-yta) !important; box-shadow: none !important;
+  min-height: 60px; padding: 10px 16px; -webkit-backdrop-filter: blur(20px) saturate(1.6); backdrop-filter: blur(20px) saturate(1.6);
+  transition: background-color .25s var(--ios-snabb), transform .5s var(--ios-fjader); }
+.val-lista > .val:first-child { border-radius: var(--r-grupp) var(--r-grupp) 0 0 !important; }
+.val-lista > .val:last-child { border-radius: 0 0 var(--r-grupp) var(--r-grupp) !important; }
+.val-lista > .val:only-child { border-radius: var(--r-grupp) !important; }
+.val-lista > .val + .val::before { content: ''; position: absolute; top: 0; left: 66px; right: 0; height: 1px; background: var(--har); transform: scaleY(.5); transform-origin: top; pointer-events: none; }
+.val-lista > .val[aria-pressed="true"] { background: linear-gradient(var(--vald-yta), var(--vald-yta)), var(--grupp-yta) !important; }
+.val-lista > .val:active { transform: none; background: linear-gradient(var(--grupp-tryck), var(--grupp-tryck)), var(--grupp-yta) !important; }
+body[data-niva="motionar"] .val-lista { box-shadow: 0 0 0 .5px rgba(11, 21, 32, .06), 0 14px 32px -22px rgba(24, 54, 83, .3); }
+body[data-niva="elit"] .val-lista { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 0 0 .5px rgba(255, 255, 255, .06); }
+.val-lista > .val .ikonruta { width: 34px; height: 34px; border-radius: 9px; }
+
+/* inställningarna i Jag: samma lista */
+.jg-inst { border-radius: var(--r-grupp) !important; border: 0 !important; background: var(--grupp-yta) !important; }
+body[data-niva="motionar"] .jg-inst { box-shadow: 0 0 0 .5px rgba(11, 21, 32, .06), 0 14px 32px -22px rgba(24, 54, 83, .3) !important; }
+.jg-inst-rad { position: relative; border-top: 0 !important; min-height: 52px; grid-template-columns: 30px 1fr auto; padding: 10px 16px; transition: background-color .2s var(--ios-snabb); }
+.jg-inst-rad + .jg-inst-rad::before { content: ''; position: absolute; top: 0; left: 58px; right: 0; height: 1px; background: var(--har); transform: scaleY(.5); transform-origin: top; }
+.jg-inst-rad .ikonruta { width: 30px !important; height: 30px !important; border-radius: 8px !important; }
+.jg-inst-rad:active { background: var(--grupp-tryck); }
+
+/* check-in och pass: reglagen i en grupp (första och sista raden får hörnen) */
+.ark .jg-ci { position: relative; margin-top: 0; padding: 14px 16px 10px; background: var(--grupp-yta); }
+.ark :not(.jg-ci) + .jg-ci { margin-top: var(--luft-5); border-radius: var(--r-grupp) var(--r-grupp) 0 0; }
+.ark .jg-ci:not(:has(+ .jg-ci)) { border-radius: 0 0 var(--r-grupp) var(--r-grupp); }
+.ark :not(.jg-ci) + .jg-ci:not(:has(+ .jg-ci)) { border-radius: var(--r-grupp); }
+.ark .jg-ci + .jg-ci::before { content: ''; position: absolute; top: 0; left: 16px; right: 0; height: 1px; background: var(--har); transform: scaleY(.5); transform-origin: top; }
+.ark .jg-ci-summa, .ark .jg-au { border-radius: var(--r-grupp) !important; }
+
+/* ---- L11 reglage ---- */
+/* växeln som iOS: 51 × 31, tummen 27 px som sträcks när man håller, grön när den är på */
+.vaxel { width: 51px !important; height: 31px !important; border: 0 !important; background: var(--vaxel-av) !important; box-shadow: none !important;
+  transition: background-color .3s var(--ios-snabb) !important; }
+.vaxel[aria-checked="true"] { background: var(--vaxel-pa) !important; }
+.vaxel::after { top: 2px !important; left: 2px !important; width: 27px !important; height: 27px !important; border-radius: 999px !important; background: #fff !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .15), 0 3px 1px rgba(0, 0, 0, .06), 0 0 0 .5px rgba(0, 0, 0, .04) !important;
+  transition: transform .5s var(--ios-studs), width .3s var(--ios-snabb) !important; }
+.vaxel[aria-checked="true"]::after { transform: translateX(20px) !important; }
+.vaxel:active::after { width: 33px !important; }
+.vaxel[aria-checked="true"]:active::after { transform: translateX(14px) !important; }
+.vaxel::before { content: ''; position: absolute; inset: -7px -4px; }
+/* skjutreglaget: tunt spår och en kapseltumme av glas som sväller när man drar */
+.reglage::-webkit-slider-runnable-track { height: 6px !important; }
+.reglage::-webkit-slider-thumb { width: 38px !important; height: 24px !important; margin-top: -9px !important; border-radius: 999px !important; background: #fff !important; border: 0 !important;
+  box-shadow: 0 .5px 4px rgba(0, 0, 0, .12), 0 6px 13px rgba(0, 0, 0, .12), 0 0 0 .5px rgba(0, 0, 0, .04) !important;
+  transition: transform .45s var(--ios-fjader), background-color .25s, box-shadow .25s !important; }
+.reglage:active::-webkit-slider-thumb { transform: scale(1.22, 1.3) !important; background: rgba(255, 255, 255, .72) !important;
+  box-shadow: inset 0 1px 0 #fff, inset 0 0 0 1px rgba(255, 255, 255, .9), 0 8px 20px rgba(0, 0, 0, .2) !important; }
+/* segmenten: kapsel av glas, markören som en lins med ljus överkant, fjädrar mellan valen */
+.segment-markor, .kv-lage-markor { transition: transform .55s var(--ios-fjader), width .4s var(--ios-snabb), opacity .2s !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .75), inset 0 -1px 0 rgba(15, 110, 87, .2), 0 3px 10px -2px rgba(15, 110, 87, .45), 0 0 0 .5px rgba(15, 110, 87, .2) !important; }
+.segment button, .kv-lage button { font-weight: 600; }
+/* valda chips: glasregeln i L4 tog bort det valda läget – det valda ska alltid synas */
+.chip.chip-val[aria-pressed="true"]:not([data-ton]) { background: var(--accent) !important; color: #0b1520 !important; border-color: transparent !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), 0 6px 16px -8px rgba(15, 110, 87, .65) !important; }
+
+/* ovalda chips: systemets fyllnad (tertiary fill) så att de syns på alla ytor */
+body[data-niva="motionar"] { --fyll: rgba(118, 118, 128, .1); }
+body[data-niva="elit"] { --fyll: rgba(160, 170, 190, .14); }
+.chip.chip-val:not([aria-pressed="true"]):not([data-ton]) { background: var(--fyll) !important; box-shadow: none !important; border-color: transparent !important; color: var(--text); }
+
+/* ---- L12 arken: flytande glas med handtag (detent), fjädrar upp, hörnen följer skärmen ---- */
+.ark { left: 8px !important; right: 8px !important; bottom: 8px !important; max-height: calc(100% - var(--topp) - 12px) !important; border-radius: var(--r-ark) !important;
+  padding: 6px 20px calc(max(var(--botten) - 8px, 12px) + 8px) !important; animation-timing-function: var(--ios-fjader);
+  box-shadow: inset 0 1px 0 var(--lg-glans), inset 0 0 0 .5px var(--lg-kant), 0 30px 70px -20px rgba(0, 0, 0, .5), 0 0 0 .5px var(--lg-kant-ut) !important; }
+body[data-niva="motionar"] .ark { background: rgba(250, 249, 246, .86) !important; }
+body[data-niva="elit"] .ark { background: linear-gradient(180deg, rgba(28, 45, 62, .88), rgba(16, 29, 43, .92)) !important; }
+.ark-handtag { width: 36px !important; height: 5px !important; margin: 0 auto 12px !important; border-radius: 3px !important; background: var(--text-3) !important; opacity: .42; }
+.ark-lager[data-dragen] .ark-handtag { opacity: .7; }
+.ark-sloja { background: rgba(0, 0, 0, .22) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+body[data-niva="elit"] .ark-sloja { background: rgba(0, 0, 0, .42) !important; }
+.ark-rubrik .ikonknapp[data-stang-ark] { width: 44px !important; height: 44px !important; flex: none; }
+.ark-rubrik .ikonknapp[data-stang-ark] svg { width: 17px; height: 17px; }
+.ark-rubrik > .ikonruta { border-radius: 12px; }
+/* huvudknappen står kvar nederst i arket medan innehållet rullar under den (som en verktygsrad) */
+.ark .ark-knappar { position: sticky; bottom: calc(-1 * (max(var(--botten) - 8px, 12px) + 8px)); z-index: 3; margin-inline: -20px; padding: 14px 20px calc(max(var(--botten) - 8px, 12px) + 8px); margin-bottom: calc(-1 * (max(var(--botten) - 8px, 12px) + 8px));
+  background: linear-gradient(transparent, var(--ark-bott) 34%); }
+.ark .ark-knappar:not(:last-child) { margin-bottom: 0; position: static; background: none; padding-bottom: 0; }
+body[data-niva="motionar"] { --ark-bott: rgba(250, 249, 246, .96); }
+body[data-niva="elit"] { --ark-bott: rgba(17, 30, 44, .97); }
+
+/* ---- L13 navigeringsfältet och flikraden: mjuk rullkant i stället för ett fast band ---- */
+.kompakt-topp { background: transparent !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; border-bottom: 0 !important; isolation: isolate; }
+.kompakt-topp::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  -webkit-backdrop-filter: blur(12px) saturate(1.7); backdrop-filter: blur(12px) saturate(1.7);
+  background: linear-gradient(var(--bg) 0 55%, color-mix(in srgb, var(--bg) 88%, transparent)); }
+/* under rubriken bara en svag färgtoning utan oskärpa – innehållet där är alltid skarpt */
+.kompakt-topp::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 18px; z-index: -1; pointer-events: none;
+  background: linear-gradient(color-mix(in srgb, var(--bg) 55%, transparent), transparent); }
+.kompakt-topp span { position: relative; z-index: 1; }
+/* rullkanten nedtill bakom flikraden */
+.app:has(.flikrad:not([hidden])) .skarm-lager::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--botten) + 56px); z-index: 2; pointer-events: none;
+  background: linear-gradient(transparent, color-mix(in srgb, var(--bg) 35%, transparent)); }
+
+/* ---- L14 tryck med fjäder (som haptik): skala .96 in, fjädrar tillbaka ---- */
+.knapp, .ikonknapp, .chip-val, button.kort, .jg-medalj, .kv-grupp, .jg-lage, .sc-formular, .kv-snabbval, .kv-sidknapp {
+  transition-property: transform, background-color, color, box-shadow, opacity, border-color; transition-duration: .55s, .25s, .25s, .25s, .25s, .25s;
+  transition-timing-function: var(--ios-fjader), ease, ease, ease, ease, ease; }
+.knapp:active, .ikonknapp:active, .chip-val:active, button.kort:active, .jg-medalj:active, .kv-grupp:active, .jg-lage:active, .sc-formular:active, .kv-snabbval:active, .kv-sidknapp:active {
+  transform: scale(.96); transition-duration: .1s, .25s, .25s, .25s, .25s, .25s; }
+.bock-rad:active { transform: none; background: var(--grupp-tryck); border-radius: 12px; }
+
+/* ---- L15 koncentriska radier: kort 28 → inre ytor 11 (luften är ~17 px), hjältar 32 ---- */
+.kort, .bento-ruta { border-radius: var(--r-kort); }
+.sc-hjalte, .jg-hjalte { border-radius: var(--r-hjalte) !important; }
+.kv-zon .kv-dagbok, .kort .notis, .kv-med .notis, .sc-trappa-kort .trappsteg { border-radius: var(--r-inre) !important; }
+.sc-hjalte .sc-forbered { border-radius: 12px !important; }
+.jg-hjalte .jg-poang { border-radius: 15px !important; }
+.jg-lage .jg-mini { border-radius: 11px !important; }
+.sc-trappa-kort .trappsteg .tal { border-radius: 6px !important; }
+
+/* ---- L16 toasten: glaskapsel (tätare glas – texten ska gå att läsa över korten) ---- */
+body[data-niva="motionar"] { --toast-glas: rgba(255, 255, 255, .94); }
+body[data-niva="elit"] { --toast-glas: rgba(24, 40, 56, .95); }
+.toast { background: var(--toast-glas) !important; color: var(--text) !important; border: 0 !important; border-radius: 999px !important;
+  -webkit-backdrop-filter: blur(30px) saturate(1.9); backdrop-filter: blur(30px) saturate(1.9); box-shadow: var(--lg-rand), var(--lg-skugga) !important;
+  font: 600 15px/20px var(--font-brod); }
+.toast[data-visas] { transition: transform .6s var(--ios-fjader), opacity .25s var(--ios-snabb) !important; }
+
+/* ---- L17 pekytor ≥ 44 px utan att raden växer ---- */
+.kort-rubrik .mer, .jg-lank { min-height: 44px; margin-block: -6px; display: inline-flex; align-items: center; }
+.kv-vrid { min-height: 44px; }
+.idag-vy .kort-rubrik .mer { min-height: 44px; }
+.kr .kr-chip::before { content: ''; position: absolute; inset: -12px -2px; }
+
+/* ---- L18 frågorna och nivåvalet ---- */
+.fraga .textfalt { height: 56px; border-radius: 16px; font: 600 20px/24px var(--font-rubrik); }
+.niva-kort { border-radius: var(--r-kort) !important; }
+
+/* ---- L19 minskad rörelse ---- */
+@media (prefers-reduced-motion: reduce) {
+  .vaxel::after, .reglage::-webkit-slider-thumb, .segment-markor, .kv-lage-markor { transition-duration: .01s !important; }
+}
+
+
+/* ---- L20 Beredskap i iOS 26-stil (hud3) och veckan som glaskapsel ---- */
+.hud3 { position: relative; padding: 18px 16px 16px; border-radius: 32px; overflow: hidden; isolation: isolate;
+  background: radial-gradient(90% 70% at 50% 28%, rgba(126, 224, 195, .14), transparent 70%), linear-gradient(180deg, rgba(30, 48, 66, .72), rgba(16, 28, 40, .72));
+  -webkit-backdrop-filter: blur(24px) saturate(1.8); backdrop-filter: blur(24px) saturate(1.8);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), inset 0 0 0 .5px rgba(255, 255, 255, .08), 0 24px 48px -24px rgba(0, 0, 0, .8); }
+.h3-matare { position: relative; width: 250px; height: 228px; margin: 0 auto; }
+.h3-matare svg { width: 100%; height: 100%; overflow: visible; }
+.h3-spar { fill: none; stroke: rgba(255, 255, 255, .08); stroke-width: 16; stroke-linecap: round; }
+.h3-tick { stroke: rgba(255, 255, 255, .16); stroke-width: 1.6; stroke-linecap: round; }
+.h3-bage, .h3-bage-glod { fill: none; stroke: url(#h3-g); stroke-width: 16; stroke-linecap: round; stroke-dasharray: var(--L); stroke-dashoffset: 0; animation: h3-rita 1.5s cubic-bezier(.2, .8, .2, 1) .25s both; }
+.h3-bage-glod { opacity: .55; stroke-width: 18; }
+@keyframes h3-rita { from { stroke-dashoffset: var(--L); } }
+.h3-knopp { fill: #fff; stroke: rgba(11, 21, 32, .35); stroke-width: 2; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .5)) drop-shadow(0 0 10px rgba(200, 247, 230, .7)); opacity: 0; animation: tona-in .4s var(--mjuk) 1.6s forwards; }
+.h3-mitt { position: absolute; inset: 0 0 18px; display: grid; place-content: center; justify-items: center; text-align: center; }
+.h3-mitt small { font: 600 .8rem/1 var(--font-brod); color: rgba(235, 245, 255, .7); letter-spacing: 0; }
+.h3-mitt b { font: 700 4.2rem/1 var(--font-rubrik); letter-spacing: -.05em; color: #fff; margin: 6px 0 10px; }
+.h3-status { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px; font: 650 .82rem/1 var(--font-brod); color: #eafff7;
+  background: rgba(126, 224, 195, .16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), inset 0 0 0 .5px rgba(126, 224, 195, .4); }
+.h3-status i { width: 7px; height: 7px; border-radius: 50%; background: #7ee0c3; box-shadow: 0 0 8px #7ee0c3; }
+.h3-status[data-ton="gul"] { background: rgba(246, 201, 107, .16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), inset 0 0 0 .5px rgba(246, 201, 107, .45); }
+.h3-status[data-ton="gul"] i { background: #f6c96b; box-shadow: 0 0 8px #f6c96b; }
+.h3-status[data-ton="rod"] i { background: #ff9a86; box-shadow: 0 0 8px #ff9a86; }
+.h3-skala { position: absolute; left: 34px; right: 34px; bottom: 8px; display: flex; justify-content: space-between; font: 600 .68rem var(--font-brod); color: rgba(235, 245, 255, .4); }
+.h3-insikt { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 2px 0 14px; font: 500 .92rem/1.35 var(--font-brod); color: rgba(235, 245, 255, .82); text-align: center; }
+.h3-insikt svg { width: 15px; height: 15px; color: #7ee0c3; flex: none; }
+.h3-delar { display: grid; grid-template-columns: repeat(3, 1fr); border-radius: 22px; overflow: hidden; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .08); }
+.h3-del { display: grid; gap: 6px; padding: 12px 12px 10px; }
+.h3-del + .h3-del { box-shadow: inset .5px 0 0 rgba(255, 255, 255, .1); }
+.h3-del-topp { display: inline-flex; align-items: center; gap: 5px; font: 600 .74rem var(--font-brod); color: rgba(235, 245, 255, .65); }
+.h3-del-topp svg { width: 13px; height: 13px; color: #a7d2ff; }
+.h3-del b { font: 700 1.55rem/1 var(--font-rubrik); letter-spacing: -.03em; color: #fff; }
+.h3-del b small { font: 600 .72rem var(--font-brod); color: rgba(235, 245, 255, .45); margin-left: 2px; letter-spacing: 0; }
+.h3-del-fot { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.h3-spark { width: 64px; height: 20px; overflow: visible; }
+.h3-spark polyline { fill: none; stroke: rgba(167, 210, 255, .7); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.h3-spark circle { fill: #fff; }
+.h3-del em { font: 700 .7rem var(--font-brod); font-style: normal; padding: 2px 6px; border-radius: 999px; color: #9ef0d6; background: rgba(126, 224, 195, .14); }
+.h3-del em[data-ton="gul"] { color: #f6d58b; background: rgba(246, 201, 107, .14); }
+.h3-del em[data-ton="is"] { color: #cfe6ff; background: rgba(167, 210, 255, .12); }
+.h3-not { display: block; margin-top: 10px; text-align: center; font: 500 .7rem var(--font-brod); color: rgba(235, 245, 255, .45); }
+
+/* veckan som en glaskapsel (iOS 26): idag som en upplyst kapsel, check-in som en liten prick */
+.vecka { padding: 6px; border-radius: 999px !important; background: var(--lg-yta) !important; border: 0 !important; box-shadow: var(--lg-rand), var(--lg-skugga) !important;
+  -webkit-backdrop-filter: var(--lg-blur); backdrop-filter: var(--lg-blur); }
+.vecka-dag { border-radius: 999px !important; padding: 9px 0 8px !important; }
+.vecka-dag small { font: 600 .62rem var(--font-brod) !important; letter-spacing: .02em !important; text-transform: none !important; }
+.vecka-dag b { font: 700 1.05rem/1.1 var(--font-rubrik) !important; }
+.vecka-dag[data-idag] { background: linear-gradient(180deg, #a6f0d9, #5fd3b0) !important; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), 0 8px 18px -8px rgba(15, 110, 87, .8) !important; }
+.vecka-prickar i[data-t="ci"] { width: 6px !important; height: 6px !important; margin-top: 0 !important; background: var(--accent) !important; background-image: none !important; }
+.vecka-prickar i[data-t="ci"][data-pass] { box-shadow: 0 0 0 2px rgba(126, 224, 195, .28) !important; }
+.vecka-dag[data-idag] .vecka-prickar i { background: #0b1520 !important; }
+@media (prefers-reduced-motion: reduce) { .h3-bage, .h3-bage-glod, .h3-knopp { animation: none !important; opacity: 1; } }
+
+.h3-del { min-width: 0; padding: 12px 10px 10px; }
+.h3-del-fot { min-width: 0; }
+.h3-spark { flex: 1 1 auto; min-width: 0; width: auto; height: 20px; }
+.h3-del em { flex: none; }
+
+/* mitten centrerad på bågens mittpunkt (cy 128 av 236 = 123,6 px) och liten nog att rymmas innanför bågen */
+.h3-mitt { inset: auto 0 auto 0; top: calc(123.6px - 64px); height: 128px; }
+.h3-mitt small { font-size: .74rem; }
+.h3-mitt b { font-size: 3.5rem; margin: 4px 0 8px; }
+.h3-status { padding: 5px 11px; font-size: .76rem; }
+
+/* =====================================================================================================================
+   L21–L30 iOS 26 på hela appen (2026-11-18, användaren: "fixa iphone 18/17 på hela appen och på båda elit och motion").
+   Förebilden är Beredskapen (hud3): frostad glasplatta med hårfin ljuskant, stort tal i rubrikfonten, statuskapsel med
+   prick, en smart rad med ikon, grupperade glasrader med hårfina avdelare och förändringsbrickor i ton.
+   L21 materialet (plattan, grupperna, texten) · L22 rubriker och tal · L23 statuskapslar · L24 smarta rader och brickor
+   · L25 Idag · L26 Kropp · L27 Screening · L28 Jag · L29 arken och frågorna · L30 minskad rörelse
+   ===================================================================================================================== */
+
+/* ---- L21 materialet: samma platta i båda lägena – mörkt frostat glas i elit, vitt frostat glas för motionären ---- */
+body[data-niva="elit"] {
+  --pl-yta: radial-gradient(120% 80% at 50% 0, rgba(126, 224, 195, .05), transparent 60%), linear-gradient(180deg, rgba(30, 48, 66, .7), rgba(16, 28, 40, .7));
+  --pl-rand: inset 0 1px 0 rgba(255, 255, 255, .13), inset 0 0 0 .5px rgba(255, 255, 255, .08);
+  --pl-skugga: 0 24px 48px -26px rgba(0, 0, 0, .85);
+  --pl-grupp: rgba(255, 255, 255, .045); --pl-grupp-rand: inset 0 0 0 .5px rgba(255, 255, 255, .08); --pl-delare: rgba(255, 255, 255, .1);
+  --pl-tal: #fff; --pl-etikett: rgba(235, 245, 255, .66); --pl-dampad: rgba(235, 245, 255, .5);
+  --pl-ok: #9ef0d6; --pl-ok-yta: rgba(126, 224, 195, .14); --pl-gul: #f6d58b; --pl-gul-yta: rgba(246, 201, 107, .14);
+  --pl-rod: #ffb3a4; --pl-rod-yta: rgba(255, 138, 115, .14); --pl-is: #cfe6ff; --pl-is-yta: rgba(167, 210, 255, .12);
+}
+body[data-niva="motionar"] {
+  --pl-yta: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .74));
+  --pl-rand: inset 0 1px 0 #fff, inset 0 0 0 .5px rgba(255, 255, 255, .9), 0 0 0 .5px rgba(11, 21, 32, .06);
+  --pl-skugga: 0 18px 36px -24px rgba(24, 54, 83, .36), 0 2px 6px rgba(24, 54, 83, .04);
+  --pl-grupp: rgba(118, 128, 140, .075); --pl-grupp-rand: inset 0 0 0 .5px rgba(11, 21, 32, .04); --pl-delare: rgba(11, 21, 32, .09);
+  --pl-tal: #0b1520; --pl-etikett: #4f5b67; --pl-dampad: #5f6a76;
+  --pl-ok: #0f6e57; --pl-ok-yta: rgba(63, 201, 163, .14); --pl-gul: #7f5500; --pl-gul-yta: rgba(240, 181, 69, .17);
+  --pl-rod: #9c2f1c; --pl-rod-yta: rgba(229, 103, 79, .13); --pl-is: #1d5f9e; --pl-is-yta: rgba(90, 168, 230, .13);
+}
+:root { --pl-blur: blur(24px) saturate(1.8); --pl-inre: 12px; /* kort 28 − luft 16 = inre 12 */ }
+
+/* plattan: alla kort, bento-rutor och hjältar */
+body[data-niva] :is(.kort, .bento-ruta, .sc-hjalte, .jg-hjalte) {
+  background: var(--pl-yta); border: 0; box-shadow: var(--pl-rand), var(--pl-skugga);
+  -webkit-backdrop-filter: var(--pl-blur); backdrop-filter: var(--pl-blur); }
+body[data-niva] :is(.kort, .bento-ruta) { border-radius: var(--r-kort); }
+body[data-niva] :is(.sc-hjalte, .jg-hjalte) { border-radius: var(--r-hjalte) !important; }
+
+/* ---- L22 rubriker och tal: Apples typskala, talen i rubrikfonten, tätt spärrade ---- */
+body[data-niva] .kort .kort-rubrik h3, body[data-niva] .kort .rad h3 { font: var(--ios-headline); letter-spacing: -.015em; color: var(--pl-tal); }
+body[data-niva] .kort .kort-rubrik .liten { font: var(--ios-footnote); color: var(--pl-dampad); }
+/* ögonraden i korten: en liten etikett i accentfärg (som "Beredskap"), inte versaler */
+body[data-niva] :is(.kort, .bento-ruta, .sc-hjalte) .ogon { font: 650 13px/16px var(--font-brod); letter-spacing: 0; text-transform: none; }
+body[data-niva] :is(.bento-tal, .belastning-tal > b, .skaderad .dagar b, .tavla-siffror b, .kv-matare b, .norm-tal, .trappsteg strong, .jg-mal-tal b, .sc-ring .varde b) {
+  font-family: var(--font-rubrik); font-weight: 700; letter-spacing: -.04em; color: var(--pl-tal); font-variant-numeric: tabular-nums; }
+.bento-tal small, .jg-mal-tal b small { font: 600 12px var(--font-brod) !important; color: var(--pl-dampad) !important; letter-spacing: 0; margin-left: 2px; }
+.bento-namn { font: 600 13px/16px var(--font-brod) !important; letter-spacing: 0 !important; text-transform: none !important; color: var(--pl-etikett) !important; }
+.bento-under { font: 500 12px/16px var(--font-brod) !important; color: var(--pl-dampad) !important; }
+
+/* ---- L23 statuskapslar: tonad kapsel med prick och ljus överkant (som Beredskapens "Bra läge") ---- */
+body[data-niva] :is(.kort, .bento-ruta, .sc-hjalte, .jg-hjalte, .kv-scen, .jg-rubrik, .sektion-rubrik) .chip[data-ton],
+body[data-niva] :is(.match-status, .kv-sammanfattning) {
+  min-height: 26px; padding: 0 10px; gap: 6px; border: 0 !important; border-radius: 999px; font: 650 12px/1 var(--font-brod); letter-spacing: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16), inset 0 0 0 .5px var(--kap-kant, rgba(126, 224, 195, .4)); }
+body[data-niva] :is(.chip, .match-status, .kv-sammanfattning)[data-ton="ok"] { color: var(--pl-ok) !important; background: var(--pl-ok-yta) !important; --kap-kant: rgba(63, 201, 163, .42); --kap-prick: #3fc9a3; }
+body[data-niva] :is(.chip, .match-status, .kv-sammanfattning)[data-ton="gul"] { color: var(--pl-gul) !important; background: var(--pl-gul-yta) !important; --kap-kant: rgba(240, 181, 69, .45); --kap-prick: #f0b545; }
+body[data-niva] :is(.chip, .match-status, .kv-sammanfattning)[data-ton="rod"] { color: var(--pl-rod) !important; background: var(--pl-rod-yta) !important; --kap-kant: rgba(229, 103, 79, .42); --kap-prick: #ff8a73; }
+body[data-niva] :is(.chip, .match-status, .kv-sammanfattning)[data-ton="is"] { color: var(--pl-is) !important; background: var(--pl-is-yta) !important; --kap-kant: rgba(90, 168, 230, .4); --kap-prick: #7dbdf5; }
+/* pricken: chips utan egen ikon får en lysande prick först */
+body[data-niva] :is(.kort, .bento-ruta, .sc-hjalte, .kv-scen) .chip[data-ton]:not(:has(svg, i))::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex: none;
+  background: var(--kap-prick); box-shadow: 0 0 6px var(--kap-prick); }
+body[data-niva] :is(.match-status, .kv-sammanfattning) > i { width: 6px !important; height: 6px !important; border-radius: 50%; flex: none; background: var(--kap-prick) !important; box-shadow: 0 0 6px var(--kap-prick) !important; }
+body[data-niva="motionar"] :is(.chip[data-ton], .match-status, .kv-sammanfattning) { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), inset 0 0 0 .5px var(--kap-kant); }
+body[data-niva="motionar"] .chip[data-ton]:not(:has(svg, i))::before { box-shadow: none; }
+
+/* ---- L24 smarta rader och förändringsbrickor ---- */
+.lg-insikt { display: flex; align-items: flex-start; gap: 8px; margin: 12px 0 0; font: 500 13px/18px var(--font-brod); color: var(--pl-etikett); text-wrap: pretty; }
+.lg-insikt svg { width: 15px; height: 15px; flex: none; margin-top: 1.5px; color: var(--pl-ok); }
+.lg-delta { flex: none; display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: 999px; font: 700 11px/1 var(--font-brod); font-style: normal; font-variant-numeric: tabular-nums;
+  color: var(--pl-ok); background: var(--pl-ok-yta); }
+.lg-delta[data-ton="gul"] { color: var(--pl-gul); background: var(--pl-gul-yta); }
+.lg-delta[data-ton="is"] { color: var(--pl-is); background: var(--pl-is-yta); }
+.lg-not { display: block; margin-top: 10px; text-align: center; font: 500 11px/14px var(--font-brod); color: var(--pl-dampad); }
+.lg-matare { position: relative; height: 6px; margin: 12px 0 0; border-radius: 999px; background: var(--pl-grupp); box-shadow: var(--pl-grupp-rand); overflow: hidden; }
+.lg-matare i { position: absolute; inset: 0 auto 0 0; width: var(--v); border-radius: inherit; background: linear-gradient(90deg, #5aa8e6, #7ee0c3); box-shadow: 0 0 10px rgba(126, 224, 195, .45); }
+body[data-niva="motionar"] .lg-matare i { box-shadow: none; }
+
+/* ---- L25 Idag ---- */
+/* bento: talet och brickan på samma rad, den smarta raden i belastningen */
+.bento-talrad { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; min-width: 0; }
+.bento-talrad .lg-delta { align-self: center; }
+.idag-vy .bento-ruta { padding: 16px; }
+.idag-vy .bento-topp .ikonruta { width: 28px; height: 28px; border-radius: 9px; }
+.idag-vy .bento-topp .ikonruta svg { width: 15px; height: 15px; }
+.bento-insikt { margin-top: 14px; padding-top: 12px; border-top: .5px solid var(--pl-delare); }
+/* korten under bento: grupperade listor med hårfina avdelare som börjar vid texten */
+body[data-niva] .kort .lista { padding: 0 12px; margin-top: 12px; }
+body[data-niva] .kort .lista li { position: relative; border-top: 0; padding: 11px 0 !important; min-height: 52px; }
+body[data-niva] .kort .lista li + li::before { content: ''; position: absolute; top: 0; left: 46px; right: 0; height: .5px; background: var(--pl-delare); }
+body[data-niva] .kort .lista li b { font: 600 15px/20px var(--font-brod); color: var(--pl-tal); }
+body[data-niva] .kort .lista li small { font: 500 12px/16px var(--font-brod) !important; color: var(--pl-dampad) !important; }
+body[data-niva] .kort .lista li > .ikonruta { width: 34px !important; height: 34px !important; border-radius: 10px !important; }
+body[data-niva] .idag-vy .tips-lista .lista li { padding: 12px 0 !important; }
+/* PCME: mätaren, raden och listan */
+.pcme-lista .status[data-ton="tom"] { width: 24px; height: 24px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--pl-delare); background: none; }
+/* skaderegistret: dagarna stort, varningen som en smart rad */
+body[data-niva] .skade-not { margin-top: 12px; }
+body[data-niva] .skade-not svg { color: var(--pl-gul); }
+/* nästa match och fokus i samma platta */
+body[data-niva] .match2 .tavla-siffror > span { border-radius: 12px; background: var(--pl-grupp); box-shadow: var(--pl-grupp-rand); }
+body[data-niva] .fokus .fokus-text small { font: 500 13px/18px var(--font-brod); color: var(--pl-etikett); }
+body[data-niva] .fokus .fokus-text b { font: var(--ios-headline); letter-spacing: -.015em; }
+
+/* ---- L26 Kropp ---- */
+body[data-niva] .kv-dagbok { background: var(--pl-grupp) !important; box-shadow: var(--pl-grupp-rand); border: 0 !important; border-radius: var(--pl-inre) !important; }
+.kv-dagbok-topp { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.kv-dagbok-hoger { display: inline-flex; align-items: center; gap: 6px; }
+body[data-niva] .kv-zon-namn b { font: var(--ios-headline); letter-spacing: -.015em; }
+body[data-niva] .kv-zon-namn span { font: 500 13px/18px var(--font-brod); color: var(--pl-dampad); }
+body[data-niva] .kv-lista { padding: 0 12px; margin-top: 12px; }
+body[data-niva] .kv-listrad { position: relative; border: 0 !important; background: none !important; border-radius: 0 !important; box-shadow: none !important; }
+body[data-niva] .kv-listrad + .kv-listrad::before { content: ''; position: absolute; top: 0; left: 52px; right: 0; height: .5px; background: var(--pl-delare); }
+body[data-niva] .kv-listtext b { font: 600 15px/20px var(--font-brod); color: var(--pl-tal); }
+body[data-niva] .kv-listtext small { font: 500 12px/16px var(--font-brod); color: var(--pl-dampad); }
+body[data-niva] .kv-med-lista { padding: 0 12px; margin-top: 12px; }
+body[data-niva] .kv-med-lista li { position: relative; border: 0 !important; background: none !important; box-shadow: none !important; border-radius: 0 !important; }
+body[data-niva] .kv-med-lista li + li::before { content: ''; position: absolute; top: 0; left: 52px; right: 0; height: .5px; background: var(--pl-delare); }
+.kv-insikt { margin-top: 12px; }
+/* scenens skenor: lägesväljaren och foten som glaskapslar i samma material */
+body[data-niva] .kv-fot { background: var(--pl-yta) !important; box-shadow: var(--pl-rand), var(--pl-skugga) !important; border: 0 !important;
+  -webkit-backdrop-filter: var(--pl-blur); backdrop-filter: var(--pl-blur); }
+body[data-niva] .kv-delare { width: .5px !important; background: var(--pl-delare) !important; }
+
+/* ---- L27 Screening ---- */
+body[data-niva] .sc-forbered { background: var(--pl-grupp) !important; box-shadow: var(--pl-grupp-rand) !important; border: 0 !important; border-radius: 16px !important; }
+body[data-niva] .sc-forbered .bock-rad { position: relative; border-top: 0 !important; border-bottom: 0 !important; }
+body[data-niva] .sc-forbered .bock-rad + .bock-rad::before { content: ''; position: absolute; top: 0; left: 34px; right: 0; height: .5px; background: var(--pl-delare); }
+body[data-niva] .sc-meta span { border-radius: 999px; background: var(--pl-grupp); box-shadow: var(--pl-grupp-rand); border: 0; }
+body[data-niva] .sc-text h2 { font: var(--ios-title3); letter-spacing: -.02em; color: var(--pl-tal); text-wrap: balance; }
+body[data-niva] .sc-formular b { font: var(--ios-headline); letter-spacing: -.015em; }
+body[data-niva] .sc-formular small { font: 500 13px/18px var(--font-brod); color: var(--pl-dampad); }
+body[data-niva] .sc-stationer { padding: 4px 12px; }
+body[data-niva] .norm-rad + .norm-rad { border-top: .5px solid var(--pl-delare) !important; }
+body[data-niva] .norm-rad b { font: 600 15px/20px var(--font-brod); }
+body[data-niva] .norm-rad small { font: 500 12px/16px var(--font-brod); color: var(--pl-dampad); }
+.sc-insikt { margin: 8px 0 10px; }
+body[data-niva] .sc-trappa-kort .trappsteg { background: var(--pl-grupp) !important; box-shadow: var(--pl-grupp-rand) !important; border: 0 !important; }
+body[data-niva] .paketrad { border-radius: 14px; background: var(--pl-grupp); box-shadow: var(--pl-grupp-rand); }
+
+/* ---- L28 Jag ---- */
+/* faktaraden under hjälten: en grupperad glasrad med hårfina avdelare, som Beredskapens tre delar */
+body[data-niva] .jg-fakta { gap: 0 !important; border-radius: 16px; overflow: hidden; background: var(--pl-grupp) !important; box-shadow: var(--pl-grupp-rand) !important; border: 0 !important; }
+body[data-niva] .jg-fakta > div { position: relative; background: none !important; border: 0 !important; box-shadow: none !important; border-radius: 0 !important; }
+body[data-niva] .jg-fakta > div + div::before { content: ''; position: absolute; left: 0; top: 12px; bottom: 12px; width: .5px; background: var(--pl-delare); }
+body[data-niva] .jg-fakta dd { font-family: var(--font-rubrik); font-weight: 700; letter-spacing: -.03em; color: var(--pl-tal); }
+body[data-niva] .jg-fakta dt { font: 600 11px/13px var(--font-brod) !important; letter-spacing: 0 !important; text-transform: none !important; color: var(--pl-etikett) !important; }
+body[data-niva] .jg-poang { background: var(--pl-grupp) !important; box-shadow: var(--pl-grupp-rand) !important; border: 0 !important; }
+body[data-niva] .jg-trend { font: 650 12px/1 var(--font-brod); }
+body[data-niva] :is(.jg-medalj, .jg-koppling, .jg-lage) { background: var(--pl-yta) !important; border: 0 !important; box-shadow: var(--pl-rand), var(--pl-skugga) !important;
+  -webkit-backdrop-filter: var(--pl-blur); backdrop-filter: var(--pl-blur); }
+body[data-niva] .jg-lage[aria-pressed="true"] { box-shadow: var(--pl-rand), inset 0 0 0 1.5px rgba(126, 224, 195, .7), 0 14px 30px -16px rgba(15, 110, 87, .55) !important; }
+body[data-niva] .jg-inst { background: var(--pl-yta) !important; box-shadow: var(--pl-rand), var(--pl-skugga) !important; -webkit-backdrop-filter: var(--pl-blur); backdrop-filter: var(--pl-blur); }
+body[data-niva] .jg-inst-rad + .jg-inst-rad::before { height: .5px; transform: none; background: var(--pl-delare); }
+body[data-niva] .jg-nod + .jg-linje + .jg-nod, body[data-niva] .jg-nod b { color: var(--pl-tal); }
+body[data-niva] .jg-mal-text b { color: var(--pl-tal); }
+body[data-niva] .jg-mal-text small { color: var(--pl-dampad); }
+
+/* ---- L29 arken och frågorna ---- */
+body[data-niva] .ark :is(.fm-summa, .jg-ci-summa) { background: var(--pl-grupp) !important; box-shadow: var(--pl-grupp-rand) !important; border: 0 !important; }
+body[data-niva] .ark .fm-lista { border-radius: var(--r-grupp); background: var(--grupp-yta); padding: 0 14px; }
+body[data-niva] .ark .fm-lista .formular-rad { position: relative; border: 0 !important; background: none !important; }
+body[data-niva] .ark .fm-lista .formular-rad + .formular-rad::before { content: ''; position: absolute; top: 0; left: 40px; right: 0; height: .5px; background: var(--pl-delare); }
+body[data-niva] .ark .notis { border: 0 !important; background: var(--pl-grupp) !important; box-shadow: var(--pl-grupp-rand); }
+body[data-niva] .notis { border-radius: 14px; }
+body[data-niva] :is(.koppling, .jg-koppling) b { color: var(--pl-tal); }
+
+/* ---- L30 minskad rörelse ---- */
+@media (prefers-reduced-motion: reduce) { .lg-matare i { transition: none !important; } }
+
+
+/* ---- L21 Motionärens dagsform i iOS 26-stil (.mh) – ljust glas, ringar som i Aktivitet ---- */
+.mh { position: relative; padding: 18px 18px 16px; border-radius: 32px; overflow: hidden;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .86), rgba(255, 255, 255, .7)); -webkit-backdrop-filter: blur(24px) saturate(1.8); backdrop-filter: blur(24px) saturate(1.8);
+  box-shadow: inset 0 1px 0 #fff, 0 0 0 .5px rgba(11, 21, 32, .06), 0 20px 40px -24px rgba(24, 54, 83, .35); }
+.mh-topp { display: flex; justify-content: space-between; align-items: flex-start; }
+.mh-topp small { font: 600 .78rem var(--font-brod); color: #6b7684; }
+.mh-topp h3 { font: 700 1.35rem/1.15 var(--font-rubrik); letter-spacing: -.02em; color: #0b1520; margin-top: 1px; }
+.mh-status { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px; font: 650 .8rem/1 var(--font-brod); color: #0f6e57; background: rgba(47, 198, 155, .13); }
+.mh-status i { width: 7px; height: 7px; border-radius: 50%; background: #2fc69b; }
+.mh-status[data-ton="gul"] { color: #8a5a00; background: rgba(240, 163, 60, .15); } .mh-status[data-ton="gul"] i { background: #f0a33c; }
+.mh-status[data-ton="rod"] { color: #9c2f1c; background: rgba(229, 103, 79, .13); } .mh-status[data-ton="rod"] i { background: #e5674f; }
+.mh-rad { display: grid; grid-template-columns: 148px 1fr; gap: 16px; align-items: center; margin-top: 12px; }
+.mh-ringar { width: 148px; height: 148px; overflow: visible; filter: drop-shadow(0 6px 12px rgba(24, 54, 83, .12)); }
+.mh-bage { animation: mh-rita 1.4s cubic-bezier(.2, .8, .2, 1) both; animation-delay: var(--d); }
+@keyframes mh-rita { from { stroke-dashoffset: var(--C); } }
+.mh-huvud { filter: drop-shadow(-1px 1px 1.5px rgba(0, 0, 0, .28)); opacity: 0; animation: tona-in .3s ease-out forwards; animation-delay: var(--d); }
+.mh-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.mh-lista li { display: grid; gap: 2px; }
+.mh-lista li + li { padding-top: 10px; border-top: .5px solid rgba(11, 21, 32, .08); }
+.mh-namn { display: inline-flex; align-items: center; gap: 6px; font: 650 .78rem var(--font-brod); }
+.mh-namn i { width: 8px; height: 8px; border-radius: 50%; }
+.mh-lista [data-n="0"] .mh-namn { color: #18a37c; } .mh-lista [data-n="0"] .mh-namn i { background: #2fc69b; }
+.mh-lista [data-n="1"] .mh-namn { color: #2f78c4; } .mh-lista [data-n="1"] .mh-namn i { background: #3d8fe0; }
+.mh-lista [data-n="2"] .mh-namn { color: #c27a12; } .mh-lista [data-n="2"] .mh-namn i { background: #f0a33c; }
+.mh-varde { display: flex; align-items: baseline; gap: 3px; }
+.mh-varde b { font: 700 1.45rem/1 var(--font-rubrik); letter-spacing: -.03em; color: #0b1520; }
+.mh-varde small { font: 600 .74rem var(--font-brod); color: #8a94a0; }
+.mh-varde em { margin-left: auto; font: 700 .7rem var(--font-brod); font-style: normal; padding: 3px 7px; border-radius: 999px; color: #0f6e57; background: rgba(47, 198, 155, .13); }
+.mh-varde em[data-ton="gul"] { color: #8a5a00; background: rgba(240, 163, 60, .15); }
+.mh-varde em[data-ton="is"] { color: #2f5f8f; background: rgba(61, 143, 224, .12); }
+.mh-insikt { display: flex; align-items: center; gap: 8px; margin: 14px 0 0; padding: 10px 12px; border-radius: 16px; background: rgba(11, 21, 32, .035); font: 550 .88rem/1.35 var(--font-brod); color: #24303c; }
+.mh-insikt svg { width: 15px; height: 15px; color: #2fc69b; flex: none; }
+.mh-not { display: block; margin-top: 8px; font: 500 .7rem var(--font-brod); color: #8a94a0; text-align: center; }
+@media (prefers-reduced-motion: reduce) { .mh-bage, .mh-huvud { animation: none !important; opacity: 1; } }
+
+.mh-ringar circle[stroke^="rgba"] { stroke-opacity: 1.6; }
+.mh-bage { filter: drop-shadow(0 0 4px rgba(255, 255, 255, .6)); }
+/* ringarna: inga suddiga filter, tydliga spår med luft emellan, huvudet tänds först när bågen ritats klart */
+.mh-ringar { filter: none; }
+.mh-bage { filter: none !important; }
+.mh-huvud { filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .25)); }
+.mh-varde em { display: inline-flex !important; }
+/* arkens ögonrad: samma lilla etikett som i korten */
+body[data-niva] .ark .ark-rubrik .ogon { font: 650 13px/16px var(--font-brod); letter-spacing: 0; text-transform: none; }
+body[data-niva] .ark .ark-rubrik h2 { color: var(--pl-tal); }
+
+
+/* ---- L31 Testvärdenas ark (Hälsa-stil): ett kort per test, rader per sida, riktig liten graf ---- */
+.tg-lista { display: grid; gap: 12px; }
+.tg-kort { border-radius: 26px; overflow: hidden; background: var(--lg-yta-tat); box-shadow: var(--lg-rand); }
+.tg-topp { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 14px 16px 4px; }
+.tg-topp h3 { font: 700 1.06rem/1.2 var(--font-rubrik); letter-spacing: -.015em; }
+.tg-baslinje { display: inline-flex; align-items: center; gap: 6px; font: 600 .74rem var(--font-brod); color: var(--text-3); white-space: nowrap; }
+.tg-baslinje i { width: 14px; border-top: 1.5px dashed currentColor; opacity: .8; }
+.tg-rad { display: grid; grid-template-columns: minmax(0, 1fr) 168px; gap: 10px; align-items: center; padding: 10px 16px 12px; }
+.tg-rad + .tg-rad { box-shadow: inset 0 .5px 0 var(--kant); }
+.tg-tal { display: grid; gap: 4px; justify-items: start; min-width: 0; }
+.tg-sida { font: 600 .72rem var(--font-brod); color: var(--text-3); }
+.tg-tal b { font: 700 2rem/1 var(--font-rubrik); letter-spacing: -.04em; }
+.tg-tal b small { font: 600 .82rem var(--font-brod); color: var(--text-3); margin-left: 2px; letter-spacing: 0; }
+.tg-diff { font: 700 .8rem var(--font-brod); color: var(--accent-text); white-space: nowrap; }
+.tg-diff small { font-weight: 600; color: var(--text-3); }
+.tg-diff[data-ton="gul"] { color: var(--gul-text); } .tg-diff[data-ton="rod"] { color: var(--rod-text); }
+.tg-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border-radius: 999px; font: 650 .7rem var(--font-brod); color: var(--accent-text);
+  background: rgba(126, 224, 195, .14); white-space: nowrap; }
+.tg-status i { width: 6px; height: 6px; border-radius: 50%; background: #3fd3a8; box-shadow: 0 0 6px #3fd3a8; }
+.tg-status[data-ton="gul"] { color: var(--gul-text); background: rgba(240, 181, 69, .15); } .tg-status[data-ton="gul"] i { background: #f0b545; box-shadow: 0 0 6px #f0b545; }
+.tg-status[data-ton="rod"] { color: var(--rod-text); background: rgba(229, 103, 79, .14); } .tg-status[data-ton="rod"] i { background: #ee7a62; box-shadow: 0 0 6px #ee7a62; }
+.tg-graf { width: 168px; height: 78px; overflow: visible; }
+.tg-bas { stroke: var(--text-3); stroke-width: 1; stroke-dasharray: 3 4; opacity: .7; }
+.tg-yta { opacity: 0; animation: tona-in .6s var(--mjuk) .5s forwards; }
+.tg-linje { fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: tg-rita .9s cubic-bezier(.2, .8, .2, 1) .2s forwards; }
+@keyframes tg-rita { to { stroke-dashoffset: 0; } }
+.tg-p { opacity: .55; }
+.tg-nu { stroke: var(--yta-tat); stroke-width: 2.5; filter: drop-shadow(0 0 6px currentColor); transform-box: fill-box; transform-origin: center; animation: kv-pop .5s var(--fjader) 1s both; }
+.tg-dag { font: 600 9px var(--font-brod); fill: var(--text-3); }
+@media (max-width: 380px) { .tg-rad { grid-template-columns: minmax(0, 1fr) 140px; } .tg-graf { width: 140px; } }
+@media (prefers-reduced-motion: reduce) { .tg-linje, .tg-yta, .tg-nu { animation: none !important; opacity: 1; stroke-dashoffset: 0; } }
+
+
+/* =====================================================================================================================
+   L32 flikraden som i iOS 26 (2026-11-18, användaren: "fixa så den passar in som på iPhone 18 och bakgrunden"):
+   en flytande kapsel av glas med fyra flikar och plusknappen i mitten (användaren: "som den var innan med att pluset var i mitten") – rund tonad mint, lite upphöjd.
+   Sidan fortsätter bakom glaset – inga band eller vinjetter nedtill.
+   ===================================================================================================================== */
+body[data-niva="motionar"] {
+  --fl-glas: linear-gradient(180deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .6));
+  --fl-rand: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 -1px 0 rgba(255, 255, 255, .35), inset 0 0 0 .5px rgba(255, 255, 255, .7), 0 0 0 .5px rgba(11, 21, 32, .08);
+  --fl-skugga: 0 10px 30px -12px rgba(24, 54, 83, .28), 0 1px 3px rgba(24, 54, 83, .06);
+  --fl-ikon: #59636f; --fl-vald: #0f7a60; --fl-droppe: rgba(126, 224, 195, .26); --fl-droppe-kant: rgba(255, 255, 255, .75);
+  --fl-filter: blur(30px) saturate(1.8) brightness(1.04);
+}
+body[data-niva="elit"] {
+  --fl-glas: linear-gradient(180deg, rgba(26, 40, 56, .64), rgba(16, 27, 40, .66));
+  --fl-rand: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 -1px 0 rgba(255, 255, 255, .06), inset 0 0 0 .5px rgba(255, 255, 255, .14), 0 0 0 .5px rgba(0, 0, 0, .4);
+  --fl-skugga: 0 12px 32px -12px rgba(0, 0, 0, .7);
+  --fl-ikon: rgba(235, 245, 255, .62); --fl-vald: #8ff0d2; --fl-droppe: rgba(126, 224, 195, .16); --fl-droppe-kant: rgba(255, 255, 255, .2);
+  --fl-filter: blur(30px) saturate(1.8);
+}
+.app .flikrad { left: 16px; right: 16px; bottom: max(calc(var(--botten) - 12px), 10px); height: 62px; padding: 0; display: flex; align-items: stretch; gap: 0;
+  background: none !important; box-shadow: none !important; border: 0 !important; border-radius: 0; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; overflow: visible; }
+.app .flikrad[hidden] { display: none; }
+.app .flikrad::before { display: none; }
+/* kapseln och plusknappen: samma glas – klart, ljusbrytande kant, lätt skugga */
+.flik-kapsel, .app .flikrad .flik-plus { position: relative; isolation: isolate; background: var(--fl-glas) !important; box-shadow: var(--fl-rand), var(--fl-skugga) !important;
+  -webkit-backdrop-filter: var(--fl-filter); backdrop-filter: var(--fl-filter); }
+.flik-kapsel { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; padding: 4px; border-radius: 999px; }
+/* kantljuset: en tunn ring som är ljusast uppe till vänster och nere till höger, som glas som bryter ljuset */
+.flik-kapsel::after, .app .flikrad .flik-plus::after { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none; z-index: 3; display: block;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .85), rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0) 68%, rgba(255, 255, 255, .45));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: none; opacity: 1; transform: none; }
+body[data-niva="elit"] .flik-kapsel::after, body[data-niva="elit"] .app .flikrad .flik-plus::after { opacity: .35; }
+.flik-kapsel button { position: relative; z-index: 2; height: 54px; display: grid; justify-items: center; align-content: center; gap: 2px; border-radius: 999px; color: var(--fl-ikon); }
+.flik-kapsel button svg { width: 25px; height: 25px; transition: transform .45s var(--ios-fjader); }
+.flik-kapsel button svg use { stroke-width: 1.7; }
+.flik-kapsel button span { font: 600 10.5px/13px var(--font-brod); letter-spacing: 0; }
+.flik-kapsel button .ik-fylld { display: none; }
+.flik-kapsel button[aria-current="page"] { color: var(--fl-vald); }
+.flik-kapsel button[aria-current="page"] .ik-linje { display: none; }
+.flik-kapsel button[aria-current="page"] .ik-fylld { display: block; }
+.flik-kapsel button[aria-current="page"] svg { transform: none; }
+.flik-kapsel button:active svg { transform: scale(.86); transition-duration: .1s; }
+/* glasdroppen bakom vald flik */
+.flik-kapsel .flik-markor { position: absolute; top: 4px; left: 0; width: calc((100% - 8px) / 5); height: 54px; z-index: 1; }
+.flik-kapsel .flik-markor::before { inset: 0; border-radius: 999px !important; background: var(--fl-droppe) !important; border: 0 !important;
+  box-shadow: inset 0 1px 0 var(--fl-droppe-kant), inset 0 0 0 .5px rgba(126, 224, 195, .35), 0 4px 12px -6px rgba(15, 110, 87, .35) !important; }
+body[data-niva="elit"] .flik-kapsel .flik-markor::before { box-shadow: inset 0 1px 0 var(--fl-droppe-kant), inset 0 0 0 .5px rgba(126, 224, 195, .3), 0 0 16px -6px rgba(126, 224, 195, .5) !important; }
+.flik-kapsel .flik-markor::after { left: 22%; right: 22%; top: 2px; height: 30%; opacity: .45; }
+body[data-niva="elit"] .flik-kapsel .flik-markor::after { opacity: .15; }
+/* plusknappen: rund tonad mint glasknapp i mitten, lite upphöjd över kapseln; droppen dyker under den (z-index) */
+.app .flikrad .flik-plus { flex: none; z-index: 4; justify-self: center; width: 58px; height: 58px; margin: -20px 0 0; border-radius: 50%; color: #0b3b2f; display: grid; place-items: center; }
+.app .flikrad .flik-plus { background: radial-gradient(120% 100% at 35% 20%, rgba(214, 251, 239, .97), rgba(132, 228, 199, .96) 55%, rgba(68, 200, 162, .96)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), inset 0 0 0 .5px rgba(255, 255, 255, .6), inset 0 -3px 8px rgba(15, 110, 87, .22), 0 0 0 .5px rgba(15, 110, 87, .25), 0 10px 24px -10px rgba(15, 110, 87, .6) !important; }
+body[data-niva="elit"] .app .flikrad .flik-plus { color: #0b1520; background: radial-gradient(120% 100% at 35% 20%, #c4f7e6, #84e4c7 55%, #3fbf99) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .85), inset 0 0 0 .5px rgba(255, 255, 255, .5), inset 0 -3px 8px rgba(15, 110, 87, .3), 0 0 0 .5px rgba(0, 0, 0, .4), 0 0 22px -6px rgba(126, 224, 195, .55), 0 12px 26px -10px rgba(0, 0, 0, .7) !important; }
+.app .flikrad .flik-plus::before { inset: -3px; z-index: -1; animation-duration: 5s; opacity: .5; }
+.app .flikrad .flik-plus svg { width: 24px; height: 24px; filter: none; }
+.app .flikrad .flik-plus svg use { stroke-width: 2.3; }
+.app .flikrad .flik-plus:hover { transform: scale(1.03); }
+.app .flikrad .flik-plus:active { transform: scale(.92); }
+/* sidan fortsätter bakom glaset: ingen vinjett, ingen rullkant */
+.bakgrund::after { display: none !important; }
+/* en mjuk toning av sidans färg (utan oskärpa) längst ned, så att flikraden alltid har kontrast */
+.app:has(.flikrad:not([hidden])) .skarm-lager::after { display: block !important; content: ""; position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; pointer-events: none;
+  height: calc(max(calc(var(--botten) - 12px), 10px) + 110px); background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--bg) 55%, transparent) 45%, color-mix(in srgb, var(--bg) 88%, transparent)) !important; }
+/* flikradens intoning får inte ligga kvar efteråt – en kvarhållen animation (fill both) gör glaset till en egen backdrop-rot och stänger av oskärpan */
+.app .flikrad, .app .flikrad .flik-plus { animation-fill-mode: backwards !important; }
+.skarm.med-flikrad { padding-bottom: calc(max(calc(var(--botten) - 12px), 10px) + 62px + 28px); }
+
+/* ---- L33 knapparna som iOS 26: glassProminent (primär), glass (sekundär), ren text, runda glasknappar ---- */
+body[data-niva="motionar"] { --kn-glas: rgba(255, 255, 255, .62); --kn-rand: inset 0 1px 0 #fff, inset 0 0 0 .5px rgba(255, 255, 255, .8), 0 0 0 .5px rgba(11, 21, 32, .08), 0 6px 16px -10px rgba(24, 54, 83, .3); }
+body[data-niva="elit"] { --kn-glas: rgba(255, 255, 255, .08); --kn-rand: inset 0 1px 0 rgba(255, 255, 255, .18), inset 0 0 0 .5px rgba(255, 255, 255, .12), 0 0 0 .5px rgba(0, 0, 0, .35), 0 8px 18px -10px rgba(0, 0, 0, .6); }
+.knapp { gap: 8px; font: 600 17px/22px var(--font-rubrik) !important; letter-spacing: -.012em; border-radius: 999px !important; -webkit-tap-highlight-color: transparent; }
+.knapp svg { width: 18px; height: 18px; }
+.knapp svg use { stroke-width: 2.1; }
+.knapp-primar, .knapp-primar.knapp-bred { min-height: 50px; padding: 0 24px; color: #06231b !important; border: 0 !important;
+  background: linear-gradient(180deg, rgba(178, 244, 224, .96), rgba(111, 220, 188, .96) 60%, rgba(84, 207, 172, .96)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .85), inset 0 0 0 .5px rgba(255, 255, 255, .55), inset 0 -2px 6px rgba(15, 110, 87, .18), 0 10px 22px -12px rgba(15, 110, 87, .65) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(1.8); backdrop-filter: blur(12px) saturate(1.8); }
+.knapp-primar::after { opacity: .5; }
+.knapp-primar[disabled] { opacity: .4; }
+.knapp-sek { min-height: 44px; padding: 0 20px; color: var(--text) !important; background: var(--kn-glas) !important; box-shadow: var(--kn-rand) !important; border: 0 !important; }
+.knapp-text { min-height: 44px; padding: 0 12px; color: var(--accent-text) !important; background: none !important; box-shadow: none !important; border: 0 !important; }
+.knapp-text:active { opacity: .55; transform: none; }
+.ikonknapp { width: 44px !important; height: 44px !important; border-radius: 50% !important; color: var(--text) !important; background: var(--kn-glas) !important; box-shadow: var(--kn-rand) !important; border: 0 !important; }
+.ikonknapp svg { width: 18px !important; height: 18px !important; }
+.ikonknapp svg use { stroke-width: 2.2; }
+/* stäng (xmark) och tillbaka (chevron): Apples tjockare glyfer, chevronen optiskt centrerad */
+.ikonknapp[data-stang-ark] svg { width: 16px !important; height: 16px !important; }
+.ikonknapp[data-stang-ark] svg use { stroke-width: 2.5; }
+.ikonknapp[aria-label="Tillbaka"] svg { width: 20px !important; height: 20px !important; transform: translateX(-1px); }
+.ikonknapp[aria-label="Tillbaka"] svg use { stroke-width: 2.4; }
+/* chips: kapslar med fyllnad, valt = mint; samma höjd överallt */
+.chip.chip-val { min-height: 36px; padding: 0 14px; border-radius: 999px !important; font: 600 15px/1 var(--font-brod); }
+
+/* ---- L34 ikonrutorna: fylld färgruta med vit symbol i listor och inställningar (som iOS Inställningar), tonad i övrigt ---- */
+.ikonruta { border: 0 !important; }
+.ikonruta svg use { stroke-width: 1.8; }
+body[data-niva] :is(.val-lista .val, .jg-inst-rad, .kort .lista li, .kv-med-lista li, .norm-rad, .jg-nod) > .ikonruta {
+  --ir: #3fc9a3; --ir2: #23a883; color: #fff !important; background: linear-gradient(180deg, var(--ir), var(--ir2)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), inset 0 0 0 .5px rgba(255, 255, 255, .15), 0 1px 2px rgba(0, 0, 0, .12) !important; }
+body[data-niva] :is(.val-lista .val, .jg-inst-rad, .kort .lista li, .kv-med-lista li, .norm-rad, .jg-nod) > .ikonruta[data-ton="is"] { --ir: #64aef2; --ir2: #3a84d6; }
+body[data-niva] :is(.val-lista .val, .jg-inst-rad, .kort .lista li, .kv-med-lista li, .norm-rad, .jg-nod) > .ikonruta[data-ton="gul"] { --ir: #f6bd52; --ir2: #e7962a; }
+body[data-niva] :is(.val-lista .val, .jg-inst-rad, .kort .lista li, .kv-med-lista li, .norm-rad, .jg-nod) > .ikonruta[data-ton="rod"] { --ir: #f5846e; --ir2: #e0573f; }
+body[data-niva] :is(.val-lista .val, .jg-inst-rad, .kort .lista li, .kv-med-lista li, .norm-rad, .jg-nod) > .ikonruta svg { width: 60% !important; height: 60% !important; }
+body[data-niva] :is(.val-lista .val, .jg-inst-rad, .kort .lista li, .kv-med-lista li, .norm-rad, .jg-nod) > .ikonruta svg use { stroke-width: 2; }
+body[data-niva] :is(.kort .lista li, .kv-med-lista li, .norm-rad) > .ikonruta { width: 32px !important; height: 32px !important; border-radius: 9px !important; }
+body[data-niva] .val-lista .val > .ikonruta { width: 32px !important; height: 32px !important; border-radius: 9px !important; transform: none !important; }
+body[data-niva] .jg-nod > .ikonruta { border-radius: 9px !important; }
+/* tonade rutor: samma ton i bakgrunden, ingen kant, radien följer storleken */
+body[data-niva="elit"] .ikonruta:not([data-ton]) { background: rgba(126, 224, 195, .14); }
+
+/* ---- L35 helgenomgången (2026-11-18): radier, ont-arkets val, inställningsraderna ---- */
+/* fristående kort följer korten (28), hjältar 32; notiser utanför ett kort 20 */
+body[data-niva] .sc-resa { border-radius: 28px !important; }
+body[data-niva] .skarm .notis:not(.kort .notis, .ark .notis, .kv-med .notis, .jg-hjalte .notis) { border-radius: 20px !important; }
+.jg-hjalte .jg-poang { border-radius: 16px !important; }
+/* "Hur känns det?": fem kapslar fick inte plats på en rad (Domning/Svullnad nådde kanten) – 3 + 2 lika breda */
+.ark .kv-val-5 { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.ark .kv-val-5 .chip-val { grid-column: span 2; min-height: 44px; padding: 0 8px; font: 600 15px/1 var(--font-brod); letter-spacing: -.01em; }
+.ark .kv-val-5 .chip-val:nth-child(n + 4) { grid-column: span 3; }
+/* inställningsraderna som iOS Inställningar: brödtext (17 medium), inte rubrikvikt */
+.jg-inst-rad b { font: var(--ios-body) !important; letter-spacing: -.012em; }

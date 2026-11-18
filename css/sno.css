@@ -1,0 +1,23 @@
+/* sno – snöfall över hela appen när det är vinter (data-arstid="vinter" på body sätts av app.js). Bara transform/opacitet. */
+.sno-lager { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.sno-lager i { position: absolute; top: -10px; left: var(--x); width: var(--s); height: var(--s); border-radius: 50%; background: radial-gradient(circle, #fff 35%, rgba(255, 255, 255, 0) 72%);
+  opacity: var(--o); animation: sno-fall var(--t) linear infinite; animation-delay: var(--d); will-change: transform; }
+body[data-niva="motionar"] .sno-lager i { background: radial-gradient(circle, #fff 35%, rgba(255, 255, 255, 0) 72%); filter: drop-shadow(0 0 1.5px rgba(80, 120, 170, .55)); }
+@keyframes sno-fall { 0% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(var(--v), 50vh, 0); } 100% { transform: translate3d(calc(var(--v) * -.5), 105vh, 0); } }
+@media (prefers-reduced-motion: reduce) { .sno-lager { display: none; } }
+
+body[data-niva="motionar"] .sno-lager i { background: radial-gradient(circle, #ffffff 30%, rgba(190, 215, 240, .9) 50%, rgba(190, 215, 240, 0) 72%); }
+/* snön faller framför innehållet (under flikraden och arken) – förut låg den bakom korten och syntes knappt */
+.sno-lager { z-index: 20; }
+.sno-lager i { opacity: calc(var(--o) * .85); }
+.app:has(.splash) .sno-lager { opacity: 0; transition: opacity 1.2s; }
+/* kraftigt snöfall: närmaste flingorna är större och mjukt suddiga */
+.sno-lager i[data-d="2"] { filter: blur(1.4px); }
+.sno-lager i[data-d="0"] { filter: none; }
+.sno-lager i { opacity: var(--o); }
+body[data-niva="motionar"] .sno-lager i { filter: drop-shadow(0 0 2px rgba(70, 110, 160, .6)); }
+body[data-niva="motionar"] .sno-lager i[data-d="2"] { filter: blur(1.2px) drop-shadow(0 0 2px rgba(70, 110, 160, .5)); }
+/* Snön faller bara på Idag – på de andra flikarna och i introt tonar den bort. */
+.sno-lager { transition: opacity .6s ease; }
+body:not([data-sida="idag"]) .sno-lager { opacity: 0; }
+body:not([data-sida="idag"]) .sno-lager i { animation-play-state: paused; }

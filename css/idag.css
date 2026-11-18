@@ -1,0 +1,272 @@
+/* idag – designteamet (2026-11-18). Laddas efter app.css och vinner över den.
+   Idag-fliken i båda lägena: en rytm (--luft mellan alla kort), en radieskala (--radie ute, --radie-m/-s inne),
+   rutnät som går jämnt ut (bento 2 × 2 med lika höga rader), samma byggnad i varje ruta (topp · tal · rad · graf).
+   Avsnitt: I1 rytmen · I2 rubriken · I3 veckan · I4 hjälten (motionär) · I5 instrumentpanelen (elit) · I6 nästa match
+   · I7 snabbcheck och skalan · I8 dagens fokus · I9 bento · I10 belastningen · I11 kroppen · I12 skaderegistret och PCME
+   · I13 tips och nästa steg · I14 minskad rörelse
+   Regel: ständiga animationer rör bara transform/opacity; entréer en gång när vyn visas. */
+
+/* ---- I1 rytmen: alla delar står i ett rutnät med samma avstånd ---- */
+.idag-vy { display: grid; gap: var(--luft, 12px); }
+.idag-vy > * { margin: 0 !important; min-width: 0; }
+.idag-vy > .valkomst { margin: 4px 0 var(--luft-1, 4px) !important; }
+.idag-vy > .exempel { justify-self: center; margin-top: var(--luft-1, 4px) !important; }
+.idag-vy .kort { border-radius: var(--radie); padding: var(--kort-pad, 18px); }
+.idag-vy .kort-rubrik { align-items: flex-start; margin-bottom: 14px; }
+.idag-vy .kort-rubrik h3 { font-size: var(--fs-h3, 1rem); line-height: 1.25; }
+.idag-vy .kort-rubrik .ogon + h3 { margin-top: 6px !important; }
+.idag-vy .kort-rubrik .mer { min-height: 32px; padding: 0 2px 0 8px; }
+.idag-vy .ogon { font-size: .64rem; letter-spacing: .16em; }
+
+/* ---- I2 rubriken ---- */
+.idag-vy .valkomst { align-items: start; gap: 16px; }
+.idag-vy .valkomst h1 { font-size: 2.25rem; margin-top: 8px; padding-bottom: 2px; }
+.idag-vy .valkomst p { max-width: 30ch; font-size: var(--fs-brod, .9rem); }
+.idag-vy .valkomst-meta { margin-top: 12px; }
+.idag-vy .valkomst-profil { margin-top: 0; transition: transform var(--tid-2, .32s) var(--fjader); }
+.idag-vy .valkomst-profil:active { transform: scale(.92); }
+.idag-vy .valkomst-hej { animation: idag-glid .8s var(--mjuk) both .12s; }
+.idag-vy .valkomst h1 { animation: idag-glid .9s var(--mjuk) both .2s; }
+.idag-vy .valkomst p { animation: idag-glid .9s var(--mjuk) both .28s; }
+.idag-vy .valkomst-meta { animation: idag-glid .9s var(--mjuk) both .36s; }
+@keyframes idag-glid { from { opacity: 0; transform: translateY(10px); } }
+
+/* ---- I3 veckan: sju lika rutor, idag lyft ---- */
+.idag-vy .vecka { gap: 4px; padding: 6px; border-radius: var(--radie); }
+.idag-vy .vecka-dag { border-radius: var(--radie-m, 18px); min-height: 66px; align-content: center; padding: 8px 0 7px; }
+.idag-vy .vecka-dag:not([data-idag]):active { background: var(--yta-2); }
+.idag-vy .vecka-dag[data-idag] { animation: idag-lyft .7s var(--fjader) both .35s; }
+@keyframes idag-lyft { from { transform: scale(.82); opacity: 0; } }
+.idag-vy .vecka-prickar { justify-content: center; min-width: 11px; }
+
+/* ---- I4 hjälten (motionär): ringarna i ett lugnt kort, förklaringen i tre lika celler ---- */
+.idag-vy .idag-hjalte { padding: 22px var(--kort-pad, 18px) var(--kort-pad, 18px); border-radius: var(--radie); overflow: hidden;
+  background: var(--kort-glans), var(--yta); border: 1px solid var(--kant); box-shadow: var(--skugga); }
+body[data-niva="motionar"] .idag-vy .idag-hjalte { background: radial-gradient(90% 70% at 50% 38%, rgba(126, 224, 195, .12), transparent 70%), linear-gradient(180deg, #fff, #fcfbf8); }
+.idag-vy .idag-sken { top: 40%; }
+.idag-vy .trio { width: 232px; height: 232px; }
+.idag-vy .trio-mitt { inset: 50px; }
+.idag-vy .trio-forklaring { gap: 0; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--kant); }
+.idag-vy .trio-forklaring div { position: relative; flex-direction: column; gap: 6px; text-align: center; }
+.idag-vy .trio-forklaring div + div::before { content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 1px; background: var(--kant); }
+.idag-vy .trio-forklaring b { font-size: 1rem; }
+.idag-vy .trio-forklaring small { display: block; margin-top: 3px; font-size: .66rem; letter-spacing: .04em; }
+.idag-vy .trio-forklaring span { display: grid; justify-items: center; }
+
+/* ---- I5 instrumentpanelen (elit): samma radie som korten, hörnen utanför rutorna ---- */
+.idag-vy .hud { border-radius: var(--radie); padding: 22px 20px 20px; }
+.idag-vy .hud-ram i { width: 14px; height: 14px; border-width: 1.5px; border-color: rgba(126, 224, 195, .45); }
+.idag-vy .hud-ram i:nth-child(1) { left: 10px; top: 10px; } .idag-vy .hud-ram i:nth-child(2) { right: 10px; top: 10px; }
+.idag-vy .hud-ram i:nth-child(3) { left: 10px; bottom: 10px; } .idag-vy .hud-ram i:nth-child(4) { right: 10px; bottom: 10px; }
+.idag-vy .hud-matare { width: 236px; height: 236px; }
+.idag-vy .hud-rutor { gap: 8px; margin-top: 16px; grid-auto-rows: 1fr; }
+.idag-vy .hud-ruta { gap: 6px; padding: 12px 10px 10px; border-radius: var(--radie-s, 14px); align-content: start; }
+.idag-vy .hud-ruta b { font-size: 1.4rem; }
+.idag-vy .hud-bars { height: 24px; margin-top: 2px; }
+
+/* ---- I6 nästa match: tavlan linjerad mot rubriken, pulsen utan box-shadow ---- */
+.idag-vy .match2 { padding: var(--kort-pad, 18px); }
+.idag-vy .match2-rad { margin: 14px 0 12px; }
+.idag-vy .match2-topp { min-height: 28px; }
+.idag-vy .match-status { position: relative; top: auto; right: auto; min-height: 28px; padding: 0 10px 0 8px; border-radius: 999px; background: rgba(126, 224, 195, .1); }
+.idag-vy .match-status[data-ton="gul"] { background: rgba(240, 181, 69, .12); }
+.idag-vy .match-status i { position: relative; animation: none; box-shadow: none; }
+.idag-vy .match-status i::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: inherit; animation: idag-puls 2.2s var(--mjuk) infinite; }
+@keyframes idag-puls { 0% { transform: scale(1); opacity: .7; } 80%, 100% { transform: scale(2.6); opacity: 0; } }
+.idag-vy .tavla-siffror span { min-width: 52px; border-radius: 12px; }
+.idag-vy .match2 > .liten { display: block; padding-top: 10px; border-top: 1px solid var(--kant); }
+
+/* ---- I7 snabbcheck och välmåendeskalan ---- */
+.idag-vy .snabb .kort-rubrik { margin-bottom: 16px; }
+.idag-vy .svit { margin-top: 6px; }
+.idag-vy .snabb-val { gap: 6px; }
+.idag-vy .snabb-val button { gap: 8px; padding: 10px 0; border-radius: var(--radie-m, 18px); }
+.idag-vy .snabb-val button:hover { background: var(--yta-2); }
+.idag-vy .humor-ikon { width: 46px; height: 46px; }
+.idag-vy .snabb-val small { font-size: .68rem; white-space: nowrap; }
+.idag-vy .skala { gap: 6px; }
+.idag-vy .skala button { gap: 6px; padding: 12px 0 10px; border-radius: var(--radie-s, 14px); }
+.idag-vy .skala small { white-space: nowrap; }
+.idag-vy .skala-axel { margin-top: 10px; padding: 0 4px; }
+.idag-vy .skala-axel::before { content: none; }
+.idag-vy .skala-axel span { display: inline-flex; align-items: center; gap: 6px; }
+.idag-vy .skala-axel span:first-child::before, .idag-vy .skala-axel span:last-child::after { content: ''; width: 14px; height: 1px; background: currentColor; opacity: .6; }
+.idag-vy .checkin-klar { min-height: 76px; }
+.idag-vy .checkin-klar .ikonruta { background: var(--accent); color: #0b1520; border-color: transparent; }
+.idag-vy .checkin-klar .ikonruta svg use { stroke-width: 2.4; }
+.idag-vy .checkin-klar b { line-height: 1.3; }
+.idag-vy .checkin-klar small { margin-top: 2px; line-height: 1.35; }
+
+/* ---- I8 dagens fokus ---- */
+.idag-vy .fokus { gap: 8px 14px; }
+.idag-vy .fokus-text b { line-height: 1.25; }
+.idag-vy .fokus-knapp { min-height: 36px; margin-top: 8px; transition: transform var(--tid-2, .32s) var(--fjader); }
+.idag-vy .fokus-sken { right: -70px; top: -70px; }
+
+/* ---- I9 bento: 2 × 2 lika rutor + breda rutor, varje ruta samma byggnad ---- */
+.idag-vy .bento { gap: var(--luft, 12px); grid-auto-rows: auto; }
+.idag-vy .bento-ruta { padding: 16px; border-radius: var(--radie); min-height: 172px; }
+.idag-vy .bento-ruta:not(.bred) { animation: idag-ruta .7s var(--mjuk) both; }
+.idag-vy .bento > :nth-child(1) { animation-delay: .32s; } .idag-vy .bento > :nth-child(2) { animation-delay: .38s; }
+.idag-vy .bento > :nth-child(3) { animation-delay: .44s; } .idag-vy .bento > :nth-child(4) { animation-delay: .5s; }
+@keyframes idag-ruta { from { opacity: 0; transform: translateY(12px) scale(.97); } }
+.idag-vy .bento-ruta.bred { min-height: 0; }
+.idag-vy .bento-topp { margin-bottom: 12px; min-height: 32px; }
+.idag-vy .bento-namn { font-size: .8rem; line-height: 1.2; }
+.idag-vy .bento-tal { line-height: 1; }
+.idag-vy .bento-under { display: block; margin-top: 6px; line-height: 1.3; }
+.idag-vy .bento-graf { height: 44px; margin-top: auto; padding-top: 12px; box-sizing: content-box; }
+.idag-vy .bento-graf .mini-staplar { height: 100%; margin: 0; padding: 0; gap: 5px; }
+.idag-vy .mini-staplar i { border-radius: 5px; }
+.idag-vy .mini-staplar[data-ton="is"] i { background: linear-gradient(180deg, #a7d2ff, rgba(58, 169, 201, .35)); }
+body[data-niva="motionar"] .idag-vy .mini-staplar[data-ton="is"] i { background: linear-gradient(180deg, #7fb6ec, rgba(127, 182, 236, .3)); }
+.idag-vy .bento-graf .minispark { height: 100%; margin: 0; padding: 0; }
+.idag-vy .bento-ruta:nth-child(4) .minispark-linje { stroke: var(--is); }
+.idag-vy .bento-ruta:nth-child(4) .minispark-yta { fill: rgba(167, 210, 255, .16); }
+body[data-niva="motionar"] .idag-vy .bento-ruta:nth-child(4) .minispark-linje { stroke: #5a97d4; }
+body[data-niva="motionar"] .idag-vy .minispark-linje { stroke: #2fb58f; }
+.idag-vy .minispark-linje { stroke-dasharray: 400; animation: idag-rita 1.4s var(--mjuk) both .5s; }
+@keyframes idag-rita { from { stroke-dashoffset: 400; } to { stroke-dashoffset: 0; } }
+.idag-vy .minispark-yta { animation: in-tona .9s var(--mjuk) both .7s; }
+/* tillgänglighet: 28 dagar som streck, begränsade dagar gula */
+.dagband { display: grid; grid-template-columns: repeat(28, 1fr); gap: 2px; height: 100%; align-items: end; }
+.dagband i { display: block; height: 70%; border-radius: 2px; background: linear-gradient(180deg, var(--accent), rgba(126, 224, 195, .35)); transform-origin: bottom;
+  animation: vax-upp .6s var(--mjuk) both; animation-delay: calc(var(--i) * 18ms + .45s); }
+.dagband i[data-t="begr"] { height: 46%; background: linear-gradient(180deg, var(--gul), rgba(240, 181, 69, .35)); }
+body[data-niva="motionar"] .dagband i { background: linear-gradient(180deg, #3fc9a3, rgba(63, 201, 163, .3)); }
+
+/* ---- I10 belastningen (elit): mätaren i tre zoner, staplarna med luft under ---- */
+.idag-vy .belastning-rad { grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; }
+.idag-vy .belastning-rad .acwr svg { width: 100%; max-width: 188px; height: auto; display: block; }
+.idag-vy .acwr .zon-spar { display: none; }
+.idag-vy .acwr .zon-lag, .idag-vy .acwr .zon-ok, .idag-vy .acwr .zon-hog { fill: none; stroke-width: 12; stroke-linecap: butt; }
+.idag-vy .acwr .zon-lag { stroke: rgba(167, 210, 255, .35); }
+.idag-vy .acwr .zon-ok { stroke: var(--accent); }
+body[data-niva="elit"] .idag-vy .acwr .zon-ok { filter: drop-shadow(0 0 6px rgba(126, 224, 195, .45)); }
+.idag-vy .acwr .zon-etikett { font: 800 9px var(--font-brod); fill: var(--text-3); letter-spacing: .04em; }
+.idag-vy .acwr .zon-hog { stroke: url(#g-varm); opacity: .9; }
+.idag-vy .acwr .visare { animation: idag-visare 1.4s var(--fjader) both .5s; }
+@keyframes idag-visare { from { transform: rotate(-90deg); } }
+.idag-vy .acwr .visare line { stroke-width: 2.5; }
+.idag-vy .acwr .visare circle { stroke: var(--yta-tat); stroke-width: 3; }
+.idag-vy .belastning-tal { padding-bottom: 0; gap: 4px; }
+.idag-vy .belastning-tal > b { font-size: 2.1rem; }
+.idag-vy .bento .staplar { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--kant); height: 96px; }
+
+/* ---- I11 kroppen ---- */
+.idag-vy .kropp-mini { grid-template-columns: 116px 1fr; gap: 14px; }
+.idag-vy .kropp-mini > div:last-child { display: grid; align-content: center; }
+.idag-vy .zonrad b { font-size: .86rem; }
+.idag-vy .zonrad .niva-tal { min-width: 14px; text-align: right; }
+.kropp-mini-tips { margin-top: 10px; font-size: .72rem; font-weight: 700; color: var(--text-3); }
+.idag-vy .bento-ruta.bred.tryck { transition: transform var(--tid-2, .32s) var(--mjuk); }
+.idag-vy .bento-ruta.bred.tryck:active { transform: scale(.98); }
+
+/* ---- I12 skaderegistret och PCME ---- */
+.idag-vy .skaderad .liten { line-height: 1.35; }
+/* skadeKort delas med Kropp-fliken – därför inte avgränsat till .idag-vy (axeln under linjen ersätter den gamla etiketten "14 d") */
+.tidslinje-dagar { margin-top: 16px; height: 8px; }
+.tidslinje-dagar i { transform-origin: left; animation: vax 1.2s var(--mjuk) both .5s; }
+.tidslinje-dagar em { top: -4px; bottom: -4px; }
+.tidslinje-dagar em::after { content: none; }
+.tidslinje-axel { position: relative; display: flex; justify-content: space-between; height: 14px; margin-top: 8px; font: 700 .62rem/14px var(--font-brod); color: var(--text-3); letter-spacing: .02em; }
+.tidslinje-axel span:nth-child(2) { position: absolute; left: var(--g); transform: translateX(-50%); color: var(--rod-text); white-space: nowrap; }
+.idag-vy .skade-not { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--kant); }
+.idag-vy .lista li { min-height: 52px; }
+.idag-vy .lista li > .ikonruta { width: 36px !important; height: 36px !important; border-radius: 12px !important; }
+.idag-vy .lista li > .ikonruta svg { width: 18px; height: 18px; }
+
+/* ---- I13 tips och nästa steg ---- */
+.idag-vy .tips-lista .lista li { align-items: flex-start; padding: 12px 0; }
+.idag-vy .tips-lista .lista li:first-child { padding-top: 0; }
+.idag-vy .tips-lista .lista li:last-child { padding-bottom: 0; }
+.idag-vy .tips-lista .lista li small { font-size: .78rem; line-height: 1.4; color: var(--text-2); margin-top: 2px; }
+.idag-vy .tips-lista .chip { min-height: 28px; }
+.idag-vy .nasta-steg .ogon { color: var(--is-text); }
+.idag-vy .nasta-steg h3 { font-size: var(--fs-h3, 1rem); margin-top: 6px; }
+.idag-vy .nasta-steg .liten { margin-top: 2px; }
+.idag-vy .nasta-steg .rad > svg { width: 16px; height: 16px; color: var(--text-3); flex: none; }
+.idag-vy .nasta-steg .matare { margin-top: 14px; height: 6px; }
+
+/* ---- I14 minskad rörelse ---- */
+@media (prefers-reduced-motion: reduce) {
+  .idag-vy *, .idag-vy *::before, .idag-vy *::after { animation: none !important; transition: none !important; }
+  .idag-vy .hud-pa { opacity: 1; }
+}
+.idag-vy .nasta-framsteg { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; margin-top: 14px; }
+.idag-vy .nasta-framsteg .matare { margin: 0; height: 6px; }
+.idag-vy .nasta-framsteg small { font-size: .72rem; font-weight: 800; color: var(--text-3); }
+.idag-vy .checkin-klar .svit { display: flex; margin: 3px 0 2px; }
+
+/* HUD 2 (2026-11-18): en segmenterad ring, inga dubbla ringar, inget svep, inga hörnmarkeringar */
+.idag-vy .hud2 { padding: 24px 16px 16px; }
+.hud2 .hud-ram, .hud2 .hud-svep, .hud2::before { display: none; }
+.hud2 .hud-matare { width: 228px; height: 228px; }
+.hud2 svg { transform: none; }
+.hud-seg-spar, .hud-seg { fill: none; stroke-width: 14; transform: rotate(-90deg); transform-origin: 130px 130px; }
+.hud-seg-spar { stroke: rgba(167, 210, 255, .1); }
+.hud-seg { stroke: url(#hud-g); }
+.hud2 g[mask] { filter: drop-shadow(0 0 6px rgba(126, 224, 195, .55)); }
+.hud-mask { fill: none; stroke: #fff; stroke-width: 20; transform: rotate(-90deg); transform-origin: 130px 130px; animation: hud-mask 1.6s var(--mjuk) .3s both; }
+@keyframes hud-mask { from { stroke-dashoffset: var(--C); } }
+.hud2 .hud-inre { fill: url(#hud-inre-g); stroke: none; }
+.hud-inre-linje { fill: none; stroke: rgba(167, 210, 255, .14); stroke-width: 1; stroke-dasharray: 2 5; }
+.hud-spets { fill: #eafff8; filter: drop-shadow(0 0 6px #7ee0c3) drop-shadow(0 0 12px rgba(126, 224, 195, .6)); opacity: 0; animation: tona-in .4s var(--mjuk) 1.8s forwards; }
+.hud2 .hud-mitt small { letter-spacing: .22em; }
+.hud2 .hud-mitt b { font-size: 3.1rem; margin-top: 8px; }
+.hud2 .hud-av100 { margin: 4px 0 10px; text-transform: uppercase; font-size: .6rem; letter-spacing: .16em; }
+.hud2 .hud-mitt .status { border-radius: 999px; padding: 5px 12px; }
+.hud2 .hud-rutor { margin-top: 18px; grid-auto-rows: 1fr; }
+.hud2 .hud-ruta { grid-template-rows: auto auto 1fr auto; align-items: end; gap: 6px; padding: 12px; }
+.hud2 .hud-ruta small { align-self: start; }
+.hud2 .hud-ruta b { font-size: 1.45rem; }
+.hud2 .hud-bars { height: 26px; align-self: end; }
+.hud2 .hud-ruta em { align-self: end; }
+
+/* Belastning 2: renare halvcirkel */
+.acwr2 svg { width: 100%; max-width: 210px; height: auto; overflow: visible; }
+.acwr2 path[class^="zon-"] { fill: none; stroke-width: 12; stroke-linecap: round; }
+.acwr2 .zon-lag { stroke: rgba(167, 210, 255, .45); }
+.acwr2 .zon-ok { stroke: url(#hud-g); filter: drop-shadow(0 0 6px rgba(126, 224, 195, .45)); }
+.acwr2 .zon-hog { stroke: url(#g-varm); opacity: .9; }
+body[data-niva="motionar"] .acwr2 .zon-ok { stroke: #3fc9a3; filter: none; }
+.acwr2 .zon-etikett { font: 700 9px var(--font-brod); fill: var(--text-3); letter-spacing: .02em; }
+.acwr2 .visare { transform-origin: 115px 116px; transition: transform 1.4s var(--fjader); }
+.acwr2 .visare path { fill: var(--text); }
+.acwr2 .visare .nav { fill: var(--yta-tat); stroke: var(--text); stroke-width: 2.5; }
+.acwr2 .visare .nav-mitt { fill: var(--accent); }
+.belastning-rad { align-items: center; }
+.belastning-tal > b { font-size: 2.2rem; }
+/* veckans staplar: en färg, vilodagar som prick, idag i is */
+.bento .staplar { height: 84px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--kant); }
+.bento .staplar span { max-width: 22px; border-radius: 7px; background: linear-gradient(180deg, #8de8cc, rgba(126, 224, 195, .3)); box-shadow: none; }
+.bento .staplar div[data-hog] span { background: linear-gradient(180deg, #f6c96b, rgba(240, 181, 69, .3)); }
+.bento .staplar div[data-idag] span { background: linear-gradient(180deg, #cfe6ff, rgba(167, 210, 255, .35)); }
+.bento .staplar span[style*="--h:4%"] { width: 6px; height: 6px !important; border-radius: 50%; background: var(--kant-2); }
+.bento .staplar small { font-size: .62rem; letter-spacing: .02em; text-transform: uppercase; }
+.bento .staplar div[data-idag] small { color: var(--is-text); }
+/* tillgänglighet, stress och kroppen: samma uppbyggnad */
+.bento-ruta .dagband { margin-top: auto; }
+.minispark { height: 44px; }
+.minispark-yta { fill: rgba(126, 224, 195, .1); }
+.bento-ruta.bred .kropp-mini { align-items: center; }
+.bento-ruta.bred .kropp-mini p { font-size: .82rem; line-height: 1.45; }
+
+/* veckoremsan: en markering per dag – bock = check-in (ring om man också tränat), prick = bara pass */
+.vecka-prickar { height: 12px; justify-content: center; }
+.vecka-prickar i { margin: 0 !important; }
+.vecka-prickar i[data-t="pass"] { width: 6px; height: 6px; background: var(--is); }
+.vecka-prickar i[data-t="tom"] { width: 4px; height: 4px; background: var(--kant-2); }
+.vecka-prickar i[data-t="ci"] { width: 12px; height: 12px; }
+.vecka-prickar i[data-t="ci"][data-pass] { box-shadow: 0 0 0 2px rgba(126, 224, 195, .3); }
+.vecka-dag[data-fram] .vecka-prickar i { opacity: 0; }
+
+
+/* Tillgänglighet: 28 dagar som mjuka prickar i två rader, Stress: lätt yta under kurvan */
+.dagband { display: grid !important; grid-template-columns: repeat(14, 1fr); gap: 4px; height: auto !important; margin-top: auto; }
+.dagband i { height: 8px !important; width: auto !important; border-radius: 99px !important; background: linear-gradient(90deg, #8de8cc, #5fd3b0) !important; opacity: .9;
+  animation: in-upp .5s var(--mjuk) both; animation-delay: calc(var(--i) * 18ms + .3s); }
+.dagband i[data-t="begr"] { background: linear-gradient(90deg, #f6c96b, #e6a23a) !important; }
+.dagband i:last-child { box-shadow: 0 0 0 2px rgba(126, 224, 195, .35); }
+.minispark-yta { fill: rgba(126, 224, 195, .1) !important; }
+.minispark-linje { stroke-width: 2.4 !important; filter: drop-shadow(0 2px 6px rgba(126, 224, 195, .35)); }

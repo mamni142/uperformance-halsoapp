@@ -1,0 +1,249 @@
+/* kroppvy – designteamet (2026-11-18). Laddas efter app.css och vinner över den.
+   Kropp-fliken runt 3D-kroppen: scenen (lägesväljaren överst och foten nederst speglar varandra), "Var känns det?" (5 × 2),
+   smärtdagboken per område, testvärden mot baslinjen (3 tal + 2 × 3 rutor), medicinskt (låst lista) och arken (ont, sida, övningar, testvärden).
+   Rytm: 12 px mellan kort och rutor, 8 px i rutnäten, rubriker 24/12. Rörelse: entréer en gång, bara transform/opacitet/streck. */
+
+/* ---- 01 toner (en källa för färgen i kort, rutor och grafer) ---- */
+:is(.kv-zon, .kv-dagbok, .kv-tally > div, .kv-grupp, .kv-sidor > span, .kv-sidpanel, .kv-niva-visning, .kv-sidknapp, .kv-prick, .kv-sammanfattning)[data-ton="ok"] {
+  --kv-f: var(--accent); --kv-t: var(--accent-text); --kv-bg: rgba(126, 224, 195, .13); --kv-k: rgba(126, 224, 195, .32); }
+:is(.kv-zon, .kv-dagbok, .kv-tally > div, .kv-grupp, .kv-sidor > span, .kv-sidpanel, .kv-niva-visning, .kv-sidknapp, .kv-prick, .kv-sammanfattning)[data-ton="gul"] {
+  --kv-f: var(--gul); --kv-t: var(--gul-text); --kv-bg: rgba(240, 181, 69, .14); --kv-k: rgba(240, 181, 69, .34); }
+:is(.kv-zon, .kv-dagbok, .kv-tally > div, .kv-grupp, .kv-sidor > span, .kv-sidpanel, .kv-niva-visning, .kv-sidknapp, .kv-prick, .kv-sammanfattning)[data-ton="rod"] {
+  --kv-f: var(--rod); --kv-t: var(--rod-text); --kv-bg: rgba(229, 103, 79, .12); --kv-k: rgba(229, 103, 79, .32); }
+:is(.kv-sammanfattning)[data-ton="is"] { --kv-f: var(--is); --kv-t: var(--is-text); }
+body[data-niva="motionar"] :is(.kv-zon, .kv-dagbok, .kv-tally > div, .kv-grupp, .kv-sidor > span, .kv-sidpanel, .kv-niva-visning, .kv-sidknapp, .kv-prick, .kv-sammanfattning)[data-ton="ok"] {
+  --kv-f: #3cc39e; }
+
+/* ---- 02 scenen: lägesväljaren överst och foten nederst är samma glasskena ---- */
+.kv-scen { height: 532px; margin: 0 calc(var(--sida) * -1); }
+.kv-scen [data-kropp-plats] { inset: 64px 0 64px; }
+.kv-lage, .kv-fot { left: var(--sida); right: var(--sida); height: 52px; padding: 4px; border-radius: 20px;
+  background: color-mix(in srgb, var(--yta-tat) 74%, transparent); border: 1px solid var(--kant); box-shadow: var(--skugga);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3); }
+.kv-lage { top: 0; gap: 4px; isolation: isolate; }
+.kv-lage button { position: relative; z-index: 1; min-height: 0; height: 100%; border-radius: 16px; background: none; box-shadow: none; transition: color .35s var(--mjuk); }
+.kv-lage button[aria-pressed="true"] { background: none; box-shadow: none; color: #0b1520; }
+.kv-lage button:active { transform: scale(.97); }
+.kv-lage-markor { position: absolute; z-index: 0; left: 4px; top: 4px; bottom: 4px; width: calc((100% - 16px) / 3); border-radius: 16px;
+  background: linear-gradient(170deg, #b6f3e0, var(--accent)); box-shadow: 0 1px 0 rgba(255, 255, 255, .55) inset, 0 8px 18px -10px rgba(126, 224, 195, .9);
+  transform: translateX(calc(var(--n, 0) * (100% + 4px))); animation: kv-glid .6s var(--glid) both; }
+@keyframes kv-glid { from { transform: translateX(calc(var(--fran, 0) * (100% + 4px))); } }
+
+.kv-fot { top: auto; bottom: 0; display: grid; grid-template-columns: auto 1px minmax(0, 1fr); align-items: center; gap: 0; }
+.kv-vrid { height: 100%; min-height: 0; padding: 0 16px 0 14px; border-radius: 16px; background: none; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none;
+  font-size: .82rem; color: var(--text); transition: background .25s; }
+.kv-vrid:active { background: var(--yta-2); }
+.kv-delare { width: 1px; height: 22px; background: var(--kant-2); }
+.kv-sammanfattning { justify-content: center; min-height: 0; height: 100%; padding: 0 12px; background: none; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none;
+  font-size: .8rem; color: var(--text); white-space: nowrap; overflow: hidden; }
+.kv-sammanfattning i { flex: none; background: var(--kv-f, var(--accent)); box-shadow: 0 0 10px var(--kv-f, var(--accent)); }
+.kv-tips { bottom: 66px; }
+.kv-scen .kropp-las { top: 48%; animation: kv-las-in .6s var(--fjader) .2s both; }
+@keyframes kv-las-in { from { opacity: 0; transform: translate(-50%, -50%) scale(.9); } }
+body[data-niva="motionar"] .kv-scen .kropp-las { background: rgba(255, 255, 255, .78); border: 1px solid var(--kant); color: var(--text); box-shadow: var(--skugga);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); }
+body[data-niva="motionar"] .kv-scen .kropp-las svg { color: var(--is-text); }
+body[data-niva="motionar"] .kv-scen .kropp-las span { color: var(--text-2); }
+
+/* ---- 03 rubriker och "Var känns det?" (5 × 2) ---- */
+.sektion-rubrik.kv-rubrik { margin: 24px 2px 12px; }
+.sektion-rubrik.kv-rubrik .chip { min-height: 26px; }
+.kv-snabb { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.kv-snabbval { position: relative; display: grid; place-items: center; min-height: 44px; padding: 0 2px; border-radius: 14px; background: var(--yta); border: 1px solid var(--kant);
+  font: 700 .72rem/1.1 var(--font-brod); letter-spacing: -.01em; color: var(--text-2); white-space: nowrap; box-shadow: var(--skugga);
+  transition: background .3s var(--mjuk), border-color .3s, color .3s, transform .18s var(--mjuk); }
+body[data-niva="elit"] .kv-snabbval { box-shadow: none; background: var(--yta-2); }
+.kv-snabbval:active { transform: scale(.94); }
+.kv-snabbval[aria-pressed="true"] { color: var(--text); background: rgba(229, 103, 79, .1); border-color: rgba(229, 103, 79, .34); }
+.kv-snabbval .kv-prick { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--kv-f, var(--rod)); box-shadow: 0 0 8px var(--kv-f, var(--rod));
+  animation: kv-pop .5s var(--fjader) .35s both; }
+.chip-val[aria-pressed="true"] .kv-prick { background: var(--kv-f, var(--rod)); }
+
+/* ---- 04 smärtdagboken per område ---- */
+.kv-zoner { display: grid; gap: 12px; }
+.kv-zon { margin: 0; padding: 16px; }
+.kv-zon-topp { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; }
+.kv-matare { position: relative; display: grid; place-items: center; width: 56px; height: 56px; color: var(--kv-f); }
+.kv-matare svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+.kv-matare circle { fill: none; stroke-width: 5; }
+.kv-matare .spar { stroke: var(--spar); }
+.kv-matare .bage { stroke: currentColor; stroke-linecap: round; stroke-dasharray: var(--v) 100; animation: kv-bage 1.1s var(--mjuk) .25s both; }
+body[data-niva="elit"] .kv-matare .bage { filter: drop-shadow(0 0 4px var(--kv-f)); }
+@keyframes kv-bage { from { stroke-dasharray: 0 100; } }
+.kv-matare b { position: relative; font: 600 1.3rem/1 var(--font-rubrik) !important; letter-spacing: -.03em; color: var(--kv-t); }
+.kv-zon-namn { min-width: 0; }
+.kv-zon-namn b { display: block; font: 600 1rem/1.25 var(--font-rubrik); letter-spacing: -.015em; }
+.kv-zon-namn span { display: block; margin-top: 2px; font-size: .78rem; font-weight: 600; color: var(--text-3); }
+.kv-trend { min-height: 28px; padding: 0 10px; font-size: .74rem; }
+.kv-dagbok { margin-top: 14px; padding: 12px 12px 10px; border-radius: 16px; background: var(--yta-2); border: 1px solid var(--kant); color: var(--kv-f); }
+.kv-dagbok-topp { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: .76rem; font-weight: 700; color: var(--text-2); }
+.kv-dagbok .dagbok { display: block; width: 100%; height: auto; margin-top: 8px; overflow: visible; }
+.kv-dagbok .dagbok-stod { stroke: var(--kant-2); stroke-width: 1; stroke-dasharray: 2 5; }
+.kv-dagbok .dagbok-linje { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; vector-effect: none;
+  stroke-dasharray: 1; stroke-dashoffset: 1; animation: kv-rita 1.4s var(--mjuk) .3s forwards; }
+.kv-dagbok .dagbok-yta { opacity: 0; animation: kv-tona .9s var(--mjuk) .9s forwards; }
+.kv-dagbok .dagbok-nu { fill: currentColor; stroke: var(--yta-tat); stroke-width: 3; vector-effect: none; transform-box: fill-box; transform-origin: center; animation: kv-pop .55s var(--fjader) 1.45s both; }
+body[data-niva="motionar"] .kv-dagbok .dagbok-nu { stroke: #fff; }
+@keyframes kv-rita { to { stroke-dashoffset: 0; } }
+@keyframes kv-tona { to { opacity: 1; } }
+@keyframes kv-pop { from { transform: scale(0); opacity: 0; } }
+.kv-axel { display: flex; justify-content: space-between; margin-top: 6px; font-size: .68rem; font-weight: 700; color: var(--text-3); }
+.kv-knappar { gap: 8px; margin-top: 12px; }
+.kv-knappar .knapp { min-height: 44px; }
+.kv-tom { margin: 0; }
+.bara-elit:empty { display: none; }
+.bara-elit > .kort { margin-top: 12px; }
+
+/* ---- 05 testvärden: tre tal och 2 × 3 rutor ---- */
+.kv-test { padding: 16px; }
+.kv-test .kort-rubrik { align-items: flex-start; margin-bottom: 14px; }
+.kv-test .kort-rubrik .liten { display: block; margin-top: 2px; }
+.kv-tally { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 8px; }
+.kv-tally > div { display: grid; justify-items: center; gap: 4px; padding: 12px 6px 10px; border-radius: 16px; background: var(--kv-bg); border: 1px solid var(--kv-k); }
+.kv-tally b { font: 600 1.6rem/1 var(--font-rubrik); letter-spacing: -.03em; color: var(--kv-t); }
+body[data-niva="elit"] .kv-tally b { text-shadow: 0 0 16px color-mix(in srgb, var(--kv-f) 45%, transparent); }
+.kv-tally span { display: inline-flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 700; color: var(--text-2); white-space: nowrap; }
+.kv-tally i { width: 7px; height: 7px; border-radius: 50%; background: var(--kv-f); }
+.kv-grupper { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.kv-grupp { position: relative; display: grid; align-content: start; gap: 8px; padding: 12px 12px 12px 16px; border-radius: 16px; text-align: left; background: var(--yta-2); border: 1px solid var(--kant);
+  overflow: hidden; transition: transform .18s var(--mjuk), border-color .3s; }
+.kv-grupp::before { content: ''; position: absolute; left: 0; top: 14px; bottom: 14px; width: 3px; border-radius: 0 3px 3px 0; background: var(--kv-f); }
+.kv-grupp:active { transform: scale(.97); }
+.kv-grupp-topp { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.kv-grupp-topp b { font: 600 .95rem/1.2 var(--font-rubrik); letter-spacing: -.015em; }
+.kv-grupp-topp svg { width: 14px; height: 14px; color: var(--text-3); flex: none; }
+.kv-sidor { display: flex; gap: 6px; }
+.kv-sidor > span { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 9px; border-radius: 99px; font-size: .7rem; font-weight: 800; color: var(--kv-t); background: var(--kv-bg); }
+.kv-sidor i { width: 6px; height: 6px; border-radius: 50%; background: var(--kv-f); }
+.kv-grupp small { font-size: .7rem; font-weight: 700; color: var(--text-3); }
+
+/* ---- 06 medicinskt: låst lista ---- */
+.kv-med { padding: 16px; }
+.kv-med .kort-rubrik { align-items: flex-start; margin-bottom: 14px; }
+.kv-med .kort-rubrik .liten { display: block; margin-top: 2px; }
+.kv-med-lista { list-style: none; margin: 0 0 12px; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.kv-med-lista li { position: relative; display: grid; gap: 10px; padding: 12px; border-radius: 16px; background: var(--yta-2); border: 1px solid var(--kant); }
+.kv-med-lista .ikonruta { width: 34px; height: 34px; border-radius: 11px; }
+.kv-med-lista .ikonruta svg { width: 18px; height: 18px; }
+.kv-med-lista b { display: block; font: 600 .9rem/1.2 var(--font-rubrik); }
+.kv-med-lista small { display: block; margin-top: 2px; font-size: .7rem; line-height: 1.35; font-weight: 600; color: var(--text-3); }
+.kv-med-las { position: absolute; top: 14px; right: 12px; width: 15px; height: 15px; color: var(--text-3); }
+.kv-med .notis { margin: 0; }
+
+/* ---- 07 snart i appen och notisen ---- */
+.kv-snart { grid-auto-rows: 1fr; }
+.kv-snart .koppling { align-content: start; }
+.kv-notis { margin-top: 12px; }
+
+/* ---- 08 arken ---- */
+.kv-niva-falt .etikett { margin-bottom: 4px; }
+.kv-niva-visning { display: grid; justify-items: center; gap: 4px; padding: 4px 0 6px; }
+.kv-niva-visning .stor-niva { margin: 0; color: var(--kv-t); transition: color .35s var(--mjuk); }
+.kv-niva-ord { display: inline-flex; align-items: center; min-height: 26px; padding: 0 12px; border-radius: 99px; font-size: .76rem; font-weight: 800; color: var(--kv-t); background: var(--kv-bg);
+  transition: color .35s var(--mjuk), background .35s var(--mjuk); }
+.kv-skala { display: flex; justify-content: space-between; padding: 0 15px; margin-top: -2px; }
+.kv-skala i { display: grid; justify-items: center; gap: 3px; width: 0; font: 700 .64rem/1 var(--font-brod); font-style: normal; color: var(--text-3); }
+.kv-skala i::before { content: ''; width: 1px; height: 5px; background: var(--kant-2); }
+.kv-skala i[data-tal]::before { height: 8px; background: var(--text-3); }
+.kv-skala-ord { display: flex; justify-content: space-between; margin-top: 6px; font-size: .7rem; font-weight: 700; color: var(--text-3); }
+.kv-val { display: grid; gap: 8px; }
+.kv-val-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.kv-val-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.kv-val .chip-val { justify-content: center; min-height: 44px; padding: 0 4px; border-radius: 14px; font-size: .8rem; }
+.kv-val-5 .chip-val { font-size: .74rem; letter-spacing: -.01em; }
+.kv-skada { padding: 12px; border-radius: 16px; background: var(--yta-2); border: 1px solid var(--kant); }
+.kv-ark-notis { margin-top: 14px; }
+.kv-ark-not { margin: 12px 2px; }
+
+/* sida */
+.kv-sidval { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.kv-sidknapp { display: grid; justify-items: center; gap: 4px; padding: 20px 12px 18px; border-radius: 22px; text-align: center; background: var(--yta-2); border: 1px solid var(--kant);
+  transition: transform .18s var(--mjuk), border-color .3s; animation: in-upp .5s var(--mjuk) both; }
+.kv-sidknapp[data-sida="h"] { animation-delay: 70ms; }
+.kv-sidknapp:active { transform: scale(.96); }
+.kv-sidknapp[data-ton] { border-color: var(--kv-k); }
+.kv-bokstav { display: grid; place-items: center; width: 56px; height: 56px; margin-bottom: 6px; border-radius: 50%; font: 600 1.35rem/1 var(--font-rubrik);
+  color: var(--kv-t, var(--accent-text)); background: var(--kv-bg, rgba(126, 224, 195, .13)); border: 1px solid var(--kv-k, rgba(126, 224, 195, .3)); }
+.kv-sidknapp b { font: 600 .92rem/1.2 var(--font-rubrik); }
+.kv-sidknapp small { font-size: .74rem; font-weight: 600; color: var(--text-3); }
+
+/* övningar */
+.kv-ovn-intro { margin: -4px 2px 12px; }
+.kv-ovningar li { animation: in-upp .5s var(--mjuk) both; animation-delay: calc(var(--n, 0) * 70ms + 120ms); transition: background .3s, border-color .3s; }
+.kv-ovningar li:has(.bock-ruta[aria-pressed="true"]) { background: rgba(126, 224, 195, .1); border-color: rgba(126, 224, 195, .36); }
+.kv-ovningar li:has(.bock-ruta[aria-pressed="true"]) b { color: var(--accent-text); }
+
+/* testvärden mot baslinjen */
+.kv-tester { display: grid; gap: 12px; }
+.kv-tester .testkort { margin: 0; padding: 14px; box-shadow: none; }
+.kv-tester .kort-rubrik { margin-bottom: 10px; }
+.kv-sidrutnat { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.kv-sidpanel { min-width: 0; padding: 12px; border-radius: 16px; background: var(--yta-2); border: 1px solid var(--kant); color: var(--kv-f); }
+.kv-sidpanel-topp { display: flex; align-items: center; justify-content: space-between; gap: 6px; font-size: .74rem; font-weight: 700; color: var(--text-3); }
+.kv-sidpanel-topp .chip { min-height: 22px; padding: 0 8px; font-size: .66rem; }
+.kv-varde { display: block; margin-top: 8px; font: 600 1.6rem/1.05 var(--font-rubrik); letter-spacing: -.03em; color: var(--text); }
+.kv-varde small { font-size: .82rem; font-weight: 600; color: var(--text-3); letter-spacing: 0; }
+.kv-diff { display: block; margin-top: 3px; font-size: .7rem; font-weight: 700; color: var(--kv-t); }
+.kv-sidpanel .spark { display: block; width: 100%; height: auto; margin-top: 8px; }
+.kv-sidpanel .spark-linje { stroke: currentColor; stroke-width: 2.4; vector-effect: none; stroke-dasharray: 1; stroke-dashoffset: 1; animation: kv-rita 1s var(--mjuk) .35s forwards; }
+.kv-sidpanel .spark-bas { stroke: var(--text-3); }
+.kv-sidpanel .spark circle { fill: currentColor; }
+.kv-sidpanel .spark circle.nu { stroke: var(--yta-tat); stroke-width: 2.5; }
+body[data-niva="motionar"] .kv-sidpanel .spark circle.nu { stroke: #fff; }
+.kv-sidrutnat.ensam { grid-template-columns: 1fr; }
+.kv-sidrutnat.ensam .kv-sidpanel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 14px; align-items: end; }
+.kv-sidrutnat.ensam .kv-sidpanel-topp { grid-column: 1 / -1; }
+.kv-sidrutnat.ensam .spark { grid-column: 2; grid-row: 2 / span 2; margin: 0; }
+
+/* ---- 09 smal skärm (375 px) ---- */
+@media (max-width: 380px) {
+  .kv-snabbval { font-size: .68rem; }
+  .kv-val-5 .chip-val { font-size: .7rem; padding: 0 2px; }
+  .kv-lage button { font-size: .78rem; gap: 5px; }
+}
+
+/* ---- 10 minskad rörelse ---- */
+@media (prefers-reduced-motion: reduce) {
+  .kv-lage-markor, .kv-matare .bage, .kv-dagbok .dagbok-linje, .kv-dagbok .dagbok-yta, .kv-dagbok .dagbok-nu, .kv-snabbval .kv-prick, .kv-sidknapp, .kv-ovningar li, .kv-sidpanel .spark-linje {
+    animation: none !important; }
+  .kv-dagbok .dagbok-linje, .kv-sidpanel .spark-linje { stroke-dashoffset: 0; }
+  .kv-dagbok .dagbok-yta { opacity: 1; }
+}
+
+/* ---- Helhetsgranskningen: etiketterna i 3D bryts bara mellan ord ("Framsid|a lår" bröts mitt i ordet med overflow-wrap: anywhere i kropp.css) ---- */
+.kr .kr-chip { max-width: min(50%, 176px); }
+.kr .kr-chip span { min-width: min-content; overflow-wrap: normal; }
+
+/* Var känns det?: luft under rutnätet så att tomkortet aldrig ligger över knapparna */
+.kv-snabb { margin-bottom: 0; }
+.kv-snabb + .kv-tom, .kv-snabb ~ .kv-tom { margin-top: 14px !important; }
+.kv-snabbval { min-height: 46px; font-size: .74rem; font-weight: 800; letter-spacing: -.01em; }
+.kv-tom { position: relative; z-index: 0; padding: 22px 20px; }
+
+/* Testvärden i Apple-stil (2026-11-18): fördelningsstapel + grupperad lista med hårfina avdelare */
+.kv-fordelning { display: flex; gap: 3px; height: 10px; margin: 4px 0 10px; }
+.kv-fordelning i { flex: var(--n) 1 0; border-radius: 999px; background: var(--accent); transform-origin: left; animation: vax .9s var(--mjuk) both .2s; }
+.kv-fordelning i[data-ton="gul"] { background: var(--gul); animation-delay: .3s; }
+.kv-fordelning i[data-ton="rod"] { background: var(--rod); animation-delay: .4s; }
+.kv-tally2 { display: flex; gap: 16px; flex-wrap: wrap; font-size: .76rem; font-weight: 700; color: var(--text-2); }
+.kv-tally2 span { display: inline-flex; align-items: center; gap: 6px; }
+.kv-tally2 i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.kv-tally2 [data-ton="gul"] i { background: var(--gul); } .kv-tally2 [data-ton="rod"] i { background: var(--rod); }
+.kv-tally2 b { font: 700 .9rem var(--font-rubrik); color: var(--text); }
+.kv-lista { margin: 16px -16px -16px; border-top: .5px solid var(--kant); }
+.kv-listrad { display: grid; grid-template-columns: 36px 1fr auto 14px; gap: 12px; align-items: center; width: 100%; min-height: 62px; padding: 10px 16px; text-align: left;
+  border-bottom: .5px solid var(--kant); transition: background .2s; animation: in-upp .55s var(--mjuk) both; animation-delay: calc(var(--n) * 50ms + .25s); }
+.kv-listrad:last-child { border-bottom: 0; border-radius: 0 0 var(--radie) var(--radie); }
+.kv-listrad:active { background: var(--yta-2); }
+.kv-listrad > svg { width: 14px; height: 14px; color: var(--text-3); }
+.kv-listikon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: #fff; background: linear-gradient(160deg, #8ee6cb, #2fb58f); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45); }
+.kv-listikon[data-ton="gul"] { background: linear-gradient(160deg, #ffd88a, #e6a23a); }
+.kv-listikon[data-ton="rod"] { background: linear-gradient(160deg, #ffab98, #e0614a); }
+.kv-listikon svg { width: 18px; height: 18px; }
+.kv-listikon svg use { stroke-width: 2.1; }
+.kv-listtext b { display: block; font-size: .95rem; font-weight: 650; }
+.kv-listtext small { display: block; font-size: .74rem; color: var(--text-3); font-weight: 600; margin-top: 1px; }
+.kv-sidor2 { display: inline-flex; gap: 8px; font-size: .68rem; font-weight: 800; color: var(--text-3); }
+.kv-sidor2 span { display: inline-flex; align-items: center; gap: 4px; }
+.kv-sidor2 i { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+.kv-sidor2 i[data-ton="gul"] { background: var(--gul); } .kv-sidor2 i[data-ton="rod"] { background: var(--rod); }

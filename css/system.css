@@ -1,0 +1,268 @@
+/* system – designteamet (2026-11-18). Laddas efter app.css och vinner över den.
+   Designsystemet och känslan: tokens (rytm, radier, typskala, tider, glas) i båda lägena, grundkomponenterna,
+   flikraden, arket underifrån, toasten, den hoprullade rubriken, bakgrunden, skärmbytena och temabytet.
+   Avsnitt: S1 tokens · S2 bakgrund · S3 skärmbyten och entréer · S4 temabytet · S5 komponenter · S6 flikraden
+   · S7 hoprullad rubrik · S8 arket · S9 toasten · S10 minskad rörelse
+   Regel: ständiga animationer rör bara transform/opacity. Allt rör sig med samma tre kurvor (--mjuk, --fjader, --glid). */
+
+/* ---- S1 tokens ---- */
+:root {
+  /* rytmen: 4 · 8 · 12 · 16 · 24 · 32 – --luft är avståndet mellan kort, --luft-sektion mellan avsnitt */
+  --luft-1: 4px; --luft-2: 8px; --luft-3: 12px; --luft-4: 16px; --luft-5: 24px; --luft-6: 32px;
+  --luft: var(--luft-3); --luft-sektion: var(--luft-5); --kort-pad: 18px;
+  --sida: 20px;
+  /* radier: en skala – innerradie = ytterradie − avståndet till kanten */
+  --radie-xs: 10px; --radie-s: 14px; --radie-m: 18px; --radie: 24px; --radie-l: 32px; --radie-full: 999px;
+  /* typskalan (rubriker Poppins, brödtext Manrope) */
+  --fs-mikro: .66rem; --fs-liten: .78rem; --fs-brod: .9rem; --fs-h3: 1rem; --fs-h2: 1.3rem; --fs-h1: 1.72rem; --fs-tal: 2.4rem;
+  /* tider */
+  --tid-1: .18s; --tid-2: .32s; --tid-3: .5s; --tid-4: .8s;
+  --fjader-mjuk: cubic-bezier(.3, 1.25, .5, 1);
+  /* arkets fjäder: liten översväng, landar mjukt */
+  --ark-fjader: linear(0, .009, .035 2.1%, .141 4.4%, .723 12.9%, .938 16.7%, 1.017 20.6%, 1.043 24.1%, 1.044 27.6%, 1.03 32.4%, 1.006 41.7%, .998 50.6%, 1);
+}
+body[data-niva="elit"] {
+  --glas: rgba(13, 25, 37, .74); --glas-kant: rgba(246, 244, 239, .1); --glas-glans: rgba(255, 255, 255, .07);
+  --glas-skugga: 0 24px 48px -20px rgba(0, 0, 0, .75), 0 2px 8px -2px rgba(0, 0, 0, .35);
+  --skugga-lyft: 0 26px 60px -24px rgba(0, 0, 0, .85);
+  --sloja: rgba(4, 10, 16, .58); --ark-yta: linear-gradient(180deg, #17293a, #0f1c2a 46%);
+  --toast-yta: rgba(20, 36, 52, .92); --toast-text: #f6f4ef; --toast-kant: rgba(126, 224, 195, .32);
+  --markor-yta: rgba(126, 224, 195, .13); --markor-kant: rgba(126, 224, 195, .24);
+  --plus-ring: rgba(126, 224, 195, .35);
+}
+body[data-niva="motionar"] {
+  --glas: rgba(255, 255, 255, .8); --glas-kant: rgba(11, 21, 32, .07); --glas-glans: rgba(255, 255, 255, .9);
+  --glas-skugga: 0 22px 44px -22px rgba(24, 54, 83, .36), 0 2px 6px -2px rgba(24, 54, 83, .1);
+  --skugga-lyft: 0 2px 4px rgba(11, 21, 32, .04), 0 26px 50px -24px rgba(24, 54, 83, .34);
+  --sloja: rgba(11, 21, 32, .3); --ark-yta: linear-gradient(180deg, #ffffff, #fbfaf7 60%);
+  --toast-yta: rgba(11, 21, 32, .92); --toast-text: #f6f4ef; --toast-kant: rgba(255, 255, 255, .08);
+  --markor-yta: rgba(15, 110, 87, .09); --markor-kant: rgba(15, 110, 87, .14);
+  --plus-ring: rgba(15, 110, 87, .22);
+}
+
+/* ---- S2 bakgrund: stilla sken + korn (målas en gång, byter färg mjukt med läget) ---- */
+.bakgrund .fl { transition: opacity var(--tid-4) var(--mjuk); }
+.korn { opacity: .055; mix-blend-mode: overlay; }
+body[data-niva="motionar"] .korn { opacity: .035; mix-blend-mode: multiply; }
+/* en mjuk vinjett nedtill så att flikraden alltid vilar på lugn botten */
+.bakgrund::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 180px;
+  background: linear-gradient(to top, color-mix(in srgb, var(--bg) 70%, transparent), transparent); }
+
+/* ---- S3 skärmbyten och entréer ---- */
+/* sidled mellan flikarna: kort förflyttning, mjuk tona – den gamla vyn drar sig undan lite mindre än den nya kommer in */
+.skarm { padding-left: var(--sida); padding-right: var(--sida); }
+.skarm[data-in="fram"] { animation: s-in-fram var(--tid-3) var(--mjuk) both; }
+.skarm[data-in="bak"] { animation: s-in-bak var(--tid-3) var(--mjuk) both; }
+.skarm[data-in="tona"] { animation: s-in-tona .55s var(--mjuk) both; }
+.skarm[data-ut="fram"] { animation: s-ut-fram .38s var(--mjuk) both; }
+.skarm[data-ut="bak"] { animation: s-ut-bak .38s var(--mjuk) both; }
+.skarm[data-ut="tona"] { animation: s-ut-tona .36s var(--mjuk) both; }
+.skarm[data-ut] { pointer-events: none; z-index: 0; }
+.skarm:not([data-ut]) { z-index: 1; }
+@keyframes s-in-fram { from { transform: translate3d(32px, 0, 0); opacity: 0; } }
+@keyframes s-in-bak { from { transform: translate3d(-32px, 0, 0); opacity: 0; } }
+@keyframes s-in-tona { from { transform: scale(.985) translateY(6px); opacity: 0; } }
+@keyframes s-ut-fram { to { transform: translate3d(-22px, 0, 0) scale(.99); opacity: 0; } }
+@keyframes s-ut-bak { to { transform: translate3d(22px, 0, 0) scale(.99); opacity: 0; } }
+@keyframes s-ut-tona { to { transform: scale(1.008); opacity: 0; } }
+/* delarna i vyn kommer in i tur och ordning – en gång, med tak så att inget dröjer */
+.in { animation: s-in-upp .62s var(--mjuk) both; animation-delay: calc(min(var(--i, 0), 9) * 50ms + 60ms); }
+@keyframes s-in-upp { from { opacity: 0; transform: translateY(14px) scale(.992); } }
+
+/* ---- S4 temabytet: en rund våg från knappen, den gamla bilden sjunker undan bakom ---- */
+::view-transition-group(root) { animation-duration: .85s; }
+::view-transition-old(root) { animation: s-vag-ut .85s var(--glid) both; }
+::view-transition-new(root) { animation: s-vag .85s var(--glid) both; }
+@keyframes s-vag { from { clip-path: circle(0 at var(--vx, 50%) var(--vy, 50%)); } to { clip-path: circle(150% at var(--vx, 50%) var(--vy, 50%)); } }
+@keyframes s-vag-ut { to { transform: scale(.965); opacity: .6; } }
+
+/* ---- S5 komponenter ---- */
+/* kort: samma radie, samma inre luft, samma avstånd */
+.kort { border-radius: var(--radie); padding: var(--kort-pad);
+  transition: background var(--tid-4) var(--mjuk), border-color var(--tid-4) var(--mjuk), box-shadow var(--tid-4) var(--mjuk), transform var(--tid-2) var(--mjuk); }
+button.kort:active, a.kort:active, .tryck:active { transform: scale(.98); transition-duration: var(--tid-1); }
+.kort + .kort, .kort + .rutnat-2, .rutnat-2 + .kort, .sidled + .kort, .fokus + .kort, .match + .kort { margin-top: var(--luft); }
+.rutnat-2 { gap: var(--luft); }
+.kort-rubrik { margin-bottom: var(--luft); min-height: 24px; }
+.kort-rubrik h3 { font-size: var(--fs-h3); line-height: 1.25; }
+.kort-rubrik .mer { min-height: 32px; padding: 0 2px 0 8px; border-radius: var(--radie-full); transition: opacity var(--tid-1); }
+.kort-rubrik .mer:active { opacity: .6; }
+.kort-rubrik .mer svg { transition: transform var(--tid-2) var(--fjader); }
+.kort-rubrik .mer:active svg { transform: translateX(3px); }
+body[data-niva="elit"] .kort::before { background: linear-gradient(180deg, rgba(246, 244, 239, .085), transparent 34%); }
+body[data-niva="motionar"] .kort { border-color: rgba(11, 21, 32, .06); }
+
+/* ögonrad */
+.ogon { font-size: var(--fs-mikro); letter-spacing: .15em; }
+
+/* knappar: en höjd per storlek (56 / 44), ljuset drar förbi sällan */
+.knapp { min-height: 56px; border-radius: var(--radie-full); transition: transform var(--tid-1) var(--mjuk), box-shadow var(--tid-2) var(--mjuk), opacity var(--tid-2), background var(--tid-2); }
+.knapp:active { transform: scale(.97); }
+.knapp-primar { background: linear-gradient(180deg, #a3ecd7, var(--accent) 70%); }
+.knapp-primar::after { animation: s-glans 7s var(--mjuk) 1.6s infinite; }
+@keyframes s-glans { 0%, 78% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+.knapp-sek { background: var(--yta-2); border-color: var(--kant); }
+.knapp-sek:active { background: var(--yta); }
+.knapp-text { min-height: 44px; border-radius: var(--radie-full); }
+.knapp-text:active { opacity: .6; }
+.ikonknapp { width: 40px; height: 40px; transition: transform var(--tid-1) var(--mjuk), background var(--tid-2); }
+.ikonknapp svg { width: 18px; height: 18px; }
+.ikonknapp:active { transform: scale(.9); }
+body[data-niva="motionar"] .ikonknapp { background: #fff; border-color: rgba(11, 21, 32, .08); box-shadow: 0 4px 12px -6px rgba(24, 54, 83, .25); }
+
+/* chips: 30 px (status) och 44 px (val) */
+.chip { border-radius: var(--radie-full); transition: background var(--tid-2), color var(--tid-2), border-color var(--tid-2), transform var(--tid-1) var(--mjuk); }
+.chip-val { min-height: 44px; }
+.chip-val:active { transform: scale(.95); }
+.chip-val[aria-pressed="true"] { background: linear-gradient(180deg, #a3ecd7, var(--accent)); }
+
+/* segment: markören glider med samma kurva som flikraden */
+.segment { border-radius: var(--radie-m); }
+.segment button, .segment-markor { border-radius: var(--radie-s); }
+.segment-markor { transition: transform var(--tid-3) var(--glid), opacity var(--tid-2); background: linear-gradient(180deg, #a3ecd7, var(--accent)); }
+.segment button { transition: color var(--tid-2) var(--mjuk); }
+.segment button:active:not([aria-pressed="true"]) { color: var(--text); }
+
+/* växel (på/av) */
+.vaxel { transition: background var(--tid-2) var(--mjuk), border-color var(--tid-2); }
+.vaxel::after { transition: transform var(--tid-3) var(--fjader), width var(--tid-2) var(--mjuk); }
+.vaxel:active::after { width: 28px; }
+.vaxel[aria-checked="true"]:active::after { transform: translateX(16px); }
+
+/* reglage: tummen lyfts när man drar */
+.reglage::-webkit-slider-thumb { transition: transform var(--tid-2) var(--fjader), box-shadow var(--tid-2); }
+.reglage:active::-webkit-slider-thumb { transform: scale(1.14); box-shadow: 0 0 0 7px rgba(126, 224, 195, .28), 0 8px 18px rgba(0, 0, 0, .3); }
+body[data-niva="motionar"] .reglage::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(126, 224, 195, .4), 0 4px 12px rgba(24, 54, 83, .25); }
+
+/* ringar och mätare: fylls en gång med samma kurva */
+.ring .bage { transition: stroke-dashoffset 1.4s var(--mjuk); }
+.matare { height: 8px; border-radius: var(--radie-full); }
+.matare > i { animation: vax 1.2s var(--mjuk) both .25s; }
+
+/* ikonrutor och notiser: radier ur skalan */
+.ikonruta { border-radius: var(--radie-s); }
+.notis { border-radius: var(--radie-m); padding: 12px 14px; gap: 12px; }
+
+/* ---- S6 flikraden: glaspillret linjerat med korten, markören glider och sträcks, plusknappen i mitten ---- */
+.flikrad { left: var(--sida); right: var(--sida); bottom: calc(var(--botten) - 2px); height: 64px; padding: 0 4px; border-radius: var(--radie-l);
+  background: var(--glas); border: 1px solid var(--glas-kant); box-shadow: var(--glas-skugga), 0 1px 0 var(--glas-glans) inset;
+  -webkit-backdrop-filter: blur(24px) saturate(1.7); backdrop-filter: blur(24px) saturate(1.7);
+  animation: s-flik-in .8s var(--fjader-mjuk) both .15s; transition: background var(--tid-4) var(--mjuk), border-color var(--tid-4), box-shadow var(--tid-4); }
+body[data-niva="motionar"] .flikrad { background: var(--glas); border-color: var(--glas-kant); box-shadow: var(--glas-skugga), 0 1px 0 var(--glas-glans) inset; }
+@keyframes s-flik-in { from { transform: translateY(calc(100% + 24px)); opacity: 0; } }
+.flikrad button { height: 56px; gap: 4px; font-size: .64rem; letter-spacing: .01em; transition: color var(--tid-2) var(--mjuk); }
+.flikrad button span { transition: opacity var(--tid-2); }
+.flikrad button svg { width: 22px; height: 22px; transition: transform var(--tid-3) var(--fjader); }
+.flikrad button[aria-current="page"] svg { transform: translateY(-1px) scale(1.08); }
+.flikrad button:active svg { transform: scale(.84); transition-duration: var(--tid-1); }
+.flikrad button[aria-current="page"] svg use { stroke-width: 2; }
+/* markören: behållaren flyttas (transform), pillret inuti sträcks i rörelsen */
+.flik-markor { top: 6px; width: 62px; height: 50px; border-radius: 0; background: none; border: 0;
+  transition: transform .55s var(--glid), opacity var(--tid-2); }
+.flik-markor::before { content: ''; position: absolute; inset: 0; border-radius: 20px; background: var(--markor-yta); border: 1px solid var(--markor-kant);
+  transition: background var(--tid-4), border-color var(--tid-4); }
+.flik-markor[data-glider]::before { animation: s-strack .55s var(--glid); }
+@keyframes s-strack { 40% { transform: scaleX(1.22) scaleY(.94); } }
+.flik-markor[data-forsta] { transition: none; }
+/* plusknappen: rund, lyft över raden, vrids till ett kryss när man trycker */
+.flikrad .flik-plus { width: 54px; height: 54px; margin: -22px auto 0; border-radius: 50%; color: #0b1520;
+  background: radial-gradient(120% 90% at 30% 15%, #c4f6e6, var(--accent) 55%, #49c4a2);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .7) inset, 0 -1px 0 rgba(11, 21, 32, .12) inset, 0 0 0 5px var(--plus-ring), 0 16px 30px -12px rgba(126, 224, 195, .85);
+  transition: transform var(--tid-3) var(--fjader), box-shadow var(--tid-4); }
+body[data-niva="motionar"] .flikrad .flik-plus { box-shadow: 0 1px 0 rgba(255, 255, 255, .7) inset, 0 -1px 0 rgba(11, 21, 32, .1) inset, 0 0 0 5px var(--plus-ring), 0 14px 26px -12px rgba(15, 110, 87, .55); }
+.flikrad .flik-plus svg { width: 24px; height: 24px; transition: transform var(--tid-3) var(--fjader); }
+.flikrad .flik-plus:active { transform: scale(.9); }
+.flikrad .flik-plus:active svg { transform: rotate(90deg); }
+.app[data-ark-oppet] .flikrad .flik-plus svg { transform: rotate(45deg); }
+
+/* ---- S7 hoprullad rubrik: glasremsa som tonar in när den stora rubriken rullat bort ---- */
+.kompakt-topp { height: calc(var(--topp) + 42px); padding-top: calc(var(--topp) + 6px); font: 600 .98rem/30px var(--font-rubrik); letter-spacing: -.01em;
+  background: color-mix(in srgb, var(--bg) 70%, transparent); border-bottom: 1px solid transparent; transform: none;
+  -webkit-backdrop-filter: blur(22px) saturate(1.6); backdrop-filter: blur(22px) saturate(1.6);
+  transition: opacity var(--tid-2) var(--mjuk), border-color var(--tid-2); }
+.kompakt-topp span { display: inline-block; transform: translateY(8px); opacity: 0; transition: transform var(--tid-3) var(--mjuk), opacity var(--tid-2) var(--mjuk); }
+.app[data-rullad] .kompakt-topp { border-bottom-color: var(--kant); }
+.app[data-rullad] .kompakt-topp span { transform: none; opacity: 1; }
+
+/* ---- S8 arket underifrån: fjäder, ett handtag, dra ned för att stänga ---- */
+.ark-sloja { background: var(--sloja); -webkit-backdrop-filter: blur(4px) saturate(1.2); backdrop-filter: blur(4px) saturate(1.2); animation: s-sloja-in .4s var(--mjuk) both; }
+@keyframes s-sloja-in { from { opacity: 0; } }
+/* arket går 40 px under kanten – fjäderns översväng visar aldrig ett glapp */
+.ark { bottom: -40px; max-height: calc(90% + 40px); padding: 8px var(--sida) calc(var(--botten) + 56px); border-radius: var(--radie-l) var(--radie-l) 0 0;
+  background: var(--ark-yta); border-top: 1px solid var(--kant); box-shadow: 0 -24px 60px -24px rgba(0, 0, 0, .55), 0 1px 0 var(--glas-glans) inset;
+  animation: s-ark-upp .62s var(--ark-fjader) both; overscroll-behavior: contain; }
+body[data-niva="elit"] .ark { background: var(--ark-yta); }
+body[data-niva="motionar"] .ark { box-shadow: 0 -20px 50px -24px rgba(24, 54, 83, .35), 0 1px 0 #fff inset; border-top-color: rgba(11, 21, 32, .05); }
+@keyframes s-ark-upp { from { transform: translateY(105%); } }
+.ark-lager[data-stanger] .ark { animation: s-ark-ner .34s cubic-bezier(.4, 0, .9, .6) both; }
+.ark-lager[data-stanger] .ark-sloja { animation: s-sloja-ut .34s var(--mjuk) both; }
+.ark-lager[data-dragen] .ark { animation: none; }
+@keyframes s-ark-ner { to { transform: translateY(105%); } }
+@keyframes s-sloja-ut { to { opacity: 0; } }
+/* handtaget: stor träffyta, sträcks när man drar */
+.ark-handtag { position: relative; width: 38px; height: 5px; margin: 2px auto 14px; border-radius: 5px; background: var(--kant-2); touch-action: none;
+  transition: transform var(--tid-2) var(--fjader), background var(--tid-2); }
+.ark-handtag::before { content: ''; position: absolute; left: -60px; right: -60px; top: -14px; bottom: -12px; }
+.ark-lager[data-dragen] .ark-handtag { transform: scaleX(1.25); background: var(--text-3); }
+.ark-innehall > .ark-handtag { display: none; }
+/* innehållet kommer in en gång, i tur och ordning */
+.ark-innehall > * { animation: s-ark-del .5s var(--mjuk) both; animation-delay: .08s; }
+.ark-innehall > :nth-child(2) { animation-delay: .12s; } .ark-innehall > :nth-child(3) { animation-delay: .16s; }
+.ark-innehall > :nth-child(4) { animation-delay: .2s; } .ark-innehall > :nth-child(5) { animation-delay: .24s; }
+.ark-innehall > :nth-child(n+6) { animation-delay: .28s; }
+@keyframes s-ark-del { from { opacity: 0; transform: translateY(12px); } }
+.ark-rubrik { align-items: center; gap: var(--luft); margin-bottom: var(--luft-4); touch-action: none; } /* rubriken är också ett handtag */
+.ark-rubrik > div { min-width: 0; }
+.ark h2 { font-size: var(--fs-h2); line-height: 1.2; }
+.ark-falt { margin-top: var(--luft-5); }
+.ark-knappar { gap: var(--luft-2); margin-top: var(--luft-5); }
+.snabbval { gap: var(--luft); }
+.snabbval button { border-radius: var(--radie); padding: var(--luft-4); min-height: 116px; transition: transform var(--tid-1) var(--mjuk), background var(--tid-2), border-color var(--tid-2); }
+.snabbval button:active { transform: scale(.96); }
+body[data-niva="motionar"] .snabbval button { background: #f8f6f1; border-color: rgba(11, 21, 32, .06); }
+
+/* ---- S9 toasten: mörkt glaspiller med bock, fjädrar upp ovanför flikraden ---- */
+.toast { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 18px 6px 8px; border-radius: 22px; max-width: calc(100% - 2 * var(--sida));
+  left: 0; right: 0; width: fit-content; margin: 0 auto; bottom: calc(var(--botten) + 98px); font: 600 .86rem/1.2 var(--font-brod); color: var(--toast-text); background: var(--toast-yta); border: 1px solid var(--toast-kant);
+  box-shadow: 0 18px 40px -16px rgba(0, 0, 0, .6); -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5);
+  transform: translateY(18px) scale(.92); white-space: normal; text-wrap: balance; text-align: left;
+  transition: transform .4s var(--mjuk), opacity .25s var(--mjuk), visibility 0s .4s; }
+.toast[data-visas] { transform: none; transition: transform .55s var(--fjader-mjuk), opacity .3s var(--mjuk); }
+.toast-ikon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; flex: none; color: #0b1520; background: var(--accent); }
+.toast-ikon svg { width: 15px; height: 15px; }
+.toast-ikon svg use { stroke-width: 2.6; }
+.toast[data-visas] .toast-ikon svg use { stroke-dasharray: 24; stroke-dashoffset: 24; animation: s-bock .45s var(--mjuk) .18s forwards; }
+@keyframes s-bock { to { stroke-dashoffset: 0; } }
+.app:has(.flikrad[hidden]) .toast { bottom: calc(var(--botten) + 20px); }
+
+/* ---- S10 minskad rörelse ---- */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
+  .flik-markor::before, .toast-ikon svg use { animation: none !important; stroke-dashoffset: 0 !important; }
+}
+
+/* en vy som just byttes in tar inte emot tryck (spökklick) */
+.skarm[data-laser] { pointer-events: none; }
+
+
+/* Tonande vybyten i två takter: den gamla tonar bort (0,24 s) innan den nya kommer in */
+.skarm[data-ut="tona"] { animation: s-ut-tona2 .24s cubic-bezier(.4, 0, .2, 1) both !important; }
+@keyframes s-ut-tona2 { to { opacity: 0; transform: scale(.985); filter: blur(3px); } }
+.skarm[data-in="tona"][data-efter] { animation: s-in-tona2 .5s cubic-bezier(.2, .8, .2, 1) .22s both !important; }
+.skarm[data-in="tona"][data-efter] .in { animation-delay: calc(var(--i, 0) * 55ms + .3s); }
+@keyframes s-in-tona2 { from { opacity: 0; transform: scale(1.015); } }
+
+/* Firandet: ljuspuls i stället för konfetti */
+.puls-fest { position: absolute; z-index: 60; width: 0; height: 0; pointer-events: none; }
+.pf-ring, .pf-karna { position: absolute; left: 0; top: 0; border-radius: 50%; }
+.pf-ring { width: 40px; height: 40px; margin: -20px; border: 2px solid rgba(126, 224, 195, .9); box-shadow: 0 0 20px rgba(126, 224, 195, .6), inset 0 0 12px rgba(126, 224, 195, .4);
+  animation: pf-ring .9s cubic-bezier(.2, .8, .2, 1) forwards; }
+.pf-ring2 { border-color: rgba(167, 210, 255, .8); animation-delay: .12s; animation-duration: 1.1s; }
+@keyframes pf-ring { from { transform: scale(.3); opacity: 1; } to { transform: scale(5); opacity: 0; } }
+.pf-karna { width: 60px; height: 60px; margin: -30px; background: radial-gradient(circle, rgba(220, 255, 244, .9), rgba(126, 224, 195, .3) 40%, transparent 70%); animation: pf-karna .7s cubic-bezier(.2, .8, .2, 1) forwards; }
+@keyframes pf-karna { from { transform: scale(.4); opacity: 1; } to { transform: scale(2.2); opacity: 0; } }
+.puls-fest b { position: absolute; left: -1px; top: 0; width: 2px; height: 22px; border-radius: 2px; transform-origin: 1px 0;
+  background: linear-gradient(rgba(255, 255, 255, .95), rgba(126, 224, 195, 0)); opacity: 0; animation: pf-strale .8s cubic-bezier(.2, .8, .2, 1) forwards; animation-delay: var(--d); }
+@keyframes pf-strale { 0% { opacity: 0; transform: rotate(var(--a)) translateY(10px) scaleY(.3); } 25% { opacity: 1; } 100% { opacity: 0; transform: rotate(var(--a)) translateY(70px) scaleY(1); } }
+body[data-niva="motionar"] .pf-ring { border-color: rgba(15, 110, 87, .7); box-shadow: 0 0 18px rgba(63, 201, 163, .45); }
+body[data-niva="motionar"] .puls-fest b { background: linear-gradient(rgba(63, 201, 163, .9), rgba(63, 201, 163, 0)); }

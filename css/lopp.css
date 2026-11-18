@@ -1,0 +1,169 @@
+/* Lopp (kartan med rundan i färg efter farten, verktygen) och mjuka omritningar – laddas sist. */
+
+/* 01 Mjuka omritningar i samma flik: rubriken och väljarna står still, resten tonar in lätt (ingen "omladdning") */
+.skarm[data-in="mjuk"] { animation: none; }
+.skarm[data-in="mjuk"] :is(.hem-topp, .kv-scen, .vecka) { animation: none !important; }
+.skarm[data-in="mjuk"] .in:not(.hem-topp, .kv-scen, .vecka) { animation: s-mjuk-in .42s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(min(var(--i, 0), 6) * 35ms); }
+.skarm[data-ut="mjuk"] { animation: s-mjuk-ut .24s ease both; }
+@keyframes s-mjuk-in { from { opacity: 0; transform: translateY(6px); } }
+@keyframes s-mjuk-ut { to { opacity: 0; } }
+.kv-lage-markor { will-change: transform; }
+
+/* 02 Fartens färger */
+:root { --z-gar: #8fc3f7; --z-jogg: #6fdcbc; --z-spring: #f3c35a; --z-tar: #f08a6c; }
+body[data-niva="motionar"] { --z-gar: #5a9be0; --z-jogg: #22b58d; --z-spring: #e7a522; --z-tar: #e0603f; }
+[data-z="gar"] { --z: var(--z-gar); } [data-z="jogg"] { --z: var(--z-jogg); } [data-z="spring"] { --z: var(--z-spring); } [data-z="tar"] { --z: var(--z-tar); }
+
+/* 03 Kortet på Idag */
+/* button.kort är display: block i app.css – kortet behöver sitt rutnät (dubbel klass vinner) */
+.kort.lp-kort { display: grid !important; grid-template-columns: 104px minmax(0, 1fr) 20px; grid-template-areas: "karta text pil" "tal tal tal"; gap: 14px 14px; align-items: center; width: 100%; text-align: left; padding: 14px; overflow: hidden; }
+.lp-kort::before { content: ''; position: absolute; inset: -40% -20% auto auto; width: 70%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(126, 224, 195, .16), transparent 65%); pointer-events: none; }
+.lp-kort-karta { grid-area: karta; position: relative; display: block; width: 104px; height: 84px; border-radius: 18px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--kant), 0 10px 22px -14px rgba(0, 0, 0, .6); }
+.lp-kort-karta .lp-karta, .lp-rad-karta .lp-karta { width: 100%; height: 100%; display: block; }
+.lp-kort-karta .lp-karta { transform: scale(1.12); transition: transform .6s cubic-bezier(.32, .72, 0, 1); }
+.lp-kort:hover .lp-kort-karta .lp-karta { transform: scale(1.2); }
+.lp-kort-text { grid-area: text; display: grid; gap: 4px; min-width: 0; }
+.lp-kort-text b { font: 700 1.12rem/1.2 var(--font-rubrik); letter-spacing: -.015em; }
+.lp-kort-text small { font-size: .8rem; color: var(--text-2); }
+.lp-kort-pil { grid-area: pil; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--yta-2); color: var(--text-2); justify-self: end; }
+.lp-kort-pil svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; }
+.lp-kort-fart { display: flex; align-items: center; gap: 3px; margin-top: 4px; }
+.lp-kort-fart i { flex: 1; max-width: 26px; height: 5px; border-radius: 3px; background: var(--z); transform-origin: left; animation: lp-vaxa .6s cubic-bezier(.2, .8, .2, 1) both; }
+.lp-kort-fart i:nth-child(2) { animation-delay: .08s; } .lp-kort-fart i:nth-child(3) { animation-delay: .16s; } .lp-kort-fart i:nth-child(4) { animation-delay: .24s; }
+.lp-kort-tal { grid-area: tal; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.lp-kort-tal > span { display: grid; gap: 3px; padding: 9px 11px; border-radius: 14px; background: var(--yta-2); min-width: 0; }
+.lp-kort-tal small { font: 600 .64rem var(--font-brod); letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
+.lp-kort-tal b { font: 700 .98rem/1.1 var(--font-rubrik); white-space: nowrap; }
+.lp-kort-tal [data-ton="ok"] b { color: var(--accent-text); }
+.lp-kort-tal [data-ton="gul"] b { color: var(--gul-text); }
+
+/* 04 Kartan */
+.lp-karta { color: var(--text-3); }
+.lp-mark { fill: #10202e; }
+body[data-niva="motionar"] .lp-mark { fill: #e9eef2; }
+.lp-rutor { opacity: 0; }
+/* kartan som en mörk Apple-karta: kvarter, gator, parker, strand och vatten med djup */
+.lp-mark { fill: #16222e; }
+.lp-kvarter rect { fill: rgba(255, 255, 255, .028); }
+.lp-gator path { fill: none; stroke: rgba(255, 255, 255, .07); stroke-width: 2.2; stroke-linecap: round; }
+.lp-gator path.stor { stroke: rgba(255, 255, 255, .11); stroke-width: 4; }
+.lp-park { fill: rgba(110, 190, 140, .14); }
+.lp-strand { fill: none; stroke: rgba(167, 210, 255, .1); stroke-width: 6; }
+.lp-vatten { fill: #1d3a55 !important; }
+.lp-bro { fill: rgba(255, 255, 255, .16); }
+body[data-niva="motionar"] .lp-mark { fill: #eef1ec; }
+body[data-niva="motionar"] .lp-kvarter rect { fill: rgba(11, 21, 32, .035); }
+body[data-niva="motionar"] .lp-gator path { stroke: #fff; stroke-width: 3; }
+body[data-niva="motionar"] .lp-gator path.stor { stroke: #fff; stroke-width: 5.5; }
+body[data-niva="motionar"] .lp-park { fill: rgba(120, 190, 120, .28); }
+body[data-niva="motionar"] .lp-vatten { fill: #a9cdee !important; }
+body[data-niva="motionar"] .lp-strand { stroke: rgba(90, 155, 224, .18); }
+body[data-niva="motionar"] .lp-bro { fill: #fff; }
+.lp-kartram { --lp-mark-bg: #16222e; }
+body[data-niva="motionar"] .lp-kartram { --lp-mark-bg: #eef1ec !important; }
+.lp-vatten { fill: rgba(167, 210, 255, .16); }
+body[data-niva="motionar"] .lp-vatten { fill: rgba(90, 155, 224, .2); }
+.lp-bana-skugga { fill: none; stroke: rgba(0, 0, 0, .25); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+body[data-niva="motionar"] .lp-bana-skugga { stroke: rgba(255, 255, 255, .9); }
+.lp-bana { fill: none; stroke: rgba(246, 244, 239, .14); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+body[data-niva="motionar"] .lp-bana { stroke: rgba(11, 21, 32, .1); }
+[data-lp-farg] line { stroke: var(--z); stroke-width: 5; stroke-linecap: round; transition: opacity .25s; }
+.lp-karta[data-ritad] [data-lp-farg] line { animation: lp-rita .5s ease both; animation-delay: calc(var(--n) * 9ms); }
+[data-lp-farg] line.vantar { opacity: .12; animation: none !important; }
+@keyframes lp-rita { from { opacity: 0; } }
+.lp-plats circle { fill: var(--bg); stroke: var(--text); stroke-width: 2; }
+.lp-plats[data-sida="b"] circle { fill: var(--accent); stroke: #0b1520; }
+.lp-plats text { font: 600 9.5px var(--font-brod); fill: var(--text-2); paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
+.lp-kort .lp-plats, .lp-rad .lp-plats { display: none; }
+/* finputs: sammanhängande färglinje med mjuk glöd, ett ljus som löper längs banan, pulserande start */
+[data-lp-farg] { filter: drop-shadow(0 0 3px rgba(255, 255, 255, .18)) drop-shadow(0 2px 6px rgba(0, 0, 0, .35)); }
+body[data-niva="motionar"] [data-lp-farg] { filter: drop-shadow(0 2px 4px rgba(11, 21, 32, .18)); }
+[data-lp-farg] line { stroke-linecap: butt; stroke-width: 5.5; }
+.lp-bana-glod { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-dasharray: .035 .965; opacity: 0; }
+.lp-kartram .lp-karta[data-ritad]:not([data-spelar]) .lp-bana-glod { opacity: .75; animation: lp-ljus 5.5s linear infinite 1.4s; }
+@keyframes lp-ljus { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.lp-start-puls { fill: var(--accent); stroke: none; transform-box: fill-box; transform-origin: center; animation: lp-puls 2.2s ease-out infinite; }
+@keyframes lp-puls { from { transform: scale(1); opacity: .55; } to { transform: scale(3.2); opacity: 0; } }
+.lp-kort .lp-start-puls, .lp-rad .lp-start-puls { display: none; }
+.lp-spok { transition: none; }
+.lp-spok-glod { transform-box: fill-box; transform-origin: center; animation: lp-puls 1.2s ease-out infinite; }
+.lp-spok circle:last-child { fill: #fff; stroke: var(--z, var(--accent)); stroke-width: 3; }
+.lp-spok-glod { fill: var(--z, var(--accent)); opacity: .3; }
+
+.lp-kartram { position: relative; background: var(--lp-mark-bg, #10202e); margin: 14px 0 10px; border-radius: 22px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--kant); }
+.lp-kartram .lp-karta { display: block; width: 100%; height: auto; }
+.lp-live { position: relative; z-index: 1; margin: 10px 10px -2px; width: fit-content; display: flex; align-items: baseline; gap: 4px; padding: 7px 12px; border-radius: 999px; background: var(--lg-yta-tat, rgba(20, 34, 48, .8));
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: inset 0 0 0 .5px var(--lg-kant, rgba(255, 255, 255, .15)); }
+.lp-live b { font: 700 1rem/1 var(--font-rubrik); }
+.lp-live small { font-size: .72rem; color: var(--text-2); }
+.lp-zon { margin-left: 6px; font: 600 .72rem var(--font-brod); color: var(--z, var(--text-2)); }
+.lp-skiss { position: absolute; right: 12px; top: 10px; font: 600 .62rem var(--font-brod); letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
+
+/* 05 Rundan: förklaring, tal, andelar och fart per km */
+.lp-legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+.lp-legend span { display: grid; justify-items: center; gap: 4px; padding: 9px 2px 8px; border-radius: 14px; background: var(--yta-2); font: 650 .78rem var(--font-rubrik); box-shadow: inset 0 -2px 0 var(--z); animation: ts-in .45s cubic-bezier(.2, .8, .2, 1) both; }
+.lp-legend span:nth-child(2) { animation-delay: .05s; } .lp-legend span:nth-child(3) { animation-delay: .1s; } .lp-legend span:nth-child(4) { animation-delay: .15s; }
+.lp-legend i { width: 22px; height: 6px; border-radius: 3px; background: var(--z); }
+.lp-legend small { font: 500 .66rem var(--font-brod); color: var(--text-3); }
+.lp-spela { min-height: 46px !important; margin-bottom: 14px; }
+.lp-fakta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 12px; }
+.lp-fakta div { padding: 10px 12px; border-radius: 16px; background: var(--yta-2); }
+.lp-fakta dt { font: 600 .68rem var(--font-brod); color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; }
+.lp-fakta dd { margin: 4px 0 0; font: 700 1.05rem/1.1 var(--font-rubrik); }
+.lp-fakta dd small { font-size: .7rem; font-weight: 500; color: var(--text-3); }
+.lp-andel { display: flex; height: 10px; border-radius: 6px; overflow: hidden; gap: 2px; }
+.lp-andel i { width: var(--a); background: var(--z); transform-origin: left; animation: lp-vaxa .8s cubic-bezier(.2, .8, .2, 1) both .2s; }
+.lp-andel-text { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 8px 0 14px; font: 600 .76rem var(--font-brod); color: var(--text-2); }
+.lp-andel-text span { display: inline-flex; align-items: center; gap: 5px; }
+.lp-andel-text i { width: 8px; height: 8px; border-radius: 50%; background: var(--z); }
+.lp-km { display: flex; align-items: flex-end; gap: 3px; height: 64px; }
+.lp-km i { flex: 1; opacity: .92; height: var(--h); border-radius: 4px 4px 2px 2px; background: var(--z); transform-origin: bottom; animation: lp-hojd .6s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--n) * 25ms + .2s); }
+.lp-km-axel { display: flex; justify-content: space-between; margin: 6px 0 14px; font-size: .68rem; color: var(--text-3); }
+@keyframes lp-vaxa { from { transform: scaleX(0); } }
+@keyframes lp-hojd { from { transform: scaleY(.1); opacity: 0; } }
+.lp-garmin { display: grid; grid-template-columns: 40px minmax(0, 1fr) 16px; gap: 12px; align-items: center; width: 100%; text-align: left; padding: 12px; border-radius: 18px; background: var(--yta-2); border: 1px solid var(--kant); margin-bottom: 6px; }
+.lp-garmin-ikon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; color: #fff; background: linear-gradient(160deg, #2a3b4c, #0b1520); }
+.lp-garmin svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+.lp-garmin > svg { width: 16px; height: 16px; color: var(--text-3); }
+.lp-garmin b { display: block; font: 650 .92rem var(--font-rubrik); }
+.lp-garmin small { display: block; margin-top: 2px; font-size: .76rem; color: var(--text-2); }
+
+/* 06 Flikarna i arket och verktygen */
+.lp-segment { margin: 4px 0 0; }
+.lp-inne { animation: lp-inne .38s cubic-bezier(.2, .8, .2, 1) both; }
+.lp-inne[data-gar] { opacity: 0; transform: translateY(4px); transition: opacity .2s, transform .2s; animation: none; }
+@keyframes lp-inne { from { opacity: 0; transform: translateY(8px); } }
+.lp-verktyg { margin-top: 12px; padding: 14px; border-radius: 20px; background: var(--yta-2); border: 1px solid var(--kant); display: grid; gap: 12px; }
+.lp-verktyg:first-child { margin-top: 14px; }
+.lp-v-topp { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: center; }
+.lp-v-topp .ikonruta { width: 40px; height: 40px; }
+.lp-v-topp b { display: block; font: 650 .96rem var(--font-rubrik); }
+.lp-v-topp small { display: block; margin-top: 2px; font-size: .78rem; color: var(--text-2); }
+.lp-tempo { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.lp-tempo div { padding: 10px 12px; border-radius: 14px; background: var(--yta); }
+.lp-tempo b { display: block; font: 700 1.4rem/1 var(--font-rubrik); }
+.lp-tempo small { font-size: .72rem; color: var(--text-3); }
+.lp-delar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.lp-delar li { display: grid; gap: 3px; padding: 8px 6px; border-radius: 12px; background: var(--yta); text-align: center; }
+.lp-delar span { font: 600 .68rem var(--font-brod); color: var(--text-3); }
+.lp-delar b { font: 700 .86rem var(--font-rubrik); }
+.lp-prognos { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.lp-prognos b { font: 700 1.8rem/1 var(--font-rubrik); letter-spacing: -.02em; }
+.lp-liten { margin: 0; font-size: .78rem; line-height: 1.45; color: var(--text-3); }
+.lp-hojd { width: 100%; height: 64px; display: block; }
+.lp-hojd path { fill: rgba(240, 181, 69, .22); stroke: var(--z-spring); stroke-width: 1.6; }
+.lp-lista { display: grid; gap: 8px; }
+.lp-rad { display: grid; grid-template-columns: 72px minmax(0, 1fr) 26px; gap: 12px; align-items: center; width: 100%; text-align: left; padding: 8px 12px 8px 8px; border-radius: 18px;
+  background: var(--yta-2); border: 1px solid var(--kant); animation: ts-in .45s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--n) * 40ms); transition: transform .2s, border-color .25s; }
+.lp-rad:active { transform: scale(.98); }
+.lp-rad[aria-pressed="true"] { border-color: rgba(126, 224, 195, .55); box-shadow: inset 0 0 0 1px rgba(126, 224, 195, .35); }
+.lp-rad-karta { display: block; width: 72px; height: 54px; border-radius: 12px; overflow: hidden; }
+.lp-rad-text b { display: block; font: 650 .95rem var(--font-rubrik); }
+.lp-rad-text small { display: block; margin-top: 2px; font-size: .76rem; color: var(--text-2); }
+.lp-rad .bock { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--kant-2); color: transparent; }
+.lp-rad .bock svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.6; }
+.lp-rad[aria-pressed="true"] .bock { background: var(--accent); border-color: transparent; color: #0b1520; }
+@media (prefers-reduced-motion: reduce) { .lp-andel i, .lp-km i, .lp-inne, .lp-rad, .lp-karta[data-ritad] [data-lp-farg] line { animation: none !important; } }
+
+body[data-niva="motionar"] .lp-kartram { --lp-mark-bg: #e9eef2; }
+.lp-kartram .lp-karta { margin-top: -4px; }
