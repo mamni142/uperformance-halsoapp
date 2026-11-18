@@ -218,7 +218,7 @@
 
   /* ---- 05 intro och välkommen ---- */
   function splash() {
-    document.body.dataset.niva = 'elit';
+    document.body.dataset.niva = ICARE ? 'motionar' : 'elit';
     // Partiklar som sakta stiger (bara transform/opacitet), ett norrsken som andas och loggan i fyra takter.
     const partiklar = Array.from({ length: 26 }, (_, i) => `<i style="--x:${(i * 37) % 100}%;--y:${(i * 53) % 100}%;--s:${.6 + ((i * 7) % 5) / 4};--d:${-(i * .43).toFixed(2)}s;--t:${7 + (i % 5)}s"></i>`).join('');
     const el = visa(`<div class="intro-norrsken" aria-hidden="true"><i></i><i></i><i></i></div><div class="intro-partiklar" aria-hidden="true">${partiklar}</div><div class="intro-golv" aria-hidden="true"></div>
@@ -226,9 +226,9 @@
         <span class="splash-puls"></span><span class="splash-puls" style="animation-delay:1.85s"></span><span class="splash-halo"></span>
         <span class="komet" aria-hidden="true"></span>
         <svg viewBox="0 0 396 396"><path class="splash-spar" d="M198,10c103.9,0,188,84,188,187.5s-84.1,187.5-188,187.5S10,301,10,197.5,94.1,10,198,10Z"/><path class="splash-ring" d="M198,10c103.9,0,188,84,188,187.5s-84.1,187.5-188,187.5S10,301,10,197.5,94.1,10,198,10Z"/>
-        ${LANDS ? flingaSvg() : ''}<path class="splash-u${LANDS ? ' ls-dold' : ''}" d="M177.5,127.8v88.6c0,7.3,1.6,13,4.7,17.3,3.3,4.1,8.4,6.2,15.5,6.2s12.4-2.1,15.8-6.2c3.4-4.3,5.1-10.1,5.1-17.3v-88.6h49.1v88.6c0,14.9-3.1,27.8-9.3,38.4-6.2,10.5-14.7,18.4-25.5,23.8-10.8,5.3-22.9,8-36.2,8s-25.2-2.7-35.5-8c-10.2-5.3-18.2-13.2-24-23.8-5.8-10.5-8.7-23.3-8.7-38.4v-88.6h49.1-.1Z"/></svg>
+        ${LANDS ? flingaSvg() : ''}${ICARE ? '<g class="ic-splash"><circle class="ic-s-fyll" cx="198" cy="197.5" r="150"/><path class="ic-s-puls" pathLength="1" d="M-30 198H96l14-30 18 74 22-128 22 112 12-28h14"/><rect class="ic-s-i" x="185" y="122" width="26" height="152" rx="13"/><circle class="ic-s-ring2" cx="198" cy="197.5" r="150"/></g>' : ''}<path class="splash-u${LANDS || ICARE ? ' ls-dold' : ''}" d="M177.5,127.8v88.6c0,7.3,1.6,13,4.7,17.3,3.3,4.1,8.4,6.2,15.5,6.2s12.4-2.1,15.8-6.2c3.4-4.3,5.1-10.1,5.1-17.3v-88.6h49.1v88.6c0,14.9-3.1,27.8-9.3,38.4-6.2,10.5-14.7,18.4-25.5,23.8-10.8,5.3-22.9,8-36.2,8s-25.2-2.7-35.5-8c-10.2-5.3-18.2-13.2-24-23.8-5.8-10.5-8.7-23.3-8.7-38.4v-88.6h49.1-.1Z"/></svg>
       </div>
-      <div class="splash-ord">${ICARE ? '<b class="ls-ordmarke ic-ordmarke" aria-label="ImagineCare">ImagineCare</b>' : LANDS ? '<b class="ls-ordmarke" aria-label="Längdlandslaget">Längdlandslaget</b>' : '<svg viewBox="440 140 840 120" class="ordmarke" aria-label="Uperformance"><use href="#logo" width="1274.2" height="395"/></svg>'}<p>${(LANDS || ICARE ? 'Koncept av Uperformance' : 'Hälsa med elitstandard').split('').map((t, i) => `<span style="--k:${i}">${t === ' ' ? '&nbsp;' : t}</span>`).join('')}</p></div>
+      <div class="splash-ord">${ICARE ? '<img class="ic-s-ord" src="partner/imaginecare/imaginecare-ord.svg" alt="ImagineCare">' : LANDS ? '<b class="ls-ordmarke" aria-label="Längdlandslaget">Längdlandslaget</b>' : '<svg viewBox="440 140 840 120" class="ordmarke" aria-label="Uperformance"><use href="#logo" width="1274.2" height="395"/></svg>'}<p>${(LANDS || ICARE ? 'Koncept av Uperformance' : 'Hälsa med elitstandard').split('').map((t, i) => `<span style="--k:${i}">${t === ' ' ? '&nbsp;' : t}</span>`).join('')}</p></div>
       <div class="intro-laddar" aria-hidden="true"><i></i></div>`, { in: 'tona', klass: 'splash' });
     kroppStart(); // nätet byggs medan loggan ritas
     introTakt(el);
@@ -276,8 +276,8 @@
     setTimeout(() => { ring.remove(); el.remove(); if (vk.isConnected) vk.dataset.vagKlar = ''; }, 1400);
   }
   function valkommen({ fore = false } = {}) {
-    document.body.dataset.niva = 'elit';
-    return visa(`<div class="valkommen-topp in" style="--i:0">${ICARE ? '<span class="marke ls-marke ic-marke"><b>IMAGINECARE</b><small>Koncept av Uperformance</small></span>' : LANDS ? '<span class="marke ls-marke"><b>LÄNGDLANDSLAGET</b><small>Koncept av Uperformance</small></span>' : '<span class="marke"><svg viewBox="0 0 1274.2 395" aria-label="Uperformance"><use href="#logo"/></svg></span>'}<span class="exempel">${LANDS || ICARE ? 'Koncept' : 'Prototyp'}</span></div>
+    document.body.dataset.niva = ICARE ? 'motionar' : 'elit';
+    return visa(`<div class="valkommen-topp in" style="--i:0">${ICARE ? '<span class="marke ic-marke"><img src="partner/imaginecare/imaginecare.svg" alt="ImagineCare"><small>Koncept av Uperformance</small></span>' : LANDS ? '<span class="marke ls-marke"><b>LÄNGDLANDSLAGET</b><small>Koncept av Uperformance</small></span>' : '<span class="marke"><svg viewBox="0 0 1274.2 395" aria-label="Uperformance"><use href="#logo"/></svg></span>'}<span class="exempel">${LANDS || ICARE ? 'Koncept' : 'Prototyp'}</span></div>
       <div class="valkommen-kropp"><div class="bana" aria-hidden="true"></div>
         ${(ICARE ? [['hjarta', 'Blodtryck'], ['matt', 'Vikt'], ['droppe', 'Blodsocker'], ['leende', 'Mående']] : [['rorlighet', 'Rörlighet'], ['hantel', 'Styrka'], ['balans', 'Balans'], ['hjarta', 'Kondition']]).map(([i, t], n) => `<span class="bana-chip" style="--i:${n}">${ik(i)}${t}</span>`).join('')}
         <div data-kropp-plats></div></div>
@@ -800,7 +800,7 @@
     const tile = (t, nyckel) => { const m = icSenast(t), f = icFlagga(m), def = IC_TYP[t];
       return `<button class="ic-varde tryck" data-g="ic-mat" data-v="${t}" ${f ? `data-flagga="${f[0]}"` : ''}><span class="ic-varde-topp">${ik(def.ikon)}<span>${def.namn}</span></span><b class="tal">${icVarde(m)}<small> ${def.enhet}</small></b>${icSpark(t, nyckel)}<small class="ic-varde-fot">${f ? `${ik('varning')}${f[1]}` : e(icDag(m))}</small></button>`; };
     const sista = (st.icChatt || IC_CHATT0)[(st.icChatt || IC_CHATT0).length - 1];
-    return `<div class="idag-vy ic-vy">${idagTopp()}${veckoRemsa()}
+    return `<div class="idag-vy ic-vy">${idagTopp().replace('<div class="valkomst-text">', '<div class="valkomst-text"><img class="ic-huvud-logga" src="partner/imaginecare/imaginecare.svg" alt="ImagineCare">')}${veckoRemsa()}
       <section class="kort ic-insikt in" style="--i:1"><span class="ic-insikt-ikon">${ik('gnista')}</span><div><span class="ogon utan">En insikt för dagen</span><p>${e(ins)}</p></div></section>
       <section class="kort ic-aktiviteter in" style="--i:2"><div class="kort-rubrik"><div><span class="ogon utan">${dist ? 'Distansmonitorering' : 'Egenmonitorering'}</span><h3 style="margin-top:4px">Mina aktiviteter</h3></div><span class="chip">${akt.filter(([t]) => gjort(t)).length} av ${akt.length}</span></div>
         <div class="ic-akt-lista">${akt.map(rad).join('')}</div></section>
@@ -2275,7 +2275,7 @@
     'jag-inst': (b) => toast({ paminn: 'Tiden för påminnelsen väljs i nästa version', export: 'Exporten öppnas i nästa version', integritet: 'Samtycket visas i nästa version' }[b.dataset.k] || 'Kommer i nästa version'),
     dela: (b) => { st.dela[b.dataset.v] = !st.dela[b.dataset.v]; b.setAttribute('aria-checked', st.dela[b.dataset.v]); spara();
       const nod = b.closest('.jg-nod'); if (nod) { nod.previousElementSibling?.toggleAttribute('data-av', !st.dela[b.dataset.v]); const s = $('small', nod); if (s) s.textContent = `Hälsodata${st.dela[b.dataset.v] ? '' : ' · delas inte'}`; } toast(st.dela[b.dataset.v] ? 'Delas med ditt team' : 'Delas inte längre'); },
-    'borja-om': () => { st = nytt(); spara(); kroppForm$(); flik = null; document.body.dataset.niva = 'elit'; kropp?.satLage?.('elit'); kroppZoner(); splash(); },
+    'borja-om': () => { st = nytt(); spara(); kroppForm$(); flik = null; document.body.dataset.niva = ICARE ? 'motionar' : 'elit'; kropp?.satLage?.('elit'); kroppZoner(); splash(); },
   };
   function uppdateraOntFraga() {
     spara(); kroppZoner();

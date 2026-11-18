@@ -1,0 +1,47 @@
+/* ImagineCare, mjukare palett (2026-11-19, användaren: "samma färger men annan combo som är snällare för ögonen och deras kunder"):
+   ljus mintvit botten, text och logga i djup teal, tealen som accent – inga stora mörkgröna ytor. Laddas efter imaginecare.css. */
+body[data-tema="imaginecare"] { --ic: #3dab91; --ic-djup: #1d6f5f; --ic-ljus: #e3f3ee; --ic-text: #0f3d35; }
+
+/* 01 Introt och de första sidorna: ljust */
+body[data-tema="imaginecare"]:not([data-sida]) .skarm { background: radial-gradient(110% 60% at 50% 0%, #d9f1ea 0%, #ecf7f3 48%, #f7fbfa 100%) !important; }
+body[data-tema="imaginecare"] .intro-norrsken { opacity: .5 !important; filter: hue-rotate(-30deg) saturate(.7); }
+body[data-tema="imaginecare"] .splash-spar { stroke: rgba(61, 171, 145, .16) !important; }
+body[data-tema="imaginecare"] .splash-ring { stroke: #3dab91 !important; }
+body[data-tema="imaginecare"] .ic-s-puls { stroke: #3dab91; filter: drop-shadow(0 0 6px rgba(61, 171, 145, .45)); }
+body[data-tema="imaginecare"] .ic-s-ring2 { stroke: rgba(61, 171, 145, .5); }
+body[data-tema="imaginecare"] .ic-s-fyll { filter: drop-shadow(0 12px 24px rgba(29, 111, 95, .25)); }
+body[data-tema="imaginecare"] .ic-s-ord { filter: none; }
+body[data-tema="imaginecare"] .splash-ord p, body[data-tema="imaginecare"] .splash-ord p span { color: #1d6f5f !important; }
+body[data-tema="imaginecare"] .splash :is(.partikel, .splash-partiklar i, .stjarna) { background: rgba(61, 171, 145, .35) !important; }
+body[data-tema="imaginecare"] .ic-marke small { color: #1d6f5f; }
+body[data-tema="imaginecare"] .skimmer { background: linear-gradient(100deg, #1d6f5f, #3dab91, #5cc7ad, #1d6f5f) !important; background-size: 300% 100% !important;
+  -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
+body[data-tema="imaginecare"]:not([data-sida]) h1, body[data-tema="imaginecare"]:not([data-sida]) h2 { color: var(--ic-text); }
+
+/* 02 Knappar: mjuk teal med vit text, ingen hård glöd */
+body[data-tema="imaginecare"] .knapp-primar:not([disabled]), body[data-tema="imaginecare"] .app .flikrad .flik-plus { background: linear-gradient(180deg, #52b9a0, #3a9f87) !important; color: #fff !important;
+  box-shadow: 0 8px 18px -10px rgba(29, 111, 95, .55) !important; }
+body[data-tema="imaginecare"] .knapp-glitter { box-shadow: 0 10px 22px -12px rgba(29, 111, 95, .6) !important; animation: none !important; }
+
+/* 03 Idag: ljust sidhuvud i mint med logga och text i djup teal (deras teal som detalj, inte som hel vägg) */
+body[data-tema="imaginecare"][data-niva="motionar"] .ic-vy > .valkomst { color: var(--ic-text); }
+body[data-tema="imaginecare"][data-niva="motionar"] .ic-vy > .valkomst::before { background: radial-gradient(90% 90% at 90% 0%, #c9ece2, transparent 60%), linear-gradient(180deg, #dcf1eb, #eef8f5 80%, rgba(238, 248, 245, 0)); border-radius: 0; }
+body[data-tema="imaginecare"][data-niva="motionar"] .ic-vy .ios-titel, body[data-tema="imaginecare"][data-niva="motionar"] .ic-vy .ios-titel-text { color: var(--ic-text) !important; -webkit-text-fill-color: var(--ic-text) !important; }
+body[data-tema="imaginecare"][data-niva="motionar"] .ic-vy .ios-datum, body[data-tema="imaginecare"][data-niva="motionar"] .ic-vy .ios-under { color: #3f6b62 !important; }
+body[data-tema="imaginecare"][data-niva="motionar"] .ic-vy .ios-g { background: rgba(255, 255, 255, .8) !important; color: var(--ic-text) !important; box-shadow: 0 1px 2px rgba(15, 61, 53, .06), inset 0 0 0 .5px rgba(29, 111, 95, .14) !important; }
+body[data-tema="imaginecare"][data-niva="motionar"] .ic-vy .ios-g b, body[data-tema="imaginecare"][data-niva="motionar"] .ic-vy .ios-g small { color: var(--ic-text) !important; }
+body[data-tema="imaginecare"][data-niva="motionar"] .ic-vy .ios-g svg { color: #3dab91; }
+body[data-tema="imaginecare"][data-niva="elit"] .ic-huvud-logga { filter: brightness(0) invert(1); }
+/* Distansläget: dämpad skiffer-teal i stället för neon */
+body[data-tema="imaginecare"][data-niva="elit"] { --ic: #5cbfa6; }
+body[data-tema="imaginecare"][data-niva="elit"] .ic-vy > .valkomst::before { background: radial-gradient(90% 80% at 85% 0%, rgba(92, 191, 166, .45), transparent 60%), linear-gradient(170deg, #24584f, #183c37); }
+
+/* 04 Korten: mjuka mintytor, inga hårda kanter */
+body[data-tema="imaginecare"][data-niva="motionar"] .ic-varde { background: #fff; box-shadow: 0 1px 2px rgba(15, 61, 53, .05), 0 8px 24px -16px rgba(15, 61, 53, .18), inset 0 0 0 .5px rgba(29, 111, 95, .1); }
+body[data-tema="imaginecare"][data-niva="motionar"] .ic-insikt { background: linear-gradient(160deg, #f1faf7, #fff) !important; }
+body[data-tema="imaginecare"] .ic-insikt-ikon, body[data-tema="imaginecare"] .ic-chatt-knapp, body[data-tema="imaginecare"] .ic-sk { background: linear-gradient(160deg, #6cc8b1, #3a9f87) !important; }
+body[data-tema="imaginecare"] .ic-bubbla[data-av="jag"] { background: linear-gradient(160deg, #5cbfa6, #3a9f87); }
+
+/* introts ljusa svep och halo la sig som en vit skiva över cirkeln i det ljusa läget */
+body[data-tema="imaginecare"] .splash-mark::after, body[data-tema="imaginecare"] .splash-halo, body[data-tema="imaginecare"] .splash-puls { display: none !important; }
+body[data-tema="imaginecare"] .splash-mark svg { background: none !important; box-shadow: 0 24px 60px -30px rgba(29, 111, 95, .35) !important; animation: none !important; }
