@@ -100,3 +100,10 @@ body[data-tema="landslaget"] .minispark-prick { color: #ffcd00 !important; }
 /* plusknappen i guld (liquid.css har högre vikt) */
 body[data-tema="landslaget"] .app .flikrad .flik-plus { color: #072a5c !important; background: radial-gradient(120% 100% at 35% 20%, #fff1a8, #ffd633 55%, #e0a800) !important; }
 body[data-tema="landslaget"] .flikrad .flik-plus::before { background: radial-gradient(circle, rgba(255, 205, 0, .38), rgba(255, 205, 0, 0) 68%) !important; }
+/* flikraden: vald flik i landslagets blått med guld (elit) / blått (motionär) i stället för mint */
+body[data-tema="landslaget"][data-niva="elit"] { --fl-vald: #ffd633 !important; --fl-droppe: rgba(77, 163, 255, .24) !important; }
+body[data-tema="landslaget"][data-niva="motionar"] { --fl-vald: #0b5cc2 !important; --fl-droppe: rgba(11, 92, 194, .13) !important; }
+body[data-tema="landslaget"] .flik-kapsel .flik-markor::before { box-shadow: inset 0 1px 0 var(--fl-droppe-kant), inset 0 0 0 .5px rgba(109, 182, 255, .4), 0 4px 12px -6px rgba(11, 92, 194, .4) !important; }
+body[data-tema="landslaget"][data-niva="elit"] .flik-kapsel .flik-markor::before { box-shadow: inset 0 1px 0 var(--fl-droppe-kant), inset 0 0 0 .5px rgba(109, 182, 255, .45), 0 0 16px -6px rgba(77, 163, 255, .6) !important; }
+/* säsongskortets åkare: blå ikon i guldbricka med blå ring */
+.ls-s-akare { color: #0a3470 !important; box-shadow: 0 6px 14px -6px rgba(200, 150, 0, .8), 0 0 0 3px rgba(11, 62, 128, .9), 0 0 0 5px rgba(255, 205, 0, .35) !important; }
