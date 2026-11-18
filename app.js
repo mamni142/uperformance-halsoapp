@@ -1583,7 +1583,7 @@
     const lag = [[0, 1.02, 1], [.55, .98, 0], [1.25, 1.06, 0], [2.3, 1, 0], [3.1, .96, 0]];
     const akare = ([bak, takt, ledare], n) => { const b = (-bak).toFixed(2);
       return `<g class="ls-ak" data-n="${n}"><animateMotion dur="16s" begin="${b}s" repeatCount="indefinite" rotate="auto" path="${spar}" calcMode="linear" keyPoints="0;.64;.85;1" keyTimes="0;.5;.87;1"/>
-        <animate attributeName="opacity" dur="16s" begin="${b}s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;.06;.94;1"/>
+        <animate attributeName="opacity" dur="16s" begin="${b}s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;.25;.31;.94;1"/>
         <g transform="scale(.9)">${akareSvg(b, takt, ledare)}</g></g>`; };
     return `<svg class="ls-backe" viewBox="0 0 400 100" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
       <defs><linearGradient id="ls-backe-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
