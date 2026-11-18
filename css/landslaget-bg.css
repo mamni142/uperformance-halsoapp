@@ -60,3 +60,31 @@ body[data-tema="landslaget"] .skimmer { background: linear-gradient(100deg, #6db
 .ls-bg-fjall { overflow: visible; }
 .ls-bg-fjarran { bottom: 12% !important; height: 30% !important; }
 .ls-bg-nara { height: 26% !important; }
+
+/* Nivåvalet byter värld: Elit = natt med norrsken, Motionär = ljus vinterdag med sol, blå himmel och vita fjäll.
+   Den runda vågen (vag.css) blandar mellan dem från punkten man tryckte på. */
+body[data-tema="landslaget"][data-niva="motionar"] .ls-bg { background: linear-gradient(180deg, #5ea4ea 0%, #9fcbf5 34%, #d9ebfb 66%, #f4f8fc 100%); }
+body[data-tema="landslaget"][data-niva="motionar"] .ls-bg-ns { opacity: .28; }
+body[data-tema="landslaget"][data-niva="motionar"] .ls-bg-ns i { mix-blend-mode: normal; }
+body[data-tema="landslaget"][data-niva="motionar"] .ls-bg-stj { opacity: 0; }
+body[data-tema="landslaget"][data-niva="motionar"] .ls-bg-glod { bottom: 34%; width: 120%; height: 60%;
+  background: radial-gradient(closest-side, rgba(255, 246, 200, .95), rgba(255, 220, 110, .55) 22%, rgba(255, 205, 0, .12) 55%, transparent); }
+body[data-tema="landslaget"][data-niva="motionar"] .ls-bg-fjarran path { fill: #b7d4f2; opacity: 1; }
+body[data-tema="landslaget"][data-niva="motionar"] .ls-bg-fjarran { filter: drop-shadow(0 -1.5px 0 rgba(255, 255, 255, .95)); }
+body[data-tema="landslaget"][data-niva="motionar"] .ls-bg-nara path { fill: #eef5fd; }
+body[data-tema="landslaget"][data-niva="motionar"] .ls-bg-nara { filter: drop-shadow(0 -2px 0 #fff) drop-shadow(0 -6px 14px rgba(40, 90, 160, .18)); }
+body[data-tema="landslaget"][data-niva="motionar"] .ls-bg-spar path { stroke: rgba(11, 60, 130, .4); }
+body[data-tema="landslaget"][data-niva="motionar"] .ls-bg-sno b { background: #fff; box-shadow: 0 0 3px rgba(40, 90, 160, .45); }
+body[data-tema="landslaget"][data-niva="motionar"] .ls-bg-akare i { box-shadow: 0 0 10px 3px rgba(255, 190, 0, .5); }
+.ls-bg, .ls-bg-ns, .ls-bg-stj, .ls-bg-glod { transition: opacity .9s ease; }
+
+/* Valt kort: ett ljussvep över kortet och bocken som studsar in när man väljer */
+.niva-kort { overflow: hidden; }
+.niva-kort[data-blixt]::after { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .55) 48%, rgba(255, 230, 120, .35) 52%, transparent 70%);
+  transform: translateX(-110%); animation: nk-svep 1.1s cubic-bezier(.4, 0, .2, 1) .15s both; }
+@keyframes nk-svep { to { transform: translateX(110%); } }
+.niva-kort[data-blixt] .niva-ikon { animation: nk-ikon .6s cubic-bezier(.2, 1.5, .4, 1) both; }
+@keyframes nk-ikon { 0% { transform: scale(.8) rotate(-12deg); } 100% { transform: scale(1.08); } }
+body[data-tema="landslaget"] .niva-kort[aria-pressed="true"] { outline-color: #ffcd00 !important; box-shadow: 0 0 0 4px rgba(255, 205, 0, .16), 0 18px 40px -18px rgba(255, 190, 0, .55); }
+@media (prefers-reduced-motion: reduce) { .niva-kort[data-blixt]::after, .niva-kort[data-blixt] .niva-ikon { animation: none; } }

@@ -1919,7 +1919,7 @@
     'niva-bak': () => gaFraga(5, 'bak'),
     'valj-niva': (b, ev) => {
       st.svar.niva = b.dataset.v; $$('[data-g="valj-niva"]', nu).forEach((x) => x.setAttribute('aria-pressed', x === b)); $('[data-g="skapa"]', nu).disabled = false;
-      bytNiva(b.dataset.v, ev.clientX || innerWidth / 2, ev.clientY || innerHeight / 2); spara();
+      b.removeAttribute('data-blixt'); void b.offsetWidth; b.setAttribute('data-blixt', ''); bytNiva(b.dataset.v, ev.clientX || innerWidth / 2, ev.clientY || innerHeight / 2); spara();
     },
     skapa: () => skapar(),
     flik: (b) => hem(b.dataset.v),
