@@ -60,3 +60,11 @@
 body[data-niva="motionar"] .sc-knappar .knapp-primar { background: rgba(15, 110, 87, .1) !important; }
 body[data-niva="motionar"] .sc-knappar .knapp-sek { background: rgba(11, 21, 32, .06) !important; }
 .sc-knappar .knapp:active { transform: scale(.96) !important; opacity: .75; }
+
+/* Huvudknappen i iOS 18-stil: ren mint när den går att trycka, grå tonad kapsel när den är släckt – ingen grumlig genomskinlighet */
+.knapp-primar[disabled] { opacity: 1 !important; color: var(--text-3) !important; background: rgba(246, 244, 239, .08) !important; box-shadow: none !important; }
+.knapp-primar[disabled] svg { opacity: .7; }
+body[data-niva="motionar"] .knapp-primar[disabled] { background: rgba(11, 21, 32, .06) !important; }
+.knapp-primar { transition: background .35s ease, color .35s ease, box-shadow .35s ease, transform .2s cubic-bezier(.32, .72, 0, 1) !important; }
+/* frågornas fot: knappen svävar fritt, ingen mörk rand bakom */
+.fraga-fot { background: none !important; padding-bottom: 6px !important; }
