@@ -65,3 +65,9 @@ body[data-niva="motionar"] .ac-knopp-g[data-zon="ok"] { --ac-k: #1fb383; }
 body[data-tema="landslaget"] .ac-knopp-g[data-zon="ok"] { --ac-k: #ffcd00; } body[data-tema="landslaget"] .ac-knopp-g[data-zon="lag"] { --ac-k: #6db6ff; }
 .acwr .zon-lag, .acwr .zon-ok, .acwr .zon-hog, .acwr2 path[class^="zon-"] { stroke-width: 10 !important; }
 @media (prefers-reduced-motion: reduce) { .ac-knopp-g .ac-sken { animation: none; } }
+
+/* Knoppen tydlig mot bågen: vit med tunn mörk kant och skugga, pricken i zonens färg, skenet svagt */
+.ac-knopp-g .ac-knopp { stroke: rgba(8, 20, 40, .22) !important; stroke-width: 1.2 !important; filter: drop-shadow(0 2px 5px rgba(0, 0, 0, .45)); }
+.ac-knopp-g .ac-knopp-mitt { r: 4.6; }
+.ac-knopp-g .ac-sken { opacity: .18; }
+.acwr .zon-etikett, .acwr2 .zon-etikett { font-size: 8.5px !important; }
