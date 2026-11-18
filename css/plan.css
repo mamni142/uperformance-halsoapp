@@ -62,9 +62,14 @@ body[data-niva="motionar"] .sc-knappar .knapp-sek { background: rgba(11, 21, 32,
 .sc-knappar .knapp:active { transform: scale(.96) !important; opacity: .75; }
 
 /* Huvudknappen i iOS 18-stil: ren mint när den går att trycka, grå tonad kapsel när den är släckt – ingen grumlig genomskinlighet */
-.knapp-primar[disabled] { opacity: 1 !important; color: var(--text-3) !important; background: rgba(246, 244, 239, .08) !important; box-shadow: none !important; }
-.knapp-primar[disabled] svg { opacity: .7; }
-body[data-niva="motionar"] .knapp-primar[disabled] { background: rgba(11, 21, 32, .06) !important; }
+.knapp-primar[disabled] { opacity: 1 !important; color: rgba(246, 244, 239, .5) !important; background: linear-gradient(180deg, rgba(255, 255, 255, .085), rgba(255, 255, 255, .035)) !important;
+  box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .22), inset 0 0 0 .5px rgba(255, 255, 255, .1), 0 8px 24px -14px rgba(0, 0, 0, .6) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); }
+.knapp-primar[disabled] svg { opacity: .55; transform: translateX(-2px); transition: transform .35s ease, opacity .35s ease; }
+body[data-niva="motionar"] .knapp-primar[disabled] { color: rgba(11, 21, 32, .38) !important; background: linear-gradient(180deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, .45)) !important;
+  box-shadow: inset 0 .5px 0 #fff, inset 0 0 0 .5px rgba(11, 21, 32, .08), 0 8px 22px -14px rgba(24, 54, 83, .35) !important; }
+.knapp-primar:not([disabled]) svg { transition: transform .35s cubic-bezier(.2, 1.4, .35, 1); }
+.knapp-primar:not([disabled]):hover svg { transform: translateX(3px); }
 .knapp-primar { transition: background .35s ease, color .35s ease, box-shadow .35s ease, transform .2s cubic-bezier(.32, .72, 0, 1) !important; }
 /* frågornas fot: knappen svävar fritt, ingen mörk rand bakom */
 .fraga-fot { background: none !important; padding-bottom: 6px !important; }
