@@ -88,3 +88,8 @@ body[data-niva="elit"] .lp-p-chip-logga img { filter: none; opacity: 1; }
 .lp-s-logga { max-width: 64px !important; height: 16px !important; }
 .lp-s-polestar { font-size: .62rem !important; letter-spacing: .22em !important; }
 .lp-s-polestar .lp-s-logga { height: 13px !important; }
+.lp-p-chip-logga.lp-p-vit { background: #0b1520 !important; }
+body[data-niva="elit"] .lp-p-chip-logga.lp-p-vit { background: var(--yta) !important; }
+.lp-p-chip-logga img[alt="Mix Megapol"] { height: 24px; }
+.lp-p-chip-logga img[alt="Dannebacken"] { height: 22px; }
+.lp-p-chip-logga img[alt="Cramo"] { height: 16px; max-width: 110px; }

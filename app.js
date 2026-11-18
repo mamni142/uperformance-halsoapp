@@ -1392,7 +1392,8 @@
   }
   // Loppets partners – namnen som text tills partnernas egna loggfiler finns (inga efterritade loggor). Källan visas.
   // Loggfiler från partnerna läggs i partner/ och skrivs in här (namn → fil). Saknas filen visas namnet som ordmärke.
-  const PARTNER_LOGGA = { ASICS: 'partner/asics.svg', Polestar: 'partner/polestar.svg', Stadium: 'partner/stadium.svg', Volvokoncernen: 'partner/volvo.svg', Garmin: 'partner/garmin.svg', Chiquita: 'partner/chiquita.svg', 'Radisson Blu Scandinavia': 'partner/radisson.svg', STC: 'partner/stc.svg' }; // SVG från Wikimedia Commons; övriga som namn tills partnernas filer finns
+  const PARTNER_LOGGA = { ASICS: 'partner/asics.svg', Polestar: 'partner/polestar.svg', Stadium: 'partner/stadium.svg', STC: 'partner/stc.svg', Volvokoncernen: 'partner/volvo.svg', Garmin: 'partner/garmin.svg', Chiquita: 'partner/chiquita.svg', 'Radisson Blu Scandinavia': 'partner/radisson.svg', 'Göteborg Energi': 'partner/goteborg-energi.svg', 'Vitamin Well': 'partner/vitamin-well.svg', Biotherm: 'partner/biotherm.svg', Almondy: 'partner/almondy.svg', Dannebacken: 'partner/dannebacken.png', Cramo: 'partner/cramo.svg', 'Norion Bank': 'partner/norion-bank.svg', 'Solar Sverige': 'partner/solar.svg', Skinome: 'partner/skinome.svg', 'Mix Megapol': 'partner/mix-megapol.svg', 'Göteborgs-Posten': 'partner/gp.svg', "Runner's World": 'partner/runners-world.png', ProPud: 'partner/propud.svg', Therabody: 'partner/therabody.svg', 'HLR Konsulten': 'partner/hlr-konsulten.svg', Learnifier: 'partner/learnifier.svg' }; // från partnernas webbplatser och Wikimedia Commons
+  const VITA_LOGGOR = new Set(['Mix Megapol', 'HLR Konsulten']); // vita loggor – mörk platta i ljust läge
   function sponsorRemsa(l) {
     const p = l.partner; if (!p) return '';
     return `<div class="lp-sponsorer" aria-label="Huvudpartners: ${e(p.huvud.map(([n]) => n).join(', '))}"><span class="lp-s-etikett">Huvudpartners</span><span class="lp-s-rad">${p.huvud.map(([n], i) => PARTNER_LOGGA[n]
@@ -1400,7 +1401,7 @@
   }
   function partnerHtml(l) {
     const p = l.partner; if (!p) return '';
-    const rad = (rubrik, lista) => `<div class="lp-p-grupp"><span class="lp-p-etikett">${rubrik}</span><div class="lp-p-chips">${lista.map((n, i) => PARTNER_LOGGA[n] ? `<span class="lp-p-chip lp-p-chip-logga" style="--n:${i}"><img src="${PARTNER_LOGGA[n]}" alt="${e(n)}"></span>` : `<span class="lp-p-chip" style="--n:${i}">${e(n)}</span>`).join('')}</div></div>`;
+    const rad = (rubrik, lista) => `<div class="lp-p-grupp"><span class="lp-p-etikett">${rubrik}</span><div class="lp-p-chips">${lista.map((n, i) => PARTNER_LOGGA[n] ? `<span class="lp-p-chip lp-p-chip-logga${VITA_LOGGOR.has(n) ? ' lp-p-vit' : ''}" style="--n:${i}"><img src="${PARTNER_LOGGA[n]}" alt="${e(n)}"></span>` : `<span class="lp-p-chip" style="--n:${i}">${e(n)}</span>`).join('')}</div></div>`;
     return `<section class="lp-partner" aria-labelledby="lp-p-rubrik"><div class="lp-p-topp"><h3 id="lp-p-rubrik">${e(l.namn)}s partners</h3><span class="lp-p-kalla">Källa: ${e(p.kalla)}</span></div>
       <div class="lp-p-huvud">${p.huvud.map(([n, u], i) => `<div class="lp-p-kort" style="--n:${i}">${PARTNER_LOGGA[n] ? `<span class="lp-p-loggarad"><img class="lp-p-logga" src="${PARTNER_LOGGA[n]}" alt="${n === 'Polestar' ? '' : e(n)}">${n === 'Polestar' ? '<b class="lp-p-ordmarke">POLESTAR</b>' : ''}</span>` : `<b class="lp-p-namn">${e(n)}</b>`}<small>${e(u)}</small></div>`).join('')}</div>
       ${rad('Evenemangspartners', p.evenemang)}${rad('Mediepartners', p.media)}${rad('Leverantörer', [...new Set(p.leverantorer)])}</section>`;
