@@ -622,7 +622,7 @@
       : df >= 75 ? `Starkt läge idag – ${veckaPass} pass senaste veckan.` : df >= 60 ? `Bra läge – ${veckaPass} pass senaste veckan.` : 'Ta det lugnt idag – återhämtning räknas också.';
     const R = 25, L = 2 * Math.PI * R;
     const hm = himmelLage();
-    return `<header class="valkomst in" style="--i:0">${himmelHtml()}
+    return `<header class="valkomst in" style="--i:0">${LANDS ? lsHero() : himmelHtml()}
       <div class="valkomst-text">
         <span class="ios-datum">${ik(natt || h >= 17 ? 'mane' : 'sol')}${e(datumText())}${hm.halsning ? ` · ${e(hm.halsning)}` : ''}</span>
         <h1 class="ios-titel"><span class="ios-titel-text">${e(hej)}, ${e(visNamn())}</span></h1>
@@ -730,13 +730,13 @@
         ${ruta({ ikon: 'batteri', namn: 'Energi', tal: `${energiNu}<small>/10</small>`, under: `${energiNu >= 7 ? 'Hög' : energiNu >= 5 ? 'Normal' : 'Låg'} · snitt ${snitt(energiVals)}`, graf: minisparkar(energiVals), delta: deltaHtml(energiNu - forut('energi')) })}
         ${stressRuta}
         ${kroppRuta}</div>`;
-      const TIPS = [['Sömn', 'Lika läggdags varje kväll ger kroppen en rytm att återhämta sig i.', 'mane', 'gul'], ['Rörlighet · 5 min', 'Höft, bröstrygg och vader – tre övningar innan frukost.', 'rorlighet', ''], ['Återhämtning', 'En lugn promenad räknas också – och sänker stressen.', 'hjarta', 'is']];
+      const TIPS = LANDS ? [['Stakning · 10 min', 'Korta, explosiva stakningar på rullskidor bygger överkroppen inför snön.', 'skidor', 'is'], ['Rörlighet i höften', 'Höftböjare och vader – fem minuter före passet ger ett längre frånskjut.', 'rorlighet', ''], ['Valla rätt', 'Kolla snötemperaturen i vallaguiden innan du åker ut.', 'droppe', 'gul']] : [['Sömn', 'Lika läggdags varje kväll ger kroppen en rytm att återhämta sig i.', 'mane', 'gul'], ['Rörlighet · 5 min', 'Höft, bröstrygg och vader – tre övningar innan frukost.', 'rorlighet', ''], ['Återhämtning', 'En lugn promenad räknas också – och sänker stressen.', 'hjarta', 'is']];
       efter = `<section class="kort tips-lista in" style="--i:5"><div class="kort-rubrik"><div><span class="ogon utan">För dig idag</span><h3>Tre små saker</h3></div><span class="chip">${ik('gnista')}Tips</span></div>
           <ul class="lista">${TIPS.map(([t, x, i, f]) => `<li><span class="ikonruta"${f ? ` data-ton="${f}"` : ''}>${ik(i)}</span><div><b>${t}</b><small>${x}</small></div></li>`).join('')}</ul></section>
         <button class="kort tryck nasta-steg in" style="--i:6" data-g="screening-boka"><div class="rad"><span class="ikonruta" data-ton="is">${ik('kalender')}</span><div style="flex:1;min-width:0"><span class="ogon utan">Nästa steg</span>
           <h3>Fyll i förscreeningen</h3><p class="liten">12 frågor inför din hälsokartläggning</p></div>${ik('hoger')}</div><div class="nasta-framsteg"><div class="matare"><i style="--v:42%"></i></div><small class="tal">5 av 12</small></div></button>`;
     }
-    return `<div class="idag-vy">${idagTopp()}${veckoRemsa()}${hjalte}${elit() ? matchKort(2) : ''}${snabbcheck(elit() ? 3 : 2)}${schemaKort(elit() ? 3 : 2)}${LANDS ? vallaKort(elit() ? 3 : 2) : ''}${fokusKort(elit() ? 4 : 3)}${loppKort(elit() ? 4 : 3)}${bento}${efter}
+    return `<div class="idag-vy">${idagTopp()}${veckoRemsa()}${hjalte}${LANDS ? sasongKort(2) : ''}${elit() ? matchKort(2) : ''}${snabbcheck(elit() ? 3 : 2)}${schemaKort(elit() ? 3 : 2)}${LANDS ? vallaKort(elit() ? 3 : 2) : ''}${fokusKort(elit() ? 4 : 3)}${loppKort(elit() ? 4 : 3)}${bento}${efter}
       <p class="exempel in" style="--i:8">Exempeldata i prototypen</p></div>`;
   }
   function skadeKort(s, i) {
@@ -1499,6 +1499,33 @@
   // Vallaguiden (bara landslaget): välj snötemperatur → typ av glid- och fästvalla. Allmän guide – vallateamet avgör.
   const VALLA = [[-15, 'Kall, torr snö', 'Hård glidvalla för kyla', 'Grön eller kall fästvalla', '#7fc8ff'], [-8, 'Kall snö', 'Kall–medel glidvalla', 'Blå fästvalla', '#4f9dff'],
     [-3, 'Medelföre', 'Medel glidvalla', 'Lila fästvalla', '#9b7bff'], [0, 'Runt nollan', 'Varm glidvalla med struktur', 'Röd fästvalla eller klister', '#ff7a6b'], [3, 'Blöt snö', 'Varm glidvalla, grov struktur', 'Universalklister', '#ffb347']];
+  // Hjälten bakom hälsningen: norrsken, fjäll i två lager, stjärnor och snö (bara landslaget).
+  function lsHero() {
+    const fj = (top, n, amp) => { const p = Array.from({ length: n + 1 }, (_, i) => [i * 400 / n, i % 2 ? top + amp + ((i * 13) % 3) * 4 : top + ((i * 37) % 5) * 4]);
+      let d = `M0 100 L0 ${p[0][1]}`; for (let i = 0; i < n; i++) d += ` Q${p[i][0].toFixed(0)} ${p[i][1].toFixed(0)} ${((p[i][0] + p[i + 1][0]) / 2).toFixed(0)} ${((p[i][1] + p[i + 1][1]) / 2).toFixed(0)}`; return d + ` L400 ${p[n][1]} L400 100 Z`; };
+    const stj = Array.from({ length: 18 }, (_, i) => `<i style="--x:${(i * 53) % 100}%;--y:${(i * 31) % 60}%;--d:${(-(i * .8) % 5).toFixed(1)}s"></i>`).join('');
+    const sno = Array.from({ length: 22 }, (_, i) => `<b style="--x:${(i * 41 + 9) % 100}%;--t:${(6 + (i % 4) * 2).toFixed(0)}s;--d:${(-(i * .7)).toFixed(1)}s;--s:${(1.4 + (i % 3) * .9).toFixed(1)}px"></b>`).join('');
+    return `<div class="ls-hero" aria-hidden="true"><div class="ls-hero-ns"><i></i><i></i><i></i></div><div class="ls-hero-stj">${stj}</div>
+      <svg class="ls-hero-fj ls-hero-fj1" viewBox="0 0 400 100" preserveAspectRatio="none"><path d="${fj(26, 8, 34)}"/><path transform="translate(400 0)" d="${fj(26, 8, 34)}"/></svg>
+      <svg class="ls-hero-fj ls-hero-fj2" viewBox="0 0 400 100" preserveAspectRatio="none"><path d="${fj(50, 5, 30)}"/><path transform="translate(400 0)" d="${fj(50, 5, 30)}"/></svg>
+      <div class="ls-hero-sno">${sno}</div></div>`;
+  }
+  // Säsongen: från barmark till Vasaloppet (första söndagen i mars) – en åkare glider fram till där vi är, nedräkning till loppet.
+  function sasongKort(i) {
+    const nu0 = idag(), ar = nu0.getMonth() > 2 || (nu0.getMonth() === 2 && nu0.getDate() > 7) ? nu0.getFullYear() + 1 : nu0.getFullYear();
+    const vasa = new Date(ar, 2, 1); vasa.setDate(1 + ((7 - vasa.getDay()) % 7)); vasa.setHours(8, 0, 0, 0);
+    const dgr = Math.max(0, Math.ceil((vasa - nu0) / 864e5)), start = new Date(ar - 1, 4, 1), andel = klamp((nu0 - start) / (vasa - start), 0, 1);
+    const FAS = [['Barmark', 'Maj – okt', 0], ['Snöläger', 'Nov', .55], ['Världscup', 'Dec – feb', .7], ['Vasaloppet', vasa.toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' }), 1]];
+    const nuFas = FAS.reduce((a, f, n) => (andel >= f[2] ? n : a), 0), VIS = [0, .34, .67, 1];
+    const nf = Math.min(nuFas, 2), vis = nuFas >= 3 ? 1 : VIS[nf] + (andel - FAS[nf][2]) / (FAS[nf + 1][2] - FAS[nf][2]) * (VIS[nf + 1] - VIS[nf]); // tiden fördelad jämnt över faserna
+    return `<section class="kort ls-sasong in" style="--i:${i};--a:${(vis * 100).toFixed(1)}%;--a-tal:${vis.toFixed(3)}">
+      <div class="ls-s-topp"><div><span class="ogon utan">Säsongen ${ar - 1}/${String(ar).slice(2)}</span><h3>${FAS[nuFas][0]}</h3><small>Nu: ${e(FAS[nuFas][0].toLowerCase())} · nästa ${e((FAS[nuFas + 1] || FAS[3])[0].toLowerCase())}</small></div>
+        <div class="ls-s-ned"><b class="tal" data-rakna="${dgr}">0</b><small>dagar till<br>Vasaloppet</small></div></div>
+      <div class="ls-s-bana"><svg viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><path class="ls-s-spar" d="M0 30 C60 30 90 12 150 14 C210 16 240 30 300 22"/><path class="ls-s-spar ls-s-spar-klar" pathLength="1" d="M0 30 C60 30 90 12 150 14 C210 16 240 30 300 22"/></svg>
+        <span class="ls-s-akare" aria-hidden="true">${ik('skidor')}</span>
+        ${FAS.map(([t, u], n) => `<span class="ls-s-fas" data-n="${n}" style="--p:${VIS[n] * 100}%" ${n <= nuFas ? 'data-klar' : ''}><i></i><b>${e(t)}</b><small>${e(u)}</small></span>`).join('')}</div>
+      <p class="ls-s-fot">${ik('info')}<span>Säsongens faser och Vasaloppets datum som exempel – landslagets eget program läggs in här.</span></p></section>`;
+  }
   function vallaKort(i) {
     const v = st.valla ?? 1, [t, fore, glid, fast, farg] = VALLA[v];
     return `<section class="kort ls-valla in" style="--i:${i};--vf:${farg}"><div class="kort-rubrik"><div><span class="ogon utan">Vallaguiden · före passet</span><h3 style="margin-top:4px">${e(fore)}</h3></div><span class="ls-temp tal">${t > 0 ? '+' : ''}${t}°</span></div>

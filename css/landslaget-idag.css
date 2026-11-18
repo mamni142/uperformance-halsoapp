@@ -1,0 +1,65 @@
+/* Landslagets Idag: hjältelandskap bakom hälsningen, säsongskortet och kortens frostkant. Laddas efter landslaget-bg.css. */
+
+/* 01 Hjälten: landskapet går kant i kant bakom hälsningen */
+body[data-tema="landslaget"] .idag-vy > .valkomst::before, body[data-tema="landslaget"] .idag-vy > .valkomst::after { display: none !important; }
+.ls-hero { position: absolute; z-index: 0; left: calc(var(--sida, 20px) * -1); right: calc(var(--sida, 20px) * -1); top: calc((var(--topp, 54px) + 16px) * -1); bottom: -18px; overflow: hidden; pointer-events: none;
+  background: linear-gradient(180deg, #0a3470 0%, #0b3e80 45%, rgba(11, 62, 128, 0) 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent); mask-image: linear-gradient(180deg, #000 70%, transparent); }
+body[data-niva="motionar"] .ls-hero { background: linear-gradient(180deg, #8ec5ff 0%, #c9e3ff 50%, rgba(242, 246, 251, 0) 100%); }
+.ls-hero-ns { position: absolute; inset: -10% -30% 40%; filter: blur(16px); }
+.ls-hero-ns i { position: absolute; left: 0; right: 0; height: 40%; border-radius: 50%; mix-blend-mode: screen; opacity: .75; }
+.ls-hero-ns i:nth-child(1) { top: 10%; background: linear-gradient(90deg, transparent, rgba(70, 230, 190, .8) 35%, rgba(77, 163, 255, .6) 65%, transparent); animation: ls-band 12s ease-in-out infinite alternate; }
+.ls-hero-ns i:nth-child(2) { top: 34%; background: linear-gradient(90deg, transparent 15%, rgba(120, 140, 255, .55) 45%, rgba(255, 205, 0, .3) 75%, transparent); animation: ls-band 16s ease-in-out -5s infinite alternate-reverse; }
+.ls-hero-ns i:nth-child(3) { top: 22%; height: 22%; background: linear-gradient(90deg, transparent 35%, rgba(220, 255, 245, .55) 55%, transparent 75%); animation: ls-band 8s ease-in-out -2s infinite alternate; }
+body[data-niva="motionar"] .ls-hero-ns { opacity: .55; }
+.ls-hero-stj i { position: absolute; left: var(--x); top: var(--y); width: 2px; height: 2px; border-radius: 50%; background: #fff; box-shadow: 0 0 5px #fff; animation: ls-blink 4s ease-in-out var(--d) infinite; }
+body[data-niva="motionar"] .ls-hero-stj { display: none; }
+.ls-hero-fj { position: absolute; left: 0; bottom: 18%; width: 200%; height: 34%; animation: ls-fjall 80s linear infinite; }
+.ls-hero-fj1 { bottom: 26%; animation-duration: 120s; }
+.ls-hero-fj1 path { fill: #165092; opacity: .75; } .ls-hero-fj2 path { fill: #0c3166; opacity: .8; }
+.ls-hero-fj1 { filter: drop-shadow(0 -1.5px 0 rgba(230, 245, 255, .6)); } .ls-hero-fj2 { filter: drop-shadow(0 -1.5px 0 rgba(230, 245, 255, .45)); }
+body[data-niva="motionar"] .ls-hero-fj1 path { fill: #a9cdf5; opacity: .9; } body[data-niva="motionar"] .ls-hero-fj2 path { fill: #d5e7fb; opacity: .95; }
+.ls-hero-sno b { position: absolute; top: -8px; left: var(--x); width: var(--s); height: var(--s); border-radius: 50%; background: #fff; opacity: .7; animation: ls-hsno var(--t) linear var(--d) infinite; }
+body[data-niva="motionar"] .ls-hero-sno b { box-shadow: 0 0 2px rgba(40, 90, 160, .5); }
+@keyframes ls-hsno { to { transform: translate3d(12px, 340px, 0); } }
+body[data-tema="landslaget"] .idag-vy > .valkomst > :not(.ls-hero) { position: relative; z-index: 1; }
+
+/* 02 Säsongskortet */
+.ls-sasong { overflow: hidden; background: radial-gradient(90% 120% at 100% 0%, rgba(255, 205, 0, .16), transparent 55%), radial-gradient(80% 100% at 0% 100%, rgba(77, 163, 255, .18), transparent 60%), var(--yta) !important; }
+.ls-s-topp { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.ls-s-topp h3 { margin: 4px 0 2px; font: 650 22px/1.15 var(--font-rubrik) !important; letter-spacing: -.02em; }
+.ls-s-topp small { font-size: 13px; color: var(--text-2); }
+.ls-s-ned { display: grid; justify-items: end; text-align: right; }
+.ls-s-ned b { font: 600 42px/1 var(--font-siffror) !important; letter-spacing: -.03em; background: linear-gradient(180deg, #ffe066, #ffcd00 60%, #e0a800); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.ls-s-ned small { margin-top: 2px; font: 600 11px/1.2 var(--font-brod); color: var(--text-3); }
+.ls-s-bana { position: relative; height: 92px; margin: 16px 2px 0; }
+.ls-s-bana svg { position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 40px; overflow: visible; }
+.ls-s-spar { fill: none; stroke: var(--kant-2); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 6 5; vector-effect: non-scaling-stroke; }
+.ls-s-spar-klar { stroke: #ffcd00; filter: drop-shadow(0 0 4px rgba(255, 205, 0, .6));
+  stroke-dasharray: 1; stroke-dashoffset: 1; animation: ls-s-rita 1.6s cubic-bezier(.4, 0, .2, 1) .5s forwards; }
+@keyframes ls-s-rita { to { stroke-dashoffset: calc(1 - var(--a-tal, .5)); } }
+.ls-s-akare { position: absolute; top: 0; left: 0; width: 30px; height: 30px; margin: -10px 0 0 -15px; display: grid; place-items: center; border-radius: 50%;
+  color: #072a5c; background: linear-gradient(160deg, #ffe066, #ffcd00); box-shadow: 0 6px 14px -6px rgba(200, 150, 0, .8), 0 0 0 4px rgba(255, 205, 0, .2);
+  offset-path: path('M0 30 C60 30 90 12 150 14 C210 16 240 30 300 22'); offset-rotate: 0deg; offset-distance: 0%; animation: ls-s-aka 1.6s cubic-bezier(.4, 0, .2, 1) .5s forwards; }
+.ls-s-akare svg { width: 17px; height: 17px; animation: ls-s-hopp 1.2s ease-in-out 2.1s infinite; }
+@keyframes ls-s-aka { to { offset-distance: var(--a); } }
+@keyframes ls-s-hopp { 50% { transform: translateY(-2px) rotate(-6deg); } }
+.ls-s-fas { position: absolute; top: 44px; left: var(--p); transform: translateX(-50%); display: grid; justify-items: center; gap: 1px; text-align: center; width: 76px; }
+.ls-s-fas[data-n="0"] { transform: none; justify-items: start; text-align: left; }
+.ls-s-fas[data-n="3"] { transform: translateX(-100%); justify-items: end; text-align: right; }
+.ls-s-fas i { width: 8px; height: 8px; margin-bottom: 4px; border-radius: 50%; background: var(--kant-2); transition: background .4s; }
+.ls-s-fas[data-klar] i { background: #ffcd00; box-shadow: 0 0 6px rgba(255, 205, 0, .7); }
+.ls-s-fas b { font: 600 12.5px var(--font-rubrik); } .ls-s-fas small { font: 500 11px var(--font-brod); color: var(--text-3); }
+.ls-s-fas:not([data-klar]) b { color: var(--text-2); }
+.ls-s-fot { display: grid; grid-template-columns: 16px 1fr; gap: 6px; margin: 6px 0 0; font-size: 12px; color: var(--text-3); }
+.ls-s-fot svg { width: 14px; height: 14px; margin-top: 1px; }
+
+/* 03 Korten: en tunn frostkant i blått–gult överst och en lugn glans som drar förbi en gång */
+body[data-tema="landslaget"] .idag-vy > .kort, body[data-tema="landslaget"] .idag-vy .bento-ruta, body[data-tema="landslaget"] .idag-vy > .mh, body[data-tema="landslaget"] .idag-vy > section.h3 { position: relative; }
+body[data-tema="landslaget"] .idag-vy :is(> .kort, .bento-ruta)::after { content: ''; position: absolute; left: 18px; right: 18px; top: 0; height: 1.5px; border-radius: 2px; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(109, 182, 255, .7) 30%, rgba(255, 205, 0, .8) 70%, transparent); opacity: .6; }
+body[data-tema="landslaget"][data-niva="motionar"] .idag-vy :is(> .kort, .bento-ruta)::after { opacity: .9; }
+@media (prefers-reduced-motion: reduce) { .ls-hero *, .ls-s-akare, .ls-s-akare svg, .ls-s-spar-klar { animation: none !important; } .ls-s-akare { offset-distance: var(--a); } .ls-s-spar-klar { stroke-dashoffset: 0; } }
+
+/* hjältens fjäll tydligare */
+.ls-hero-fj1 path { opacity: .95 !important; } body[data-niva="elit"] .ls-hero-fj1 path { fill: #1d5aa3 !important; } body[data-niva="elit"] .ls-hero-fj2 path { fill: #0f3a75 !important; opacity: .95 !important; }
