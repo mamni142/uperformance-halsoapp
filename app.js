@@ -1300,6 +1300,12 @@
   // Banorna är SCHEMATISKA (inte riktiga kartdata) och märkta så. Rundan är ett exempelpass från klockan.
   const LOPP = [
     { id: 'varvet', namn: 'Göteborgsvarvet', stad: 'Göteborg', km: 21.0975, nar: 'Maj', typ: 'Halvmaraton',
+      partner: { kalla: 'goteborgsvarvet.se/partners',
+        huvud: [['ASICS', 'Huvudpartner i Varvetfamiljen'], ['Polestar', 'Officiell klockbil · Polestar 4'], ['Stadium', 'Huvudpartner sedan 2025'], ['STC', 'Uppvärmning under Varvetveckan']],
+        evenemang: ['Volvokoncernen', 'Göteborg Energi', 'Garmin', 'Vitamin Well', 'Biotherm', 'Almondy', 'Dannebacken', 'Cramo', 'Norion Bank', 'Solar Sverige', 'Skinome'],
+        media: ['Mix Megapol', 'Göteborgs-Posten', "Runner's World", 'Löpning & Livet'],
+        leverantorer: ['ProPud', 'Chiquita', 'Radisson Blu Scandinavia', 'Therabody', 'Cramo', 'HLR Konsulten', 'Learnifier'],
+        tid: 'Garmin' },
       bana: 'M150 214 C112 214 70 196 52 168 C40 150 38 128 40 104 C42 84 58 70 84 64 C120 56 168 52 206 58 C236 62 248 76 244 96 C240 112 228 122 226 134 C224 150 240 160 262 166 C284 172 290 192 270 204 C246 218 196 222 150 214',
       vatten: 'M0 118 C60 110 120 126 180 116 C240 106 300 120 340 112 L340 136 C300 144 240 130 180 140 C120 150 60 134 0 142 Z',
       parker: [[150, 226, 46, 20], [300, 30, 30, 18]], broar: [[40, 128, 0], [236, 124, 8]],
@@ -1384,6 +1390,14 @@
   function basta10() { // bästa 10-km-tid i exempelhistoriken (märkt exempel)
     return elit() ? 39 * 60 + 40 : 54 * 60 + 10;
   }
+  // Loppets partners – namnen som text tills partnernas egna loggfiler finns (inga efterritade loggor). Källan visas.
+  function partnerHtml(l) {
+    const p = l.partner; if (!p) return '';
+    const rad = (rubrik, lista) => `<div class="lp-p-grupp"><span class="lp-p-etikett">${rubrik}</span><div class="lp-p-chips">${lista.map((n, i) => `<span class="lp-p-chip" style="--n:${i}">${e(n)}</span>`).join('')}</div></div>`;
+    return `<section class="lp-partner" aria-labelledby="lp-p-rubrik"><div class="lp-p-topp"><h3 id="lp-p-rubrik">${e(l.namn)}s partners</h3><span class="lp-p-kalla">Källa: ${e(p.kalla)}</span></div>
+      <div class="lp-p-huvud">${p.huvud.map(([n, u], i) => `<div class="lp-p-kort" style="--n:${i}"><b class="lp-p-namn">${e(n)}</b><small>${e(u)}</small></div>`).join('')}</div>
+      ${rad('Evenemangspartners', p.evenemang)}${rad('Mediepartners', p.media)}${rad('Leverantörer', [...new Set(p.leverantorer)])}</section>`;
+  }
   function loppKort(i) {
     const l = loppNu(), s = loppSt(), prog = riegel(basta10(), 10, l.km), under = prog <= s.mal;
     return `<button class="kort lp-kort tryck in" style="--i:${i}" data-g="lopp-ark" aria-label="${e(l.namn)}: mål ${tidText(s.mal)}, prognos ${tidText(prog)}. Öppna rundan och verktygen.">
@@ -1409,7 +1423,8 @@
       <div class="lp-andel-text">${FART.map(([, k, t], n) => f.andel[n] > 0 ? `<span data-z="${k}"><i></i>${t} ${Math.round(f.andel[n] * 100)} %</span>` : '').join('')}</div>
       <div class="lp-km" aria-label="Fart per kilometer">${f.perKm.map((x, k) => `<i data-z="${fartZon(x)[1]}" style="--h:${Math.round(x / 16 * 100)}%;--n:${k}" title="km ${k + 1}: ${fmt(x, 1)} km/h"></i>`).join('')}</div>
       <p class="lp-km-axel"><span>km 1</span><span>Fart per kilometer</span><span>km ${fmt(l.km, 1)}</span></p>
-      <button class="lp-garmin" data-g="lopp-garmin"><span class="lp-garmin-ikon">${ik('klocka')}</span><span><b>Synka från klockan</b><small>Garmin och andra klockor · exempelpass i prototypen</small></span>${ik('hoger')}</button>`;
+      <button class="lp-garmin" data-g="lopp-garmin"><span class="lp-garmin-ikon">${ik('klocka')}</span><span><b>Synka från klockan</b><small>${l.partner?.tid ? `${e(l.partner.tid)} är loppets tidtagningspartner · exempelpass i prototypen` : 'Garmin och andra klockor · exempelpass i prototypen'}</small></span>${ik('hoger')}</button>
+      ${partnerHtml(l)}`;
     if (vy === 'verktyg') inne = `
       <section class="lp-verktyg"><div class="lp-v-topp"><span class="ikonruta" data-ton="is">${ik('klocka')}</span><div><b>Tempokalkylator</b><small>Välj måltid – appen räknar tempot och delsträckorna</small></div></div>
         <div class="jg-ci"><label for="lp-mal"><span class="jg-ci-namn"><span class="jg-ci-ikon">${ik('mal')}</span>Måltid</span><span class="jg-ci-tal tal" data-lp-maltal>${tidText(s.mal)}</span></label>

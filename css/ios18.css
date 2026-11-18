@@ -25,3 +25,21 @@ body[data-niva="elit"] .idag-vy .bento-topp .ikonruta[data-ton="is"] + .bento-na
 .lp-verktyg .jg-ci label { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
 .lp-verktyg .jg-ci-namn { display: inline-flex; align-items: center; gap: 8px; }
 .lp-verktyg .jg-ci-tal { font: 700 1.1rem var(--font-rubrik); }
+
+/* Loppets partners – huvudpartners som kort, övriga som chips; namnen som ordmärken tills partnernas loggfiler finns */
+.lp-partner { margin: 14px 0 4px; padding: 16px; border-radius: 22px; background: var(--yta-2); border: 1px solid var(--kant); }
+.lp-p-topp { display: grid; gap: 3px; margin-bottom: 12px; }
+.lp-p-topp h3 { margin: 0; font: 700 1rem var(--font-rubrik); letter-spacing: -.01em; }
+.lp-p-kalla { font: 500 .66rem var(--font-brod); color: var(--text-3); white-space: nowrap; }
+.lp-p-huvud { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.lp-p-kort { display: grid; gap: 4px; align-content: center; min-height: 72px; padding: 12px; border-radius: 16px; background: var(--yta); box-shadow: inset 0 0 0 .5px var(--kant);
+  animation: ts-in .45s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--n) * 50ms + .1s); transition: transform .25s cubic-bezier(.32, .72, 0, 1); }
+.lp-p-kort:active { transform: scale(.97); }
+.lp-p-namn { font: 800 1.05rem/1 var(--font-rubrik); letter-spacing: .06em; text-transform: uppercase; color: var(--text); }
+.lp-p-kort small { font-size: .72rem; line-height: 1.3; color: var(--text-2); }
+.lp-p-grupp + .lp-p-grupp { margin-top: 12px; }
+.lp-p-etikett { display: block; margin-bottom: 6px; font: 600 .66rem var(--font-brod); letter-spacing: .08em; text-transform: uppercase; color: var(--text-3); }
+.lp-p-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.lp-p-chip { padding: 6px 11px; border-radius: 999px; font: 650 .76rem var(--font-rubrik); letter-spacing: .01em; color: var(--text-2); background: var(--yta); box-shadow: inset 0 0 0 .5px var(--kant);
+  animation: ts-in .4s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--n) * 25ms + .25s); }
+@media (prefers-reduced-motion: reduce) { .lp-p-kort, .lp-p-chip { animation: none; } }
