@@ -132,3 +132,22 @@ h1, h2, h3, .bento-tal, .lp-fakta dd { letter-spacing: -.022em; }
 :root .idag-vy .bento-tal { font-family: var(--font-siffror) !important; }
 :root :is(.bento-tal, .lp-fakta dd, .lp-tempo b, .jg-mal-tal b, .tg-tal b, .skapar-tal b) small { font-family: var(--font-brod) !important; font-weight: 600 !important; color: var(--text-3) !important; letter-spacing: 0 !important; }
 body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+
+/* Idag i iOS 18-stil – samma språk som Hälsas Sammanfattning: ingen versal-etikett, rubriker 17 pt halvfet, länkar i tonfärg, tonade kapslar, grupperade rader */
+.idag-vy .kort { border-radius: 22px !important; }
+.idag-vy .kort-rubrik h3, .idag-vy .ts-kort h3, .idag-vy .fokus-text b, .idag-vy .lp-kort-text b { font: 650 17px/1.25 var(--font-rubrik) !important; letter-spacing: -.02em !important; }
+.idag-vy .kort-rubrik .mer, .idag-vy .ts-kort .mer { font: 500 15px var(--font-brod) !important; color: var(--accent-text) !important; }
+.idag-vy .ogon, .ts-coach-topp > b, .lp-kort-tal small, .lp-fakta dt, .lp-p-etikett, .lp-s-etikett { text-transform: none !important; letter-spacing: 0 !important; }
+.ts-coach-topp > b { font: 650 13px var(--font-brod) !important; }
+.lp-kort-tal small { font: 600 12px var(--font-brod) !important; color: var(--text-3) !important; }
+.lp-kort-tal b { font-size: 1.05rem !important; }
+/* knappen i Dagens fokus: tonad kapsel som i iOS */
+.idag-vy .fokus-knapp { background: rgba(126, 224, 195, .18) !important; color: var(--accent-text) !important; box-shadow: none !important; border: 0 !important; font: 600 14px var(--font-brod) !important; padding: 8px 14px !important; }
+body[data-niva="motionar"] .idag-vy .fokus-knapp { background: rgba(15, 110, 87, .1) !important; }
+/* Tre små saker: en grupperad lista med hårfina avdelare som börjar efter ikonen */
+.idag-vy .tips-lista .lista li { border-top: 0 !important; position: relative; padding: 12px 0 !important; }
+.idag-vy .tips-lista .lista li + li::before { content: ''; position: absolute; top: 0; left: 48px; right: 0; height: .5px; background: var(--kant-2); }
+.idag-vy .tips-lista .lista li b { font: 600 15px var(--font-rubrik) !important; }
+.idag-vy .tips-lista .lista li small { font-size: 13px !important; line-height: 1.4 !important; color: var(--text-2) !important; }
+/* chips och brickor: iOS-storlek */
+.idag-vy .chip { font: 600 12px var(--font-brod) !important; letter-spacing: 0 !important; }
