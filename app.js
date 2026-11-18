@@ -604,9 +604,14 @@
     const hm = himmelLage();
     return `<header class="valkomst in" style="--i:0">${himmelHtml()}
       <div class="valkomst-text">
-        <span class="ios-datum">${e(datumText())}${hm.halsning ? ` · ${e(hm.halsning)}` : ''}</span>
-        <h1 class="ios-titel">${e(hej)}, ${e(visNamn())}</h1>
+        <span class="ios-datum">${ik(natt || h >= 17 ? 'mane' : 'sol')}${e(datumText())}${hm.halsning ? ` · ${e(hm.halsning)}` : ''}</span>
+        <h1 class="ios-titel"><span class="ios-titel-text">${e(hej)}, ${e(visNamn())}</span></h1>
         <p class="ios-under">${e(rad)}</p>
+        ${(() => { const sv = svit(), p0 = planFor(idag()), gj = passPa(dagStr(idag())).length, ci = c && c.datum === dagStr(idag());
+          const del = [sv > 1 ? ['flamma', 'glod', `${sv} dagar i rad`] : null,
+            p0 ? [gj ? 'bock' : typIkon(p0.typ), gj ? 'ok' : 'is', gj ? `${p0.typ} klar` : `${p0.typ} ${p0.tid}`] : ['mane', 'is', 'Vilodag'],
+            ci ? ['puls', df >= 60 ? 'ok' : 'gul', `Dagsform ${df}`] : ['puls', 'gra', 'Check-in väntar']].filter(Boolean);
+          return `<div class="ios-glance" aria-label="Idag i korthet">${del.map(([i, t, x], n) => `<span class="ios-g" data-t="${t}" style="--n:${n}">${ik(i)}<b>${e(x)}</b></span>`).join('')}</div>`; })()}
       </div>
       <button class="valkomst-profil" data-g="flik" data-v="jag" aria-label="Din profil · hälsopoäng ${hp}">
         <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="${R}" class="vp-spar"/><circle cx="30" cy="30" r="${R}" class="vp-bage" style="stroke-dasharray:${L};stroke-dashoffset:${L * (1 - hp / 100)}"/></svg>
