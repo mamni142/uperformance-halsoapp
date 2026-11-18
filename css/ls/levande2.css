@@ -1,0 +1,5 @@
+/* GENERERAD ur css/levande2.css av _underlag/halsoapp-modell/landslaget-farg.cjs – kör om, ändra inte för hand. Laddas direkt efter css/levande2.css. */
+:where(body[data-tema="landslaget"]) .ac-spets { filter: drop-shadow(0 0 4px rgba(255, 205, 0, .95)); }
+:where(body[data-tema="landslaget"]) .acwr .zon-ok { filter: drop-shadow(0 0 6px rgba(255, 205, 0, .45)); }
+:where(body[data-tema="landslaget"]) .idag-vy .acwr .visare .ac-spets,
+:where(body[data-tema="landslaget"]) .acwr2 .visare .ac-spets { fill: #ffcd00 !important; }

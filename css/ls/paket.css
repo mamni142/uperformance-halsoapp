@@ -1,0 +1,13 @@
+/* GENERERAD ur css/paket.css av _underlag/halsoapp-modell/landslaget-farg.cjs – kör om, ändra inte för hand. Laddas direkt efter css/paket.css. */
+:where(body[data-tema="landslaget"]) .pk { background: radial-gradient(120% 90% at 20% 0%, rgba(255, 205, 0, .16), transparent 55%), radial-gradient(120% 90% at 100% 100%, rgba(167, 210, 255, .14), transparent 55%), linear-gradient(170deg, #16283a, #0b1520); }
+:where(body[data-tema="landslaget"]) .pk-plus { background: linear-gradient(100deg, #a7d2ff, #ffcd00); -webkit-background-clip: text; background-clip: text; }
+:where(body[data-tema="landslaget"]) .pk-ram i { background: conic-gradient(from 0deg, transparent 0 72%, rgba(255, 205, 0, .2) 80%, #ffcd00 90%, #fff 92%, transparent 94%); }
+:where(body[data-tema="landslaget"]) .pk[data-steg="2"] .pk-ram i { background: conic-gradient(from 0deg, transparent 0 32%, #a7d2ff 42%, #fff 44%, transparent 46% 82%, #ffcd00 92%, #fff 94%, transparent 96%); }
+:where(body[data-tema="landslaget"]) .pk[data-steg="2"] { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 0 0 .5px rgba(255, 205, 0, .3), 0 14px 30px -14px rgba(160, 112, 0, .75), 0 0 26px -8px rgba(255, 205, 0, .45); }
+:where(body[data-tema="landslaget"]) .pk-premium { background: linear-gradient(90deg, #a7d2ff, #ffcd00, #fff, #ffcd00); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; }
+:where(body[data-tema="landslaget"]) .pk-bock { background: linear-gradient(160deg, #ffe066, #ffcd00); }
+:where(body[data-tema="landslaget"]) .pk[aria-pressed="true"] { box-shadow: inset 0 0 0 1.5px #ffcd00, 0 14px 30px -14px rgba(160, 112, 0, .75), 0 0 24px -10px rgba(255, 205, 0, .6); }
+:where(body[data-tema="landslaget"]) .pk[aria-pressed="true"][data-steg="2"] { box-shadow: inset 0 0 0 1.5px #ffcd00, 0 14px 30px -14px rgba(160, 112, 0, .75), 0 0 30px -8px rgba(255, 205, 0, .6); }
+:where(body[data-tema="landslaget"]) .ios-titel-text { background: linear-gradient(100deg, var(--text) 0 40%, #ffcd00 50%, var(--text) 60% 100%); background-size: 260% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+:where(body[data-tema="landslaget"]) .ios-g[data-t="ok"] svg { color: #0b5cc2; }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .ios-g[data-t="ok"] svg { color: #ffcd00; }

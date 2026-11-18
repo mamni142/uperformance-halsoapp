@@ -87,3 +87,16 @@ img[src*="partner/landslaget/"] { filter: none !important; opacity: 1 !important
 .lp-p-kort img[src*="partner/landslaget/"] { height: 32px !important; max-width: 120px !important; }
 .lp-bel-logga img[src*="partner/landslaget/"] { max-width: 44px !important; max-height: 26px !important; padding: 0; }
 body[data-tema="landslaget"] .lp-s-logga[src*="landslaget/"] { filter: none !important; }
+
+/* 08 Efter färgbytet (landslaget-farg.css): fartens färger, ok-status i blått, fjällen i hjälten under texten */
+body[data-tema="landslaget"] { --z-gar: #9cd0ff; --z-jogg: #3b8ff0; --z-spring: #ffcd00; --z-tar: #ff7a5c; }
+body[data-tema="landslaget"][data-niva="motionar"] { --z-gar: #6fb1f2; --z-jogg: #0b5cc2; --z-spring: #e0a800; --z-tar: #e0603f; }
+body[data-tema="landslaget"][data-niva="elit"] :is(span.chip, .mh-status, .tg-status, .match-status, .h3-status, .jg-trend, .lg-delta)[data-ton="ok"] { color: #7dbcff !important; }
+body[data-tema="landslaget"][data-niva="motionar"] :is(span.chip, .mh-status, .tg-status, .match-status, .h3-status, .jg-trend, .lg-delta)[data-ton="ok"] { color: #0b5cc2 !important; }
+body[data-tema="landslaget"] .minispark-prick { color: #ffcd00 !important; }
+.ls-hero-fj1 { bottom: -2% !important; height: 26% !important; }
+.ls-hero-fj2 { bottom: -10% !important; height: 24% !important; }
+.lp-km-tips { z-index: 3; }
+/* plusknappen i guld (liquid.css har högre vikt) */
+body[data-tema="landslaget"] .app .flikrad .flik-plus { color: #072a5c !important; background: radial-gradient(120% 100% at 35% 20%, #fff1a8, #ffd633 55%, #e0a800) !important; }
+body[data-tema="landslaget"] .flikrad .flik-plus::before { background: radial-gradient(circle, rgba(255, 205, 0, .38), rgba(255, 205, 0, 0) 68%) !important; }

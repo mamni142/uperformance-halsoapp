@@ -1,0 +1,9 @@
+/* GENERERAD ur css/screening.css av _underlag/halsoapp-modell/landslaget-farg.cjs – kör om, ändra inte för hand. Laddas direkt efter css/screening.css. */
+:where(body[data-tema="landslaget"]) .sc-steg[data-lage="nu"] .sc-steg-prick { box-shadow: 0 0 0 5px rgba(255, 205, 0, .14); }
+:where(body[data-tema="landslaget"]) .sc-tidslinje i { background: rgba(255, 205, 0, .18); }
+:where(body[data-tema="landslaget"]) .sc-trappa-kort .trappsteg:last-child em { background: linear-gradient(160deg, #ffe066, var(--accent)); }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .sc-tidslinje i { border: 1px solid rgba(255, 205, 0, .28); }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .sc-station::before { background: linear-gradient(180deg, rgba(255, 205, 0, .45), rgba(167, 210, 255, .12)); }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .trapp-matare i { box-shadow: 0 0 8px rgba(255, 205, 0, .5); }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .sc-trappa-kort .trappsteg strong { text-shadow: 0 0 14px rgba(255, 205, 0, .45); }
+body[data-niva="motionar"]:where([data-tema="landslaget"]) .sc-tidslinje i { background: rgba(160, 112, 0, .12); }

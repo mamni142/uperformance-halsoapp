@@ -1,0 +1,4 @@
+/* GENERERAD ur css/skapar.css av _underlag/halsoapp-modell/landslaget-farg.cjs – kör om, ändra inte för hand. Laddas direkt efter css/skapar.css. */
+:where(body[data-tema="landslaget"]) .skapar-kropp::after { background: radial-gradient(closest-side, rgba(255, 205, 0, .35), transparent); }
+:where(body[data-tema="landslaget"]) .sk-bage { filter: drop-shadow(0 0 6px rgba(255, 205, 0, .45)); }
+:where(body[data-tema="landslaget"]) .skapar-lista li[data-klar] .snurr { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b1520' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center / 14px no-repeat, linear-gradient(160deg, #ffe066, #ffcd00) !important; }

@@ -1,0 +1,5 @@
+/* GENERERAD ur css/kroppvy.css av _underlag/halsoapp-modell/landslaget-farg.cjs – kör om, ändra inte för hand. Laddas direkt efter css/kroppvy.css. */
+:where(body[data-tema="landslaget"]) :is(.kv-zon, .kv-dagbok, .kv-tally > div, .kv-grupp, .kv-sidor > span, .kv-sidpanel, .kv-niva-visning, .kv-sidknapp, .kv-prick, .kv-sammanfattning)[data-ton="ok"] { --kv-bg: rgba(255, 205, 0, .13); --kv-k: rgba(255, 205, 0, .32); }
+:where(body[data-tema="landslaget"]) .kv-lage-markor { background: linear-gradient(170deg, #ffe066, var(--accent)); box-shadow: 0 1px 0 rgba(255, 255, 255, .55) inset, 0 8px 18px -10px rgba(255, 205, 0, .9); }
+:where(body[data-tema="landslaget"]) .kv-bokstav { background: var(--kv-bg, rgba(255, 205, 0, .13)); border: 1px solid var(--kv-k, rgba(255, 205, 0, .3)); }
+:where(body[data-tema="landslaget"]) .kv-ovningar li:has(.bock-ruta[aria-pressed="true"]) { background: rgba(255, 205, 0, .1); border-color: rgba(255, 205, 0, .36); }

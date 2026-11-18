@@ -1,0 +1,3 @@
+/* GENERERAD ur css/bento.css av _underlag/halsoapp-modell/landslaget-farg.cjs – kör om, ändra inte för hand. Laddas direkt efter css/bento.css. */
+:where(body[data-tema="landslaget"]) .lg-delta[data-ton="ok"] { color: #0b5cc2 !important; }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .lg-delta[data-ton="ok"] { color: #ffcd00 !important; }

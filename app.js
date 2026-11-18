@@ -1410,9 +1410,9 @@
   }
   function rundaFakta(l, v) {
     const del = l.km / v.length, sek = v.reduce((s, x) => s + del / x * 3600, 0), andel = FART.map(([, k]) => v.filter((x) => fartZon(x)[1] === k).length / v.length);
-    const perKm = []; for (let k = 0; k < Math.ceil(l.km); k++) { const fran = Math.floor(k / l.km * v.length), till = Math.max(fran + 1, Math.floor(Math.min(k + 1, l.km) / l.km * v.length)); const s = v.slice(fran, till); perKm.push(s.reduce((a, x) => a + x, 0) / s.length); }
+    const steg = Math.max(1, Math.ceil(l.km / 30)), perKm = []; for (let k = 0; k < Math.ceil(l.km / steg); k++) { const fran = Math.floor(k * steg / l.km * v.length), till = Math.max(fran + 1, Math.floor(Math.min((k + 1) * steg, l.km) / l.km * v.length)); const s = v.slice(fran, till); perKm.push(s.reduce((a, x) => a + x, 0) / s.length); }
     const snabb = perKm.indexOf(Math.max(...perKm));
-    return { sek, tempo: sek / l.km, andel, perKm, snabb };
+    return { sek, tempo: sek / l.km, andel, perKm, snabb, steg };
   }
   function kartaSvg(l, { spela = true } = {}) {
     return `<svg class="lp-karta" viewBox="0 0 340 250" role="img" aria-label="Schematisk karta över ${e(l.namn)} med rundan färgad efter farten">
@@ -1553,11 +1553,11 @@
         <span class="lp-skiss">Schematisk bana</span>${sponsorRemsa(l)}</div>
       <div class="lp-legend">${FART.map(([max, k, t], n) => `<span data-z="${k}"><i></i>${t}<small>${n === 0 ? `< ${FART[0][0]}` : n === 3 ? `${FART[2][0]}+` : `${FART[n - 1][0]}–${max}`} km/h</small></span>`).join('')}</div>
       <button class="knapp knapp-sek knapp-bred lp-spela" data-g="lopp-spela">${ik('spela')}Spela upp rundan</button>
-      <dl class="lp-fakta"><div><dt>Tid</dt><dd class="tal">${tidText(f.sek)}</dd></div><div><dt>Snittempo</dt><dd class="tal">${tempoText(f.tempo)}<small>/km</small></dd></div><div><dt>Snabbast</dt><dd class="tal">km ${f.snabb + 1}</dd></div></dl>
+      <dl class="lp-fakta"><div><dt>Tid</dt><dd class="tal">${tidText(f.sek)}</dd></div><div><dt>Snittempo</dt><dd class="tal">${tempoText(f.tempo)}<small>/km</small></dd></div><div><dt>Snabbast</dt><dd class="tal">km ${f.snabb * f.steg + 1}</dd></div></dl>
       <div class="lp-andel" aria-label="Andel av rundan per fart">${FART.map(([, k, t], n) => `<i data-z="${k}" style="--a:${(f.andel[n] * 100).toFixed(1)}%" title="${t} ${Math.round(f.andel[n] * 100)} %"></i>`).join('')}</div>
       <div class="lp-andel-text">${FART.map(([, k, t], n) => f.andel[n] > 0 ? `<span data-z="${k}"><i></i>${t} ${Math.round(f.andel[n] * 100)} %</span>` : '').join('')}</div>
-      <div class="lp-km" aria-label="Fart per kilometer – tryck på en stapel">${f.perKm.map((x, k) => `<i data-z="${fartZon(x)[1]}" data-km="${k + 1}" data-kmh="${fmt(x, 1)}" data-zon="${fartZon(x)[2]}" style="--h:${Math.round(x / 16 * 100)}%;--n:${k}" title="km ${k + 1}: ${fmt(x, 1)} km/h"></i>`).join('')}<span class="lp-km-tips" data-km-tips hidden></span></div>
-      <p class="lp-km-axel"><span>km 1</span><span>Fart per kilometer</span><span>km ${fmt(l.km, 1)}</span></p>
+      <div class="lp-km" aria-label="Fart per kilometer – tryck på en stapel">${f.perKm.map((x, k) => `<i data-z="${fartZon(x)[1]}" data-km="${f.steg > 1 ? `${k * f.steg + 1}–${Math.min((k + 1) * f.steg, Math.round(l.km))}` : k + 1}" data-kmh="${fmt(x, 1)}" data-zon="${fartZon(x)[2]}" style="--h:${Math.round(x / Math.max(16, ...f.perKm) * 100)}%;--n:${k}" title="km ${f.steg > 1 ? `${k * f.steg + 1}–${Math.min((k + 1) * f.steg, Math.round(l.km))}` : k + 1}: ${fmt(x, 1)} km/h"></i>`).join('')}<span class="lp-km-tips" data-km-tips hidden></span></div>
+      <p class="lp-km-axel"><span>km 1</span><span>${f.steg > 1 ? `Fart per ${f.steg} km` : 'Fart per kilometer'}</span><span>km ${fmt(l.km, 1)}</span></p>
       <button class="lp-garmin" data-g="lopp-garmin"><span class="lp-garmin-ikon">${ik('klocka')}</span><span><b>Synka från klockan</b><small>${l.partner?.tid ? `${e(l.partner.tid)} är loppets tidtagningspartner · exempelpass i prototypen` : 'Garmin och andra klockor · exempelpass i prototypen'}</small></span>${ik('hoger')}</button>
       ${beloningHtml(l)}${partnerHtml(l)}`;
     if (vy === 'verktyg') inne = `

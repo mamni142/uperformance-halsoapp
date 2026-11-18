@@ -1,0 +1,9 @@
+/* GENERERAD ur css/traning.css av _underlag/halsoapp-modell/landslaget-farg.cjs – kör om, ändra inte för hand. Laddas direkt efter css/traning.css. */
+:where(body[data-tema="landslaget"]) .ts-dag[data-lage="klar"] .ts-prick { background: linear-gradient(160deg, #ffe066, var(--accent)); box-shadow: 0 6px 14px -8px rgba(160, 112, 0, .8); }
+:where(body[data-tema="landslaget"]) .ts-idag[data-lage="klar"] .ts-idag-ikon { background: linear-gradient(160deg, #ffe066, var(--accent)); }
+:where(body[data-tema="landslaget"]) .ts-coach { background: linear-gradient(135deg, rgba(255, 205, 0, .12), rgba(167, 210, 255, .08)); border: 1px solid rgba(255, 205, 0, .22); }
+:where(body[data-tema="landslaget"]) .ts-coach[data-ton="is"] { background: linear-gradient(135deg, rgba(167, 210, 255, .14), rgba(255, 205, 0, .06)); }
+:where(body[data-tema="landslaget"]) .ts-coach-bild { background: linear-gradient(160deg, #ffe066, var(--accent)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 6px 14px -8px rgba(160, 112, 0, .8); }
+:where(body[data-tema="landslaget"]) .ts-forhand { background: linear-gradient(135deg, rgba(255, 205, 0, .12), rgba(167, 210, 255, .08)); border: 1px solid rgba(255, 205, 0, .22); }
+:where(body[data-tema="landslaget"]) .up-notis-ikon { color: #ffcd00; }
+:where(body[data-tema="landslaget"]) .vecka-dag[data-idag] b { background: linear-gradient(180deg, #ffe066, #ffcd00); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), 0 6px 14px -6px rgba(160, 112, 0, .75); }

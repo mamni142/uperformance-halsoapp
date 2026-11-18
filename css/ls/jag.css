@@ -1,0 +1,22 @@
+/* GENERERAD ur css/jag.css av _underlag/halsoapp-modell/landslaget-farg.cjs – kör om, ändra inte för hand. Laddas direkt efter css/jag.css. */
+body:where([data-tema="landslaget"]) { --jg-glod: rgba(255, 205, 0, .45); }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .jg-nr { background: rgba(255, 205, 0, .08); border: 1px solid rgba(255, 205, 0, .22); }
+:where(body[data-tema="landslaget"]) .jg-lank:active { background: rgba(255, 205, 0, .12); }
+:where(body[data-tema="landslaget"]) .jg-hjalte { background: radial-gradient(110% 60% at 50% 0, rgba(255, 205, 0, .22), transparent 62%), radial-gradient(80% 50% at 100% 100%, rgba(167, 210, 255, .2), transparent 62%),
+    radial-gradient(70% 45% at 0 100%, rgba(240, 181, 69, .1), transparent 60%), var(--yta); }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .jg-hjalte { background: radial-gradient(110% 60% at 50% 0, rgba(58, 169, 201, .32), transparent 62%), radial-gradient(80% 50% at 100% 100%, rgba(255, 205, 0, .12), transparent 62%),
+  linear-gradient(180deg, #13263a, #0d1a27); }
+:where(body[data-tema="landslaget"]) .jg-avatar-bild { background: radial-gradient(circle at 32% 24%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 46%), linear-gradient(150deg, #bfe0ff, #ffcd00 70%, #5cc9ad); box-shadow: inset 0 -8px 16px rgba(160, 112, 0, .22), 0 14px 30px -14px rgba(58, 169, 201, .7); }
+body[data-niva="motionar"]:where([data-tema="landslaget"]) .jg-avatar-bild { background: radial-gradient(circle at 32% 24%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 46%), linear-gradient(150deg, #d4e8ff, #9fe8d2 70%, #ffcd00); box-shadow: inset 0 -8px 16px rgba(160, 112, 0, .15), 0 14px 30px -16px rgba(24, 54, 83, .45); }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .jg-streck line.pa { filter: drop-shadow(0 0 2px rgba(255, 205, 0, .9)); }
+:where(body[data-tema="landslaget"]) .jg-trend { background: rgba(255, 205, 0, .12); }
+:where(body[data-tema="landslaget"]) .jg-vecka i { background: linear-gradient(180deg, var(--accent), rgba(255, 205, 0, .25)); }
+body[data-niva="motionar"]:where([data-tema="landslaget"]) .jg-vecka i { background: linear-gradient(180deg, #ffcd00, #cdeee4); }
+:where(body[data-tema="landslaget"]) .jg-medalj[data-klar] .jg-skiva-karna { background: radial-gradient(circle at 32% 25%, #fff, rgba(255, 255, 255, 0) 44%), conic-gradient(from 210deg, #a7d2ff, #ffcd00, #3aa9c9, #a7d2ff); box-shadow: 0 8px 18px -8px rgba(255, 205, 0, .9), inset 0 -4px 10px rgba(160, 112, 0, .3); }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .jg-medalj[data-klar] { border-color: rgba(255, 205, 0, .2); }
+:where(body[data-tema="landslaget"]) .jg-lage[aria-pressed="true"] { box-shadow: 0 0 0 4px rgba(255, 205, 0, .14), 0 16px 32px -20px rgba(255, 205, 0, .9); }
+:where(body[data-tema="landslaget"]) .jg-mini-motionar { background: radial-gradient(90% 60% at 100% 0, rgba(255, 205, 0, .45), transparent 60%), #f6f4ef; }
+:where(body[data-tema="landslaget"]) .jg-mini .m-ring { border: 4px solid #ffcd00; }
+:where(body[data-tema="landslaget"]) .jg-mini-elit .m-ruta { box-shadow: inset 0 0 0 1px rgba(255, 205, 0, .4); }
+:where(body[data-tema="landslaget"]) .jg-ci-ikon { background: rgba(255, 205, 0, .1); border: 1px solid rgba(255, 205, 0, .2); }
+:where(body[data-tema="landslaget"]) .jg-au { background: linear-gradient(120deg, rgba(255, 205, 0, .1), rgba(167, 210, 255, .06)); border: 1px solid rgba(255, 205, 0, .2); }

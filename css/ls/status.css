@@ -1,0 +1,5 @@
+/* GENERERAD ur css/status.css av _underlag/halsoapp-modell/landslaget-farg.cjs – kör om, ändra inte för hand. Laddas direkt efter css/status.css. */
+body[data-niva]:where([data-tema="landslaget"]) :is(span.chip, .mh-status, .tg-status, .match-status)[data-ton="ok"] { color: #0b5cc2 !important; }
+body[data-niva="elit"]:where([data-tema="landslaget"]) :is(span.chip, .mh-status, .tg-status, .match-status)[data-ton="ok"] { color: #ffcd00 !important; }
+body[data-niva]:where([data-tema="landslaget"]) :is(.h3-status, .jg-trend)[data-ton="ok"] { color: #0b5cc2 !important; }
+body[data-niva="elit"]:where([data-tema="landslaget"]) :is(.h3-status, .jg-trend)[data-ton="ok"] { color: #ffcd00 !important; }

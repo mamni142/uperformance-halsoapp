@@ -1,0 +1,48 @@
+/* GENERERAD ur css/liquid.css av _underlag/halsoapp-modell/landslaget-farg.cjs – kör om, ändra inte för hand. Laddas direkt efter css/liquid.css. */
+body[data-niva="motionar"]:where([data-tema="landslaget"]) { --lg-droppe: rgba(255, 205, 0, .26); }
+body[data-niva="elit"]:where([data-tema="landslaget"]) { --lg-droppe: rgba(255, 205, 0, .2); }
+:where(body[data-tema="landslaget"]) .flik-markor::before { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), inset 0 0 0 1px rgba(255, 205, 0, .35), inset 0 -6px 14px -8px rgba(160, 112, 0, .35), 0 6px 16px -8px rgba(160, 112, 0, .45); }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .flik-markor::before { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 0 0 1px rgba(255, 205, 0, .32), 0 0 18px -4px rgba(255, 205, 0, .45); }
+:where(body[data-tema="landslaget"]) .flikrad .flik-plus { background: radial-gradient(circle at 35% 28%, #d6fbef 0, #8eeacf 38%, #ffcd00 100%) !important; box-shadow: inset 0 2px 0 rgba(255, 255, 255, .75), inset 0 -4px 10px rgba(160, 112, 0, .35), 0 0 0 5px var(--lg-yta-tat), 0 16px 30px -12px rgba(160, 112, 0, .75) !important; }
+:where(body[data-tema="landslaget"]) .flikrad .flik-plus::before { background: radial-gradient(circle, rgba(255, 205, 0, .45), transparent 66%); }
+:where(body[data-tema="landslaget"]) .segment-markor,
+:where(body[data-tema="landslaget"]) .kv-lage-markor { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 6px 14px -8px rgba(160, 112, 0, .6) !important; }
+:where(body[data-tema="landslaget"]) .knapp-primar { box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, .7), inset 0 -3px 8px rgba(160, 112, 0, .28), 0 12px 26px -12px rgba(160, 112, 0, .7) !important; }
+:where(body[data-tema="landslaget"]) .flikrad .flik-plus::before { background: radial-gradient(circle, rgba(255, 205, 0, .38), rgba(255, 205, 0, 0) 68%); }
+body[data-niva="motionar"]:where([data-tema="landslaget"]) { --vald-yta: rgba(255, 205, 0, .16); }
+body[data-niva="elit"]:where([data-tema="landslaget"]) { --vald-yta: rgba(255, 205, 0, .12); --vaxel-pa: #ffcd00; }
+:where(body[data-tema="landslaget"]) .segment-markor,
+:where(body[data-tema="landslaget"]) .kv-lage-markor { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .75), inset 0 -1px 0 rgba(160, 112, 0, .2), 0 3px 10px -2px rgba(160, 112, 0, .45), 0 0 0 .5px rgba(160, 112, 0, .2) !important; }
+:where(body[data-tema="landslaget"]) .chip.chip-val[aria-pressed="true"]:not([data-ton]) { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), 0 6px 16px -8px rgba(160, 112, 0, .65) !important; }
+:where(body[data-tema="landslaget"]) .hud3 { background: radial-gradient(90% 70% at 50% 28%, rgba(255, 205, 0, .14), transparent 70%), linear-gradient(180deg, rgba(30, 48, 66, .72), rgba(16, 28, 40, .72)); }
+:where(body[data-tema="landslaget"]) .h3-status { background: rgba(255, 205, 0, .16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), inset 0 0 0 .5px rgba(255, 205, 0, .4); }
+:where(body[data-tema="landslaget"]) .h3-status i { background: #ffcd00; box-shadow: 0 0 8px #ffcd00; }
+:where(body[data-tema="landslaget"]) .h3-insikt svg { color: #ffcd00; }
+:where(body[data-tema="landslaget"]) .h3-del em { background: rgba(255, 205, 0, .14); }
+:where(body[data-tema="landslaget"]) .vecka-dag[data-idag] { background: linear-gradient(180deg, #ffe066, #ffcd00) !important; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), 0 8px 18px -8px rgba(160, 112, 0, .8) !important; }
+:where(body[data-tema="landslaget"]) .vecka-prickar i[data-t="ci"][data-pass] { box-shadow: 0 0 0 2px rgba(255, 205, 0, .28) !important; }
+body[data-niva="elit"]:where([data-tema="landslaget"]) { --pl-yta: radial-gradient(120% 80% at 50% 0, rgba(255, 205, 0, .05), transparent 60%), linear-gradient(180deg, rgba(30, 48, 66, .7), rgba(16, 28, 40, .7)); --pl-ok-yta: rgba(255, 205, 0, .14); }
+body[data-niva="motionar"]:where([data-tema="landslaget"]) { --pl-ok: #0b5cc2; --pl-ok-yta: rgba(255, 205, 0, .14); }
+body[data-niva]:where([data-tema="landslaget"]) :is(.kort, .bento-ruta, .sc-hjalte, .jg-hjalte, .kv-scen, .jg-rubrik, .sektion-rubrik) .chip[data-ton],
+body[data-niva]:where([data-tema="landslaget"]) :is(.match-status, .kv-sammanfattning) { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16), inset 0 0 0 .5px var(--kap-kant, rgba(255, 205, 0, .4)); }
+body[data-niva]:where([data-tema="landslaget"]) :is(.chip, .match-status, .kv-sammanfattning)[data-ton="ok"] { --kap-kant: rgba(255, 205, 0, .42); --kap-prick: #ffcd00; }
+:where(body[data-tema="landslaget"]) .lg-matare i { background: linear-gradient(90deg, #5aa8e6, #ffcd00); box-shadow: 0 0 10px rgba(255, 205, 0, .45); }
+body[data-niva]:where([data-tema="landslaget"]) .jg-lage[aria-pressed="true"] { box-shadow: var(--pl-rand), inset 0 0 0 1.5px rgba(255, 205, 0, .7), 0 14px 30px -16px rgba(160, 112, 0, .55) !important; }
+:where(body[data-tema="landslaget"]) .mh-status { color: #0b5cc2; background: rgba(255, 205, 0, .13); }
+:where(body[data-tema="landslaget"]) .mh-status i { background: #ffcd00; }
+:where(body[data-tema="landslaget"]) .mh-lista [data-n="0"] .mh-namn { color: #0b5cc2; }
+:where(body[data-tema="landslaget"]) .mh-lista [data-n="0"] .mh-namn i { background: #ffcd00; }
+:where(body[data-tema="landslaget"]) .mh-varde em { color: #0b5cc2; background: rgba(255, 205, 0, .13); }
+:where(body[data-tema="landslaget"]) .mh-insikt svg { color: #ffcd00; }
+:where(body[data-tema="landslaget"]) .tg-status { background: rgba(255, 205, 0, .14); }
+:where(body[data-tema="landslaget"]) .tg-status i { background: #ffcd00; box-shadow: 0 0 6px #ffcd00; }
+body[data-niva="motionar"]:where([data-tema="landslaget"]) { --fl-droppe: rgba(255, 205, 0, .26); }
+body[data-niva="elit"]:where([data-tema="landslaget"]) { --fl-droppe: rgba(255, 205, 0, .16); }
+:where(body[data-tema="landslaget"]) .flik-kapsel .flik-markor::before { box-shadow: inset 0 1px 0 var(--fl-droppe-kant), inset 0 0 0 .5px rgba(255, 205, 0, .35), 0 4px 12px -6px rgba(160, 112, 0, .35) !important; }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .flik-kapsel .flik-markor::before { box-shadow: inset 0 1px 0 var(--fl-droppe-kant), inset 0 0 0 .5px rgba(255, 205, 0, .3), 0 0 16px -6px rgba(255, 205, 0, .5) !important; }
+:where(body[data-tema="landslaget"]) .app .flikrad .flik-plus { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), inset 0 0 0 .5px rgba(255, 255, 255, .6), inset 0 -3px 8px rgba(160, 112, 0, .22), 0 0 0 .5px rgba(160, 112, 0, .25), 0 10px 24px -10px rgba(160, 112, 0, .6) !important; }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .app .flikrad .flik-plus { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .85), inset 0 0 0 .5px rgba(255, 255, 255, .5), inset 0 -3px 8px rgba(160, 112, 0, .3), 0 0 0 .5px rgba(0, 0, 0, .4), 0 0 22px -6px rgba(255, 205, 0, .55), 0 12px 26px -10px rgba(0, 0, 0, .7) !important; }
+:where(body[data-tema="landslaget"]) .knapp-primar,
+:where(body[data-tema="landslaget"]) .knapp-primar.knapp-bred { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .85), inset 0 0 0 .5px rgba(255, 255, 255, .55), inset 0 -2px 6px rgba(160, 112, 0, .18), 0 10px 22px -12px rgba(160, 112, 0, .65) !important; }
+body[data-niva]:where([data-tema="landslaget"]) :is(.val-lista .val, .jg-inst-rad, .kort .lista li, .kv-med-lista li, .norm-rad, .jg-nod) > .ikonruta { --ir: #ffcd00; }
+body[data-niva="elit"]:where([data-tema="landslaget"]) .ikonruta:not([data-ton]) { background: rgba(255, 205, 0, .14); }

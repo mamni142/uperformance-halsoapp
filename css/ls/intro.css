@@ -1,0 +1,8 @@
+/* GENERERAD ur css/intro.css av _underlag/halsoapp-modell/landslaget-farg.cjs – kör om, ändra inte för hand. Laddas direkt efter css/intro.css. */
+:where(body[data-tema="landslaget"]) .val[aria-pressed="true"] .ikonruta { background: rgba(255, 205, 0, .22); }
+body[data-niva="motionar"]:where([data-tema="landslaget"]) .val[aria-pressed="true"] { background: linear-gradient(135deg, rgba(255, 205, 0, .2), rgba(167, 210, 255, .08)), var(--yta); }
+body[data-niva="motionar"]:where([data-tema="landslaget"]) .skapar-procent b { background: linear-gradient(100deg, #1d5f9e, #0b5cc2); -webkit-background-clip: text; background-clip: text; }
+:where(body[data-tema="landslaget"]) .intro-norrsken i:nth-child(2) { background: radial-gradient(closest-side, rgba(255, 205, 0, .36), rgba(255, 205, 0, .12) 55%, transparent); }
+:where(body[data-tema="landslaget"]) .intro-vag { background: radial-gradient(closest-side, transparent 86%, rgba(167, 210, 255, .07) 92%, rgba(255, 205, 0, .32) 98%, rgba(214, 255, 241, .85) 99.5%, transparent 100%); }
+:where(body[data-tema="landslaget"]) .skapar[data-klar] .skapar-procent::after { background: #ffcd00 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b1520' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E") center / 30px no-repeat; box-shadow: 0 0 0 8px rgba(255, 205, 0, .16), 0 14px 30px -10px rgba(255, 205, 0, .8); }
+:where(body[data-tema="landslaget"]) .skapar[data-klar] .skapar-matare i { background: linear-gradient(90deg, #ffcd00, #a7d2ff); }
