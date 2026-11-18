@@ -1,0 +1,41 @@
+/* Levande grafer och skarpare laddningsskärm (iOS 18). Laddas sist. Bara transform/opacitet i det som rör sig hela tiden. */
+
+/* 01 Ljussvep över staplar och andelsfält – en ljusstrimma som drar förbi var sjätte sekund */
+.lp-km, .lp-andel, .mini-staplar, .staplar { position: relative; }
+.lp-km::after, .lp-andel::after, .idag-vy .mini-staplar::after { content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, .55) 48%, transparent 66%); mix-blend-mode: soft-light;
+  transform: translateX(-120%); animation: lev-svep 6s cubic-bezier(.4, 0, .2, 1) 1.4s infinite; }
+.lp-andel { overflow: hidden; }
+.lp-km { overflow: visible; }
+.lp-km::after { -webkit-mask: linear-gradient(#000, #000); }
+@keyframes lev-svep { 0% { transform: translateX(-120%); } 28%, 100% { transform: translateX(120%); } }
+
+/* 02 Staplarna per km: tryck eller dra för värdet – vald stapel lyfts, de andra tonas ner */
+.lp-km i { cursor: pointer; transition: opacity .25s, transform .3s cubic-bezier(.2, 1.3, .35, 1), filter .25s; }
+.lp-km:has(i[data-vald]) i:not([data-vald]) { opacity: .35; }
+.lp-km i[data-vald] { transform: scaleY(1.06); filter: brightness(1.08); }
+.lp-km-tips { position: absolute; z-index: 2; left: var(--x, 50%); bottom: calc(100% + 6px); transform: translateX(-50%); white-space: nowrap; padding: 6px 11px; border-radius: 999px;
+  font: 600 .74rem var(--font-brod); color: var(--text); background: var(--lg-yta-tat, rgba(20, 34, 48, .9)); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  box-shadow: inset 0 0 0 .5px var(--lg-kant, rgba(255, 255, 255, .15)), 0 8px 18px -10px rgba(0, 0, 0, .5); animation: lev-tips .25s cubic-bezier(.2, 1.3, .35, 1) both; }
+.lp-km-tips::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--z); vertical-align: 0; }
+.lp-km-tips[hidden] { display: none; }
+@keyframes lev-tips { from { opacity: 0; transform: translateX(-50%) translateY(4px) scale(.95); } }
+
+/* 03 Andelsfältets delar andas in efter varandra och förklaringens prickar pulserar mjukt */
+.lp-andel i:nth-child(2) { animation-delay: .35s; } .lp-andel i:nth-child(3) { animation-delay: .5s; } .lp-andel i:nth-child(4) { animation-delay: .65s; }
+.lp-andel-text span { animation: ts-in .45s cubic-bezier(.2, .8, .2, 1) both; }
+.lp-andel-text span:nth-child(2) { animation-delay: .1s; } .lp-andel-text span:nth-child(3) { animation-delay: .2s; } .lp-andel-text span:nth-child(4) { animation-delay: .3s; }
+.lp-andel-text i { animation: lev-prick 2.8s ease-in-out infinite; }
+@keyframes lev-prick { 50% { transform: scale(1.35); } }
+
+/* 04 Laddningsskärmen: U-märket på en glasskiva med ljus överkant, skarpare linjer, lugnare partiklar */
+.splash-mark svg { border-radius: 50%; shape-rendering: geometricPrecision;
+  background: radial-gradient(circle at 34% 26%, rgba(255, 255, 255, .2), rgba(255, 255, 255, .05) 42%, rgba(126, 224, 195, .04) 70%, transparent 72%);
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, .28), inset 0 -10px 24px rgba(0, 0, 0, .25), 0 24px 60px -24px rgba(0, 0, 0, .7), 0 0 60px -10px rgba(126, 224, 195, .25);
+  animation: lev-skiva 1.1s cubic-bezier(.2, .8, .2, 1) .9s both; }
+@keyframes lev-skiva { from { box-shadow: none; background: none; } }
+.intro-partiklar i { opacity: .55; }
+.splash-ord svg, .splash-ord p { -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+.splash-ord p { letter-spacing: .26em; }
+
+@media (prefers-reduced-motion: reduce) { .lp-km::after, .lp-andel::after, .idag-vy .mini-staplar::after, .lp-andel-text i { animation: none; display: none; } .splash-mark svg { animation: none; } }

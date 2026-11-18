@@ -1306,6 +1306,13 @@
         media: ['Mix Megapol', 'Göteborgs-Posten', "Runner's World"],
         leverantorer: ['ProPud', 'Chiquita', 'Radisson Blu Scandinavia', 'Therabody', 'Cramo', 'HLR Konsulten', 'Learnifier'],
         tid: 'Garmin' },
+      beloningar: [
+        { id: 'vw', partner: 'Vitamin Well', typ: 'stracka', km: 5, rubrik: 'En Vitamin Well på köpet', text: 'Hämta vid målområdet', kod: 'VARVET-VW5' },
+        { id: 'polestar', partner: 'Polestar', typ: 'plats', t: .36, plats: 'Hisingen', rubrik: 'Provkör Polestar 4', text: 'Boka en provkörning efter loppet', kod: 'VARVET-PS4' },
+        { id: 'asics', partner: 'ASICS', typ: 'stracka', km: 10, rubrik: '20 % på löparkläder', text: 'I butik och på nätet', kod: 'VARVET-ASICS20' },
+        { id: 'stadium', partner: 'Stadium', typ: 'plats', t: .8, plats: 'Avenyn', rubrik: '15 % på löparskor', text: 'I Stadiums butik vid Avenyn', kod: 'VARVET-STAD15' },
+        { id: 'garmin', partner: 'Garmin', typ: 'stracka', km: 15, rubrik: '10 % på en löparklocka', text: 'När rundan är synkad', kod: 'VARVET-GAR10' },
+        { id: 'stc', partner: 'STC', typ: 'stracka', km: 21.1, rubrik: 'Ett gympass på köpet', text: 'När du gått i mål', kod: 'VARVET-STC' } ],
       bana: 'M150 214 C112 214 70 196 52 168 C40 150 38 128 40 104 C42 84 58 70 84 64 C120 56 168 52 206 58 C236 62 248 76 244 96 C240 112 228 122 226 134 C224 150 240 160 262 166 C284 172 290 192 270 204 C246 218 196 222 150 214',
       vatten: 'M0 118 C60 110 120 126 180 116 C240 106 300 120 340 112 L340 136 C300 144 240 130 180 140 C120 150 60 134 0 142 Z',
       parker: [[150, 226, 46, 20], [300, 30, 30, 18]], broar: [[40, 128, 0], [236, 124, 8]],
@@ -1406,12 +1413,36 @@
       <div class="lp-p-huvud">${p.huvud.map(([n, u], i) => `<div class="lp-p-kort" style="--n:${i}">${PARTNER_LOGGA[n] ? `<span class="lp-p-loggarad"><img class="lp-p-logga" src="${PARTNER_LOGGA[n]}" alt="${n === 'Polestar' ? '' : e(n)}">${n === 'Polestar' ? '<b class="lp-p-ordmarke">POLESTAR</b>' : ''}</span>` : `<b class="lp-p-namn">${e(n)}</b>`}<small>${e(u)}</small></div>`).join('')}</div>
       ${rad('Evenemangspartners', p.evenemang)}${rad('Mediepartners', p.media)}${rad('Leverantörer', [...new Set(p.leverantorer)])}</section>`;
   }
+  // Belöningar: var på banan (andel) och om de är upplåsta (sparas per lopp i st.lopp.upplast).
+  const belT = (l, b) => (b.typ === 'stracka' ? Math.min(1, b.km / l.km) : b.t);
+  const upplast = (l) => new Set(((loppSt().upplast || {})[l.id]) || []);
+  function lasUpp(l, b) { const s0 = loppSt(); s0.upplast = s0.upplast || {}; const lista = s0.upplast[l.id] = s0.upplast[l.id] || []; if (lista.includes(b.id)) return false; lista.push(b.id); spara(); return true; }
+  function belVillkor(b) { return b.typ === 'stracka' ? (b.km >= 21 ? 'Gå i mål' : `Spring ${fmt(b.km, 0)} km`) : `Spring förbi ${b.partner} vid ${b.plats}`; }
+  function beloningHtml(l) {
+    const lista = l.beloningar; if (!lista) return ''; const u = upplast(l), n = lista.filter((b) => u.has(b.id)).length;
+    return `<section class="lp-bel" aria-labelledby="lp-bel-rubrik"><div class="lp-bel-topp"><div><h3 id="lp-bel-rubrik">Belöningar längs banan</h3><small>Lås upp erbjudanden från loppets partners när du springer</small></div>
+      <span class="lp-bel-rakna" data-bel-rakna><b class="tal">${n}</b>/${lista.length}</span></div>
+      <div class="lp-bel-matare matare" aria-hidden="true"><i data-bel-matare style="--v:${n / lista.length * 100}%"></i></div>
+      <ul class="lp-bel-lista">${lista.map((b, i) => { const ok = u.has(b.id), lg = PARTNER_LOGGA[b.partner];
+        return `<li class="lp-bel-rad" data-bel="${b.id}" ${ok ? 'data-upplast' : ''} style="--n:${i}">
+          <span class="lp-bel-logga">${lg ? `<img src="${lg}" alt="${e(b.partner)}">` : `<b>${e(b.partner)}</b>`}</span>
+          <span class="lp-bel-text"><b>${e(b.rubrik)}</b><small>${ik(b.typ === 'plats' ? 'plats' : 'sko')}${e(belVillkor(b))} · ${e(b.text)}</small></span>
+          <span class="lp-bel-lage">${ok ? `<button class="lp-bel-kod" data-g="bel-kod" data-kod="${e(b.kod)}" aria-label="Kopiera koden ${e(b.kod)}"><span class="tal">${e(b.kod)}</span>${ik('dokument')}</button>` : `<span class="lp-bel-las">${ik('las')}Låst</span>`}</span></li>`; }).join('')}</ul>
+      <p class="lp-bel-fot">${ik('info')}<span>Exempel i prototypen – erbjudanden och villkor bestäms tillsammans med partnerna. Spela upp rundan för att se hur de låses upp.</span></p>${n ? `<button class="knapp knapp-text lp-bel-om" data-g="bel-nollstall">${ik('uppdatera')}Lås belöningarna igen</button>` : ''}</section>`;
+  }
+  function visaUpplast(l, b) {
+    const ram = $('.lp-kartram', arkLager); if (!ram) return; const lg = PARTNER_LOGGA[b.partner];
+    const k = document.createElement('div'); k.className = 'lp-upp'; k.innerHTML = `<span class="lp-upp-logga">${lg ? `<img src="${lg}" alt="">` : ''}</span><span><small>Upplåst · ${e(b.partner)}</small><b>${e(b.rubrik)}</b></span><span class="lp-upp-bock">${ik('bock')}</span>`;
+    ram.appendChild(k); try { navigator.vibrate?.(12); } catch (err) { /* ingen vibration */ } setTimeout(() => k.dataset.ut = '', 2200); setTimeout(() => k.remove(), 2700);
+    const rad = $(`.lp-bel-rad[data-bel="${b.id}"]`, arkLager); if (rad) { rad.dataset.upplast = ''; $('.lp-bel-lage', rad).innerHTML = `<button class="lp-bel-kod" data-g="bel-kod" data-kod="${e(b.kod)}" aria-label="Kopiera koden ${e(b.kod)}"><span class="tal">${e(b.kod)}</span>${ik('dokument')}</button>`; rad.animate?.([{ transform: 'scale(1)' }, { transform: 'scale(1.03)' }, { transform: 'scale(1)' }], { duration: 500, easing: 'cubic-bezier(.2, 1.3, .35, 1)' }); }
+    const n = upplast(l).size, t0 = $('[data-bel-rakna]', arkLager); if (t0) t0.innerHTML = `<b class="tal">${n}</b>/${l.beloningar.length}`; $('[data-bel-matare]', arkLager)?.style.setProperty('--v', `${n / l.beloningar.length * 100}%`);
+  }
   function loppKort(i) {
     const l = loppNu(), s = loppSt(), prog = riegel(basta10(), 10, l.km), under = prog <= s.mal;
     return `<button class="kort lp-kort tryck in" style="--i:${i}" data-g="lopp-ark" aria-label="${e(l.namn)}: mål ${tidText(s.mal)}, prognos ${tidText(prog)}. Öppna rundan och verktygen.">
       <span class="lp-kort-karta" aria-hidden="true">${kartaSvg(l, { spela: false })}</span>
       <span class="lp-kort-text"><span class="ogon utan">Ditt lopp · ${e(l.nar)}</span><b>${e(l.namn)}</b><small>${e(l.typ)} · ${fmt(l.km, 1)} km</small>
-        <span class="lp-kort-fart" aria-hidden="true">${FART.map(([, k]) => `<i data-z="${k}"></i>`).join('')}</span></span>
+        <span class="lp-kort-fart" aria-hidden="true">${FART.map(([, k]) => `<i data-z="${k}"></i>`).join('')}</span>${l.beloningar ? `<span class="lp-kort-bel">${ik('stjarna')}${l.beloningar.length - upplast(l).size} belöningar att låsa upp</span>` : ''}</span>
       <span class="lp-kort-pil" aria-hidden="true">${ik('hoger')}</span>
       <span class="lp-kort-tal"><span><small>Mål</small><b class="tal">${tidText(s.mal)}</b></span><span><small>Prognos</small><b class="tal">${tidText(prog)}</b></span>
         <span data-ton="${under ? 'ok' : 'gul'}"><small>Läge</small><b>${under ? 'Före målet' : 'Efter målet'}</b></span></span></button>`;
@@ -1422,17 +1453,17 @@
     const delar = l.km > 20 ? [5, 10, 15, l.km] : l.km > 9 ? [2.5, 5, 7.5, l.km] : [1, 2.5, 4, l.km];
     let inne = '';
     if (vy === 'karta') inne = `
-      <div class="lp-kartram"><canvas class="lp-3d" role="img" aria-label="Karta i 3D över ${e(l.namn)} med rundan färgad efter farten"></canvas><div class="lp-live" data-lp-live><b class="tal">${fmt(l.km, 1)}</b><small>km</small><span class="lp-zon">Exempelpass · från klockan</span></div>
+      <div class="lp-kartram"><canvas class="lp-3d" role="img" aria-label="Karta i 3D över ${e(l.namn)} med rundan färgad efter farten"></canvas><div class="lp-live" data-lp-live><b class="tal">${fmt(l.km, 1)}</b><small>km</small><span class="lp-zon">Exempelpass · schematisk bana</span></div>
         <span class="lp-skiss">Schematisk bana</span>${sponsorRemsa(l)}</div>
       <div class="lp-legend">${FART.map(([max, k, t], n) => `<span data-z="${k}"><i></i>${t}<small>${n === 0 ? `< 7` : n === 3 ? '13+' : `${FART[n - 1][0]}–${max}`} km/h</small></span>`).join('')}</div>
       <button class="knapp knapp-sek knapp-bred lp-spela" data-g="lopp-spela">${ik('uppdatera')}Spela upp rundan</button>
       <dl class="lp-fakta"><div><dt>Tid</dt><dd class="tal">${tidText(f.sek)}</dd></div><div><dt>Snittempo</dt><dd class="tal">${tempoText(f.tempo)}<small>/km</small></dd></div><div><dt>Snabbast</dt><dd class="tal">km ${f.snabb + 1}</dd></div></dl>
       <div class="lp-andel" aria-label="Andel av rundan per fart">${FART.map(([, k, t], n) => `<i data-z="${k}" style="--a:${(f.andel[n] * 100).toFixed(1)}%" title="${t} ${Math.round(f.andel[n] * 100)} %"></i>`).join('')}</div>
       <div class="lp-andel-text">${FART.map(([, k, t], n) => f.andel[n] > 0 ? `<span data-z="${k}"><i></i>${t} ${Math.round(f.andel[n] * 100)} %</span>` : '').join('')}</div>
-      <div class="lp-km" aria-label="Fart per kilometer">${f.perKm.map((x, k) => `<i data-z="${fartZon(x)[1]}" style="--h:${Math.round(x / 16 * 100)}%;--n:${k}" title="km ${k + 1}: ${fmt(x, 1)} km/h"></i>`).join('')}</div>
+      <div class="lp-km" aria-label="Fart per kilometer – tryck på en stapel">${f.perKm.map((x, k) => `<i data-z="${fartZon(x)[1]}" data-km="${k + 1}" data-kmh="${fmt(x, 1)}" data-zon="${fartZon(x)[2]}" style="--h:${Math.round(x / 16 * 100)}%;--n:${k}" title="km ${k + 1}: ${fmt(x, 1)} km/h"></i>`).join('')}<span class="lp-km-tips" data-km-tips hidden></span></div>
       <p class="lp-km-axel"><span>km 1</span><span>Fart per kilometer</span><span>km ${fmt(l.km, 1)}</span></p>
       <button class="lp-garmin" data-g="lopp-garmin"><span class="lp-garmin-ikon">${ik('klocka')}</span><span><b>Synka från klockan</b><small>${l.partner?.tid ? `${e(l.partner.tid)} är loppets tidtagningspartner · exempelpass i prototypen` : 'Garmin och andra klockor · exempelpass i prototypen'}</small></span>${ik('hoger')}</button>
-      ${partnerHtml(l)}`;
+      ${beloningHtml(l)}${partnerHtml(l)}`;
     if (vy === 'verktyg') inne = `
       <section class="lp-verktyg"><div class="lp-v-topp"><span class="ikonruta" data-ton="is">${ik('klocka')}</span><div><b>Tempokalkylator</b><small>Välj måltid – appen räknar tempot och delsträckorna</small></div></div>
         <div class="jg-ci"><label for="lp-mal"><span class="jg-ci-namn"><span class="jg-ci-ikon">${ik('mal')}</span>Måltid</span><span class="jg-ci-tal tal" data-lp-maltal>${tidText(s.mal)}</span></label>
@@ -1456,7 +1487,14 @@
       <div class="segment lp-segment" role="tablist"><span class="segment-markor"></span>${flikar.map(([k, t]) => `<button type="button" role="tab" data-g="lopp-flik" data-v="${k}" aria-pressed="${vy === k}">${t}</button>`).join('')}</div>
       <div class="lp-inne" data-vy="${vy}">${inne}</div>`,
     { efter: (a) => loppEfter(a, false) });
-    function loppEfter(a, bara0) { if (!bara0) { const sg = $('.lp-segment', a), mk = $('.segment-markor', sg); mk.style.transition = 'none'; segmentMarkor(sg); void mk.offsetWidth; mk.style.transition = ''; } cancelAnimationFrame(spokRaf); karta3dNu?.stopp(); karta3dNu = null; const cv3 = $('.lp-3d', a); if (cv3) karta3dNu = karta3d(cv3, l, v); const svg = $('.lp-kartram .lp-karta', a);
+    function loppEfter(a, bara0) {
+      const km = $('.lp-km', a); if (km && !km.dataset.kopplad) { km.dataset.kopplad = '';
+        const visaKm = (st0) => { if (!st0?.dataset.km) return; $$('i', km).forEach((x) => x.toggleAttribute('data-vald', x === st0)); const tip = $('[data-km-tips]', km);
+          tip.innerHTML = `<b>km ${st0.dataset.km}</b> · ${st0.dataset.kmh} km/h · ${st0.dataset.zon}`; tip.hidden = false; tip.dataset.z = st0.dataset.z;
+          const kb = km.getBoundingClientRect(), sb = st0.getBoundingClientRect(); tip.style.setProperty('--x', `${Math.min(kb.width - 70, Math.max(70, sb.left - kb.left + sb.width / 2))}px`); };
+        km.addEventListener('pointerdown', (ev) => visaKm(ev.target.closest('i')));
+        km.addEventListener('pointermove', (ev) => { if (ev.buttons || ev.pointerType === 'mouse') visaKm(document.elementFromPoint(ev.clientX, ev.clientY)?.closest?.('.lp-km i')); });
+        km.addEventListener('pointerleave', () => { $$('i', km).forEach((x) => x.removeAttribute('data-vald')); const tip = $('[data-km-tips]', km); if (tip) tip.hidden = true; }); } if (!bara0) { const sg = $('.lp-segment', a), mk = $('.segment-markor', sg); mk.style.transition = 'none'; segmentMarkor(sg); void mk.offsetWidth; mk.style.transition = ''; } cancelAnimationFrame(spokRaf); karta3dNu?.stopp(); karta3dNu = null; const cv3 = $('.lp-3d', a); if (cv3) karta3dNu = karta3d(cv3, l, v); const svg = $('.lp-kartram .lp-karta', a);
       if (svg) { fargaRunda(svg, v); const p = $('[data-lp-bana]', svg), pt = p.getPointAtLength(0); $('[data-lp-spok]', svg)?.setAttribute('transform', `translate(${pt.x} ${pt.y})`); }
       $$('.lp-kort-karta .lp-karta, .lp-rad-karta .lp-karta', a).forEach((x) => fargaRunda(x, exempelRunda(LOPP.find((y) => x.getAttribute('aria-label').includes(y.namn)) || l)));
       const r = $('[data-lp-mal]', a); if (r) { reglageFarg(r); r.addEventListener('input', () => { reglageFarg(r); const m = +r.value, tp = m / l.km; s.mal = m; spara();
@@ -1486,6 +1524,7 @@
     const hus = []; for (let i = 0; i < 80; i++) { const x = (i % 10) * 34 + 6 + ((i * 7) % 9), y = Math.floor(i / 10) * 31 + 4 + ((i * 11) % 7), w = 14 + (i * 5) % 10, d = 13 + (i * 3) % 9;
       const cx = x + w / 2, cy = y + d / 2; if (nara(cx, cy, 17) || iVatten(cx, cy) || iPark(cx, cy) || x + w > 336 || y + d > 246) continue; hus.push({ x, y, w, d, h: 5 + ((i * 37) % 23) * (Math.abs(cx - 170) < 90 ? 1.2 : .7), f: (i * 13) % 7 }); }
     let W = 0, H = 0, dpr = 1, raf = 0, t0 = performance.now(), spel = null, cam = { yaw: -.32, tilt: .2 };
+    const bel = (l.beloningar || []).map((b) => { const t = belT(l, b), i = Math.min(rutt.length - 1, Math.round(t * (rutt.length - 1))), img = new Image(); if (PARTNER_LOGGA[b.partner]) img.src = PARTNER_LOGGA[b.partner]; return { b, t, p: rutt[i], img }; });
     const g = cv.getContext('2d');
     const storlek = () => { dpr = Math.min(2, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); };
     storlek();
@@ -1494,7 +1533,8 @@
       const ct = Math.cos(cam.tilt), st = Math.sin(cam.tilt), D = 430, djup = D - zr * st - h * ct, f = W * .98 * D / 340;
       return [W / 2 + f * xr / djup, H * .56 + f * (zr * ct - h * st) / djup, djup, f / djup]; };
     const poly = (pts, h = 0) => { g.beginPath(); pts.forEach(([x, y], i) => { const [a, b] = proj(x, y, h); i ? g.lineTo(a, b) : g.moveTo(a, b); }); };
-    function rita(nu0) {
+    function rita(nu0) { try { ritaNu(nu0); } catch (err) { /* en enstaka bild får hellre utebli än att animeringen stannar */ } }
+    function ritaNu(nu0) {
       g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
       // marken med en mjuk ton mot horisonten
       poly([[-60, -60], [400, -60], [400, 310], [-60, 310]]); const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, P.mark2); gr.addColorStop(1, P.mark); g.fillStyle = gr; g.fill();
@@ -1524,14 +1564,23 @@
       // ett ljus som löper längs banan när den inte spelas upp
       if (!spel && !lugn) { const k = Math.floor(((nu0 / 5200) % 1) * v.length); for (let j = 0; j < 6; j++) { const i = (k - j + v.length) % v.length, p2 = rutt[i + 1] || rutt[i], [a, b] = proj(rutt[i][0], rutt[i][1], 1.8), [c2, d2] = proj(p2[0], p2[1], 1.8);
         g.globalAlpha = (1 - j / 6) * .85; g.strokeStyle = '#fff'; g.lineWidth = 1.8; g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2); g.stroke(); } g.globalAlpha = 1; }
+      // belöningarna: en nål med partnerns logga i en vit bricka – låst = grå med lås, upplåst = mint med glöd
+      const ul = upplast(l);
+      for (const x of bel.slice().sort((a, b) => proj(b.p[0], b.p[1])[2] - proj(a.p[0], a.p[1])[2])) { const ok = ul.has(x.b.id), [a, b] = proj(x.p[0], x.p[1], 1.6), [c2, d2] = proj(x.p[0], x.p[1], 36), rr = 14;
+        if (ok) { const gl = g.createRadialGradient(c2, d2, 0, c2, d2, 26); gl.addColorStop(0, 'rgba(126,224,195,.55)'); gl.addColorStop(1, 'rgba(126,224,195,0)'); g.fillStyle = gl; g.beginPath(); g.arc(c2, d2, 26, 0, 6.283); g.fill(); }
+        g.strokeStyle = ok ? '#7ee0c3' : (ljus ? 'rgba(11,21,32,.35)' : 'rgba(255,255,255,.35)'); g.lineWidth = 1.4; g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2 + rr); g.stroke();
+        g.beginPath(); g.arc(c2, d2, rr, 0, 6.283); g.fillStyle = '#fff'; g.fill(); g.lineWidth = 2; g.strokeStyle = ok ? '#2fbf95' : (ljus ? 'rgba(11,21,32,.18)' : 'rgba(255,255,255,.5)'); g.stroke();
+        if (x.img.complete && x.img.naturalWidth) { const iw = x.img.naturalWidth, ih = x.img.naturalHeight, sk = Math.min(21 / iw, 12 / ih); g.globalAlpha = ok ? 1 : .45; g.drawImage(x.img, c2 - iw * sk / 2, d2 - ih * sk / 2, iw * sk, ih * sk); g.globalAlpha = 1; }
+        if (!ok) { const lx = c2 + 11, ly = d2 - 11; g.beginPath(); g.arc(lx, ly, 6.5, 0, 6.283); g.fillStyle = ljus ? '#5f6a76' : '#2a3b4c'; g.fill(); g.fillStyle = '#fff'; g.fillRect(lx - 2.6, ly - .4, 5.2, 4); g.strokeStyle = '#fff'; g.lineWidth = 1.2; g.beginPath(); g.arc(lx, ly - .6, 1.9, Math.PI, 0); g.stroke(); }
+        else { const lx = c2 + 11, ly = d2 - 11; g.beginPath(); g.arc(lx, ly, 6.5, 0, 6.283); g.fillStyle = '#2fbf95'; g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 1.7; g.beginPath(); g.moveTo(lx - 3, ly); g.lineTo(lx - 1, ly + 2.2); g.lineTo(lx + 3.2, ly - 2.4); g.stroke(); } }
       // nålar för platserna – start och mål med pulserande ring på marken
       l.platser.forEach(([x, y, t, s]) => { const start = s === 'b', [a, b] = proj(x, y), [c2, d2] = proj(x, y, start ? 22 : 16);
         if (start) { const fas = ((nu0 / 2200) % 1); poly(Array.from({ length: 24 }, (_, i) => [x + Math.cos(i / 24 * 6.283) * (4 + fas * 16), y + Math.sin(i / 24 * 6.283) * (4 + fas * 16)])); g.strokeStyle = `rgba(126,224,195,${(1 - fas) * .8})`; g.lineWidth = 2; g.stroke(); }
         g.strokeStyle = ljus ? 'rgba(11,21,32,.45)' : 'rgba(255,255,255,.5)'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2); g.stroke();
         g.beginPath(); g.arc(c2, d2, start ? 5 : 3.6, 0, 6.283); g.fillStyle = start ? '#7ee0c3' : (ljus ? '#fff' : '#e8eef2'); g.fill(); g.lineWidth = 1.6; g.strokeStyle = start ? '#0b1520' : (ljus ? '#20303c' : '#0b1520'); g.stroke();
         g.font = `600 ${start ? 10.5 : 10}px Manrope, system-ui, sans-serif`; const tw = g.measureText(t).width, tx = Math.min(W - 8 - tw / 2, Math.max(8 + tw / 2, c2)); g.textAlign = 'center'; g.lineWidth = 3.4; g.lineJoin = 'round'; g.strokeStyle = P.textKant; g.strokeText(t, tx, d2 - 9); g.fillStyle = P.text; g.fillText(t, tx, d2 - 9); });
-      // löparen under uppspelningen
-      if (spel) { const i = Math.min(v.length - 1, slut), q = (sp * v.length) - i, x = rutt[i][0] + (rutt[Math.min(i + 1, v.length)][0] - rutt[i][0]) * q, y = rutt[i][1] + (rutt[Math.min(i + 1, v.length)][1] - rutt[i][1]) * q, z = fartZon(v[i]), [a, b] = proj(x, y, 2.5);
+      // löparen under uppspelningen – belöningar som passeras låses upp
+      if (spel) { for (const x of bel) if (sp >= x.t - .001 && !spel.passerat.has(x.b.id)) { spel.passerat.add(x.b.id); if (lasUpp(l, x.b)) visaUpplast(l, x.b); } const i = Math.min(v.length - 1, slut), q = (sp * v.length) - i, x = rutt[i][0] + (rutt[Math.min(i + 1, v.length)][0] - rutt[i][0]) * q, y = rutt[i][1] + (rutt[Math.min(i + 1, v.length)][1] - rutt[i][1]) * q, z = fartZon(v[i]), [a, b] = proj(x, y, 2.5);
         const glod = g.createRadialGradient(a, b, 0, a, b, 16); glod.addColorStop(0, F[z[1]]); glod.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = glod; g.globalAlpha = .7; g.beginPath(); g.arc(a, b, 16, 0, 6.283); g.fill(); g.globalAlpha = 1;
         g.beginPath(); g.arc(a, b, 5, 0, 6.283); g.fillStyle = '#fff'; g.fill(); g.lineWidth = 3; g.strokeStyle = F[z[1]]; g.stroke();
         spel.info && (spel.info.innerHTML = `<b class="tal">${fmt(sp * l.km, 1)}</b><small>km</small><span class="lp-zon" data-z="${z[1]}">${z[2]} · ${fmt(v[i], 1)} km/h</span>`);
@@ -1546,7 +1595,7 @@
     }
     if (lugn) { cam.tilt = .98; cam.yaw = -.12; rita(performance.now()); } else raf = requestAnimationFrame(steg);
     const ro = new ResizeObserver(() => { storlek(); if (lugn) rita(performance.now()); }); ro.observe(cv);
-    return { spela(knapp, info) { spel = { t0: performance.now(), T: lugn ? 1 : 8000, knapp, info }; if (knapp) knapp.innerHTML = `${ik('klocka')}Spelar upp …`; if (lugn) { spel.t0 -= 1; rita(performance.now()); } else if (!raf) raf = requestAnimationFrame(steg); },
+    return { spela(knapp, info) { spel = { t0: performance.now(), T: lugn ? 1 : 9000, knapp, info, passerat: new Set() }; if (knapp) knapp.innerHTML = `${ik('klocka')}Spelar upp …`; if (lugn) { spel.t0 -= 1; rita(performance.now()); } else if (!raf) raf = requestAnimationFrame(steg); },
       stopp() { cancelAnimationFrame(raf); ro.disconnect(); } };
   }
   let karta3dNu = null;
@@ -1737,6 +1786,8 @@
     'lopp-flik': (b) => { if (b.getAttribute('aria-pressed') === 'true') return; const g = b.parentElement; $$('button', g).forEach((x) => x.setAttribute('aria-pressed', x === b)); segmentMarkor(g);
       cancelAnimationFrame(spokRaf); const inne = $('.lp-inne', arkLager); if (inne) inne.dataset.gar = ''; clearTimeout(G['lopp-flik'].t); G['lopp-flik'].t = setTimeout(() => loppArk(b.dataset.v, { bara: true }), lugn ? 0 : 180); },
     'lopp-spela': (b) => { if (karta3dNu) return karta3dNu.spela(b, $('[data-lp-live]', arkLager)); const svg = $('.lp-kartram .lp-karta', arkLager); if (svg) spelaRunda(svg, exempelRunda(loppNu()), loppNu(), b); },
+    'bel-nollstall': () => { const s0 = loppSt(); if (s0.upplast) delete s0.upplast[loppNu().id]; spara(); loppArk('karta', { bara: true }); toast('Belöningarna är låsta igen – spela upp rundan'); },
+    'bel-kod': (b) => { const k = b.dataset.kod; try { navigator.clipboard?.writeText(k); } catch (err) { /* ingen urklippstavla */ } b.classList.add('kopierad'); setTimeout(() => b.classList.remove('kopierad'), 1200); toast(`Koden ${k} är kopierad`); },
     'lopp-garmin': () => toast('Kopplingen till klockan öppnas i nästa version'),
     'lopp-val': (b) => { const l = LOPP.find((x) => x.id === b.dataset.v); if (!l) return; const s0 = loppSt(); s0.id = l.id; s0.mal = Math.round(l.km * (elit() ? 260 : 330) / 60) * 60; spara();
       loppArk('karta'); toast(`${l.namn} är ditt lopp`); if (flik === 'idag') setTimeout(() => { const k = $('.lp-kort', nu); if (k) { k.outerHTML = loppKort(4); const ny = $('.lp-kort', nu); ny.classList.remove('in'); const x = $('.lp-karta', ny); if (x) fargaRunda(x, exempelRunda(l)); } }, 400); },
