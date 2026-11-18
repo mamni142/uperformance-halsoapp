@@ -65,3 +65,12 @@ body[data-tema="imaginecare"] .valkommen .bana { opacity: .5; }
   background: rgba(255, 255, 255, .92); box-shadow: 0 8px 20px -12px rgba(0, 0, 0, .45), inset 0 1px 0 #fff; animation: ic-pill-in .7s cubic-bezier(.2, 1.3, .35, 1) .1s both; }
 @keyframes ic-pill-in { from { opacity: 0; transform: translateY(6px) scale(.94); } }
 @media (prefers-reduced-motion: reduce) { .ic-huvud-logga { animation: none; } }
+
+/* Loggbrickan på Idag i alla tre versionerna (2026-11-19, användaren: "alla 3 sidor ska ha samma") – imaginecare2.css laddas för alla teman */
+.ic-huvud-logga { box-sizing: content-box; display: block; width: 116px; height: auto; padding: 6px 12px 6px 8px; margin: 0 0 12px; border-radius: 999px;
+  background: rgba(255, 255, 255, .92); box-shadow: 0 8px 20px -12px rgba(0, 0, 0, .45), inset 0 1px 0 #fff; animation: ic-pill-in .7s cubic-bezier(.2, 1.3, .35, 1) .1s both; }
+.ls-huvud-logga { width: 92px !important; padding: 4px 12px 4px 6px !important; }
+.up-huvud-logga { width: 104px !important; height: 32px; padding: 4px 12px !important; color: #183653; } .up-huvud-logga svg { display: block; width: 100%; height: 100%; }
+.ls-s-logga { width: min(230px, 60vw) !important; }
+.ls-marke-logga img { width: 130px !important; }
+.ls-marke-logga small { color: #ffcd00 !important; }

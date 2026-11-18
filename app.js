@@ -228,7 +228,7 @@
         <svg viewBox="0 0 396 396"><path class="splash-spar" d="M198,10c103.9,0,188,84,188,187.5s-84.1,187.5-188,187.5S10,301,10,197.5,94.1,10,198,10Z"/><path class="splash-ring" d="M198,10c103.9,0,188,84,188,187.5s-84.1,187.5-188,187.5S10,301,10,197.5,94.1,10,198,10Z"/>
         ${LANDS ? flingaSvg() : ''}${ICARE ? '<g class="ic-splash"><circle class="ic-s-fyll" cx="198" cy="197.5" r="150"/><path class="ic-s-puls" pathLength="1" d="M-30 198H96l14-30 18 74 22-128 22 112 12-28h14"/><rect class="ic-s-i" x="185" y="122" width="26" height="152" rx="13"/><circle class="ic-s-ring2" cx="198" cy="197.5" r="150"/></g>' : ''}<path class="splash-u${LANDS || ICARE ? ' ls-dold' : ''}" d="M177.5,127.8v88.6c0,7.3,1.6,13,4.7,17.3,3.3,4.1,8.4,6.2,15.5,6.2s12.4-2.1,15.8-6.2c3.4-4.3,5.1-10.1,5.1-17.3v-88.6h49.1v88.6c0,14.9-3.1,27.8-9.3,38.4-6.2,10.5-14.7,18.4-25.5,23.8-10.8,5.3-22.9,8-36.2,8s-25.2-2.7-35.5-8c-10.2-5.3-18.2-13.2-24-23.8-5.8-10.5-8.7-23.3-8.7-38.4v-88.6h49.1-.1Z"/></svg>
       </div>
-      <div class="splash-ord">${ICARE ? '<img class="ic-s-ord" src="partner/imaginecare/imaginecare-ord.svg" alt="ImagineCare">' : LANDS ? '<b class="ls-ordmarke" aria-label="Längdlandslaget">Längdlandslaget</b>' : '<svg viewBox="440 140 840 120" class="ordmarke" aria-label="Uperformance"><use href="#logo" width="1274.2" height="395"/></svg>'}<p>${(LANDS || ICARE ? 'Koncept av Uperformance' : 'Hälsa med elitstandard').split('').map((t, i) => `<span style="--k:${i}">${t === ' ' ? '&nbsp;' : t}</span>`).join('')}</p></div>
+      <div class="splash-ord">${ICARE ? '<img class="ic-s-ord" src="partner/imaginecare/imaginecare-ord.svg" alt="ImagineCare">' : LANDS ? '<img class="ic-s-ord ls-s-logga" src="partner/ssf/ssf-vit.svg" alt="Svenska Skidförbundet">' : '<svg viewBox="440 140 840 120" class="ordmarke" aria-label="Uperformance"><use href="#logo" width="1274.2" height="395"/></svg>'}<p>${(LANDS || ICARE ? 'Koncept av Uperformance' : 'Hälsa med elitstandard').split('').map((t, i) => `<span style="--k:${i}">${t === ' ' ? '&nbsp;' : t}</span>`).join('')}</p></div>
       <div class="intro-laddar" aria-hidden="true"><i></i></div>`, { in: 'tona', klass: 'splash' });
     kroppStart(); // nätet byggs medan loggan ritas
     introTakt(el);
@@ -277,7 +277,7 @@
   }
   function valkommen({ fore = false } = {}) {
     document.body.dataset.niva = ICARE ? 'motionar' : 'elit';
-    return visa(`<div class="valkommen-topp in" style="--i:0">${ICARE ? '<span class="marke ic-marke"><img src="partner/imaginecare/imaginecare.svg" alt="ImagineCare"><small>Koncept av Uperformance</small></span>' : LANDS ? '<span class="marke ls-marke"><b>LÄNGDLANDSLAGET</b><small>Koncept av Uperformance</small></span>' : '<span class="marke"><svg viewBox="0 0 1274.2 395" aria-label="Uperformance"><use href="#logo"/></svg></span>'}<span class="exempel">${LANDS || ICARE ? 'Koncept' : 'Prototyp'}</span></div>
+    return visa(`<div class="valkommen-topp in" style="--i:0">${ICARE ? '<span class="marke ic-marke"><img src="partner/imaginecare/imaginecare.svg" alt="ImagineCare"><small>Koncept av Uperformance</small></span>' : LANDS ? '<span class="marke ic-marke ls-marke-logga"><img src="partner/ssf/ssf-vit.svg" alt="Svenska Skidförbundet"><small>Koncept av Uperformance</small></span>' : '<span class="marke"><svg viewBox="0 0 1274.2 395" aria-label="Uperformance"><use href="#logo"/></svg></span>'}<span class="exempel">${LANDS || ICARE ? 'Koncept' : 'Prototyp'}</span></div>
       <div class="valkommen-kropp"><div class="bana" aria-hidden="true"></div>
         ${(ICARE ? [['hjarta', 'Blodtryck'], ['matt', 'Vikt'], ['droppe', 'Blodsocker'], ['leende', 'Mående']] : [['rorlighet', 'Rörlighet'], ['hantel', 'Styrka'], ['balans', 'Balans'], ['hjarta', 'Kondition']]).map(([i, t], n) => `<span class="bana-chip" style="--i:${n}">${ik(i)}${t}</span>`).join('')}
         <div data-kropp-plats></div></div>
@@ -622,7 +622,7 @@
     const R = 25, L = 2 * Math.PI * R;
     const hm = himmelLage();
     return `<header class="valkomst in" style="--i:0">${LANDS ? lsHero() : himmelHtml()}
-      <div class="valkomst-text">
+      <div class="valkomst-text">${ICARE ? '<img class="ic-huvud-logga" src="partner/imaginecare/imaginecare.svg" alt="ImagineCare">' : LANDS ? '<img class="ic-huvud-logga ls-huvud-logga" src="partner/ssf/ssf-bla.svg" alt="Svenska Skidförbundet">' : '<span class="ic-huvud-logga up-huvud-logga"><svg viewBox="0 0 1274.2 395" aria-label="Uperformance"><use href="#logo" width="1274.2" height="395"/></svg></span>'}
         <span class="ios-datum">${ik(natt || h >= 17 ? 'mane' : 'sol')}${e(datumText())}${hm.halsning ? ` · ${e(hm.halsning)}` : ''}</span>
         <h1 class="ios-titel"><span class="ios-titel-text">${e(hej)}, ${e(visNamn())}</span></h1>
         <p class="ios-under">${e(rad)}</p>
@@ -800,7 +800,7 @@
     const tile = (t, nyckel) => { const m = icSenast(t), f = icFlagga(m), def = IC_TYP[t];
       return `<button class="ic-varde tryck" data-g="ic-mat" data-v="${t}" ${f ? `data-flagga="${f[0]}"` : ''}><span class="ic-varde-topp">${ik(def.ikon)}<span>${def.namn}</span></span><b class="tal">${icVarde(m)}<small> ${def.enhet}</small></b>${icSpark(t, nyckel)}<small class="ic-varde-fot">${f ? `${ik('varning')}${f[1]}` : e(icDag(m))}</small></button>`; };
     const sista = (st.icChatt || IC_CHATT0)[(st.icChatt || IC_CHATT0).length - 1];
-    return `<div class="idag-vy ic-vy">${idagTopp().replace('<div class="valkomst-text">', '<div class="valkomst-text"><img class="ic-huvud-logga" src="partner/imaginecare/imaginecare.svg" alt="ImagineCare">')}${veckoRemsa()}
+    return `<div class="idag-vy ic-vy">${idagTopp()}${veckoRemsa()}
       <section class="kort ic-insikt in" style="--i:1"><span class="ic-insikt-ikon">${ik('gnista')}</span><div><span class="ogon utan">En insikt för dagen</span><p>${e(ins)}</p></div></section>
       <section class="kort ic-aktiviteter in" style="--i:2"><div class="kort-rubrik"><div><span class="ogon utan">${dist ? 'Distansmonitorering' : 'Egenmonitorering'}</span><h3 style="margin-top:4px">Mina aktiviteter</h3></div><span class="chip">${akt.filter(([t]) => gjort(t)).length} av ${akt.length}</span></div>
         <div class="ic-akt-lista">${akt.map(rad).join('')}</div></section>
@@ -1100,60 +1100,79 @@
   // Screening, version 2: testdagen med nedräkning och förberedelser, resan, förscreeningen, stationerna, normvärden, grundformen, medicinskt.
   const FORBERED = [['somn', 'Sov ordentligt natten innan', 'mane'], ['mat', 'Ät lätt 2 timmar innan', 'droppe'], ['klader', 'Ta med träningskläder och skor', 'sko'], ['vila', 'Ingen hård träning dagen innan', 'hjarta']];
   const FRAGOR = [['Hälsohistorik', 4, 4], ['Läkemedel och allergier', 2, 2], ['Träning och vardag', 3, 3], ['Smärta och skador', 0, 2], ['Sömn och stress', 0, 1]];
+  const SC = () => LANDS ? {
+    titel: 'Tester', ogon: 'Ditt fystest', tid: '08:00', langd: 'ca 3 h', plats: 'Plats meddelas', stnRubrik: 'Testdagens stationer', stnUnder: 'Tre stationer i tur och ordning',
+    forbered: [['somn', 'Sov åtta timmar natten innan', 'mane'], ['mat', 'Lätt frukost tre timmar före testet', 'droppe'], ['klader', 'Ta med löparskor och tights', 'sko'], ['vila', 'Bara lugn distans dagen innan', 'skidor']],
+    stn: [['A', 'Medicinska tester', ['EKG', 'Blod', 'Spirometri'], 'puls', 'is', '30 min'], ['B', 'Laktattröskel', ['Stegtest på rullskidor', 'Laktat'], 'skidor', 'ok', '50 min'], ['C', 'Maxtester', ['VO₂max', 'Stakergometer'], 'blixt', 'gul', '40 min']],
+    res: [['VO₂max', elit() ? 88 : 70, 'lunga'], ['Laktattröskel', elit() ? 82 : 64, 'puls'], ['Stakstyrka', 74, 'hantel'], ['Rörlighet höft', 58, 'rorlighet']],
+    resa: [['Förscreening', 'Klar', 'klar', 'dokument'], ['Fystest', 'Om 14 dagar', 'nu', 'kalender'], ['Testrapport', 'Med tränaren', '', 'screen'], ['Säsongsplan', 'Zoner och pass', '', 'trend']],
+    form: 'Förscreening', paket: false, norm: true, trappa: true
+  } : ICARE ? {
+    titel: 'Min vård', ogon: 'Avstämning med vården', tid: '10:00', langd: 'ca 20 min', plats: 'Videosamtal', stnRubrik: 'Avstämningens delar', stnUnder: 'Det ni går igenom tillsammans',
+    forbered: [['somn', 'Mät blodtrycket morgon och kväll', 'hjarta'], ['mat', 'Väg dig på morgonen innan frukost', 'matt'], ['klader', 'Ha läkemedelslistan framme', 'dokument'], ['vila', 'Skriv ner frågor till vården', 'info']],
+    stn: [['A', 'Dina värden', ['Blodtryck', 'Vikt', 'Blodsocker'], 'trend', 'is', '8 min'], ['B', 'Symtom och mående', ['Frågor om KOL', 'Sömn', 'Mående'], 'leende', 'ok', '6 min'], ['C', 'Plan framåt', ['Läkemedel', 'Mätschema'], 'kalender', 'gul', '6 min']],
+    res: [], resa: [['Inskrivning', 'Klar', 'klar', 'dokument'], ['Mätningar hemma', 'Pågår', 'klar', 'hjarta'], ['Avstämning', 'Om 14 dagar', 'nu', 'kalender'], ['Uppföljning', 'Med vården', '', 'trend']],
+    form: 'Inför avstämningen', paket: false, norm: false, trappa: false
+  } : {
+    titel: 'Screening', ogon: 'Din testdag', tid: '08:30', langd: 'ca 2 h', plats: 'Plats meddelas', stnRubrik: 'Testdagens stationer', stnUnder: 'Tre stationer i tur och ordning', forbered: FORBERED,
+    stn: [['A', 'Medicinska tester', ['EKG', 'Blod', 'Urin', 'Antropometri'], 'puls', 'is', '25 min'], ['B', 'Funktionstester', ['Rörlighet', 'Styrka', 'Balans'], 'rorlighet', 'ok', '40 min'], ['C', 'Fystester', ['Löpning', 'Kondition'], 'sko', 'gul', '30 min']],
+    res: [['Rörlighet höft', 62, 'rorlighet'], ['Greppstyrka', 71, 'hantel'], ['Balans på ett ben', 48, 'balans'], ['Kondition (beräknad)', elit() ? 84 : 66, 'hjarta']],
+    resa: [['Förscreening', 'Klar', 'klar', 'dokument'], ['Testdag', 'Om 14 dagar', 'nu', 'kalender'], ['Rapport', 'Granskas', '', 'screen'], ['Uppföljning', 'Coaching', '', 'trend']],
+    form: 'Förscreening', paket: true, norm: true, trappa: true };
   function vyScreening() {
+    const T = SC(), FORBERED_NU = T.forbered;
     const g = `${konText() === 'alla' ? 'alla' : konText()} ${alderGrupp()}`;
     const testdag = dagar(14), kvar = 14, klaraF = st.forbered || {};
-    const fKlara = FORBERED.filter(([k]) => klaraF[k]).length;
+    const fKlara = FORBERED_NU.filter(([k]) => klaraF[k]).length;
     const fragorKlara = FRAGOR.reduce((s, x) => s + x[1], 0), fragorAlla = FRAGOR.reduce((s, x) => s + x[2], 0);
     const R = 40, L = 2 * Math.PI * R;
-    const STN = [['A', 'Medicinska tester', ['EKG', 'Blod', 'Urin', 'Antropometri'], 'puls', 'is', '25 min'], ['B', 'Funktionstester', ['Rörlighet', 'Styrka', 'Balans'], 'rorlighet', 'ok', '40 min'], ['C', 'Fystester', ['Löpning', 'Kondition'], 'sko', 'gul', '30 min']];
-    const RES = [['Rörlighet höft', 62, 'rorlighet'], ['Greppstyrka', 71, 'hantel'], ['Balans på ett ben', 48, 'balans'], ['Kondition (beräknad)', elit() ? 84 : 66, 'hjarta']];
+    const STN = T.stn, RES = T.res;
     const TRAPPA = [['Rörlighet', 'grund för teknik', .72], ['Styrka', 'grund för säker träning', .78], ['Koordination', 'grund för funktionella rörelser', .6], ['Aerob bas', 'återhämtning och spelintelligens', .7],
       ['Uthållighet', 'mjölksyratålighet', .55], ['Snabbhet', 'kräver rörlighet, styrka, koordination', .5], ['Agility / plyometri', 'kräver allt ovan + snabbhet', .42]];
     const steg = elit() ? TRAPPA : TRAPPA.slice(0, 4);
-    const RESA = [['Förscreening', 'Klar', 'klar', 'dokument'], ['Testdag', 'Om 14 dagar', 'nu', 'kalender'], ['Rapport', 'Granskas', '', 'screen'], ['Uppföljning', 'Coaching', '', 'trend']];
+    const RESA = T.resa;
     const datum = testdag.toLocaleDateString('sv-SE', { weekday: 'long', day: 'numeric', month: 'long' }).replace(/^./, (x) => x.toUpperCase());
-    return `${topp('Screening')}
+    return `${topp(T.titel)}
       <section class="sc-hjalte in" style="--i:1"><span class="sc-sken" aria-hidden="true"></span>
         <div class="sc-rad"><div class="ring sc-ring"><svg viewBox="0 0 96 96"><circle class="spar" cx="48" cy="48" r="${R}" stroke-width="8"/><circle class="bage" cx="48" cy="48" r="${R}" stroke-width="8" style="stroke-dasharray:${L};stroke-dashoffset:${L * (kvar / 30)}"/></svg>
             <div class="varde"><b class="tal" data-rakna="${kvar}">0</b><small>dagar</small></div></div>
-          <div class="sc-text"><span class="ogon">Din testdag</span><h2>${e(datum)}</h2></div></div><div class="sc-meta"><span>${ik('klocka')}08:30</span><span>${ik('timglas')}ca 2 h</span><span>${ik('plats')}Plats meddelas</span></div>
+          <div class="sc-text"><span class="ogon">${T.ogon}</span><h2>${e(datum)}</h2></div></div><div class="sc-meta"><span>${ik('klocka')}${T.tid}</span><span>${ik('timglas')}${T.langd}</span><span>${ik(ICARE ? 'team' : 'plats')}${T.plats}</span></div>
         <div class="sc-knappar"><button class="knapp knapp-primar" data-g="kalender-fil">${ik('kalender')}Lägg i kalendern</button><button class="knapp knapp-sek" data-g="boka-om">Boka om</button></div>
-        <div class="sc-forbered"><div class="rad" style="justify-content:space-between"><b>Förbered dig</b><span class="liten tal">${fKlara}/${FORBERED.length}</span></div>
-          <div class="matare" style="margin:8px 0 4px"><i style="--v:${fKlara / FORBERED.length * 100}%"></i></div>
-          ${FORBERED.map(([k, t, i]) => `<button class="bock-rad" data-g="forbered" data-k="${k}" aria-pressed="${!!klaraF[k]}"><span class="bock-ruta">${ik('bock')}</span>${ik(i)}<span>${t}</span></button>`).join('')}</div>
+        <div class="sc-forbered"><div class="rad" style="justify-content:space-between"><b>Förbered dig</b><span class="liten tal">${fKlara}/${FORBERED_NU.length}</span></div>
+          <div class="matare" style="margin:8px 0 4px"><i style="--v:${fKlara / FORBERED_NU.length * 100}%"></i></div>
+          ${FORBERED_NU.map(([k, t, i]) => `<button class="bock-rad" data-g="forbered" data-k="${k}" aria-pressed="${!!klaraF[k]}"><span class="bock-ruta">${ik('bock')}</span>${ik(i)}<span>${t}</span></button>`).join('')}</div>
       </section>
 
       <div class="sektion-rubrik in" style="--i:2"><h3>Din resa</h3><span class="liten">Steg 2 av 4</span></div>
       <div class="sc-resa in" style="--i:2"><span class="sc-resa-linje" aria-hidden="true"><i></i></span>${RESA.map(([t, u, l, i]) => `<div class="sc-steg" data-lage="${l}"><span class="sc-steg-prick">${ik(l === 'klar' ? 'bock' : i)}</span><b>${t}</b><small>${u}</small></div>`).join('')}</div>
 
       <button class="kort sc-formular tryck in" style="--i:3" data-g="formular"><div class="ring" data-ring="${Math.round(fragorKlara / fragorAlla * 100)}" style="width:62px;height:62px"><svg viewBox="0 0 120 120"><circle class="spar" cx="60" cy="60" r="50" stroke-width="12"/><circle class="bage" cx="60" cy="60" r="50" stroke-width="12"/></svg><div class="varde"><b class="tal" style="font-size:1rem">${fragorKlara}/${fragorAlla}</b></div></div>
-        <div><span class="ogon utan">Förscreening</span><b>Hälsoformuläret</b><small>${fragorAlla - fragorKlara} frågor kvar · ca 3 min · sparas automatiskt</small></div>${ik('hoger')}</button>
+        <div><span class="ogon utan">${T.form}</span><b>${ICARE ? 'Frågor före samtalet' : 'Hälsoformuläret'}</b><small>${fragorAlla - fragorKlara} frågor kvar · ca 3 min · sparas automatiskt</small></div>${ik('hoger')}</button>
 
-      <div class="sektion-rubrik in" style="--i:4"><div><h3>Testdagens stationer</h3><span class="liten">Tre stationer i tur och ordning</span></div><span class="liten tal">Ca 95 min</span></div>
+      <div class="sektion-rubrik in" style="--i:4"><div><h3>${T.stnRubrik}</h3><span class="liten">${T.stnUnder}</span></div><span class="liten tal">Ca ${STN.reduce((x, y) => x + parseInt(y[5], 10), 0)} min</span></div>
       <div class="kort sc-schema in" style="--i:4">${(() => { const tot = STN.reduce((x, y) => x + parseInt(y[5], 10), 0); let t0 = 8 * 60 + 30; const kl = (m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
         return `<div class="sc-tidslinje" aria-hidden="true">${STN.map(([b, , , , ton, tid]) => `<i data-ton="${ton}" style="--w:${parseInt(tid, 10) / tot}"><b>${b}</b></i>`).join('')}</div>
         <ol class="sc-stationer">${STN.map(([b, t, delar, i, ton, tid]) => { const fran = t0; t0 += parseInt(tid, 10);
           return `<li class="sc-station" data-ton="${ton}"><span class="sc-tid tal">${kl(fran)}</span><span class="sc-bokstav">${b}</span>
           <div class="sc-station-text"><div class="sc-station-topp"><h4>${t}</h4><span class="sc-langd tal">${tid}</span></div><div class="sc-delar">${delar.map((d) => `<span>${d}</span>`).join('')}</div>${b === 'A' ? `<small class="sc-las">${ik('las')}Svaren ser bara medicinsk personal</small>` : ''}</div></li>`; }).join('')}
-          <li class="sc-station sc-slut"><span class="sc-tid tal">${kl(t0)}</span><span class="sc-bokstav">${ik('bock')}</span><div class="sc-station-text"><h4>Klart för dagen</h4><small>Rapporten granskas innan du får den</small></div></li></ol>`; })()}</div>
+          <li class="sc-station sc-slut"><span class="sc-tid tal">${kl(t0)}</span><span class="sc-bokstav">${ik('bock')}</span><div class="sc-station-text"><h4>${ICARE ? 'Klart – vården skriver en plan' : 'Klart för dagen'}</h4><small>${ICARE ? 'Planen syns i appen efter samtalet' : LANDS ? 'Testrapporten går igenom med tränaren' : 'Rapporten granskas innan du får den'}</small></div></li></ol>`; })()}</div>
 
-      <div class="sektion-rubrik in" style="--i:5"><div><h3>Jämfört med normvärden</h3><span class="liten">${e(g)} · förra testet</span></div><span class="exempel">Exempel</span></div>
+      ${T.norm ? `<div class="sektion-rubrik in" style="--i:5"><div><h3>Jämfört med normvärden</h3><span class="liten">${e(g)} · förra testet</span></div><span class="exempel">Exempel</span></div>
       <div class="kort sc-norm in" style="--i:5"><div class="sc-norm-legend" aria-hidden="true"><span><i class="lg-band"></i>Normalt intervall</span><span><i class="lg-prick"></i>Ditt värde</span></div>${(() => { const o = RES.slice().sort((x, y) => y[1] - x[1]); return insiktHtml(`Starkast: ${o[0][0].toLowerCase()} (${o[0][1]} %) · lägst: ${o[o.length - 1][0].toLowerCase()} (${o[o.length - 1][1]} %)`, 'trend', 'sc-insikt'); })()}${RES.map(([t, v, i]) => `<div class="norm-rad"><span class="ikonruta" style="width:34px;height:34px;border-radius:11px">${ik(i)}</span><div class="norm-mitt"><div class="rad" style="justify-content:space-between"><b>${t}</b><span class="norm-tal tal" data-ton="${v >= 60 ? 'ok' : v >= 40 ? 'is' : 'gul'}">${v}</span></div>
-        <div class="norm-skala"><span class="norm-band" aria-hidden="true"></span><i style="--v:${v}%"></i></div><small>Bättre än ${v} % av ${e(g)}</small></div></div>`).join('')}</div>
+        <div class="norm-skala"><span class="norm-band" aria-hidden="true"></span><i style="--v:${v}%"></i></div><small>Bättre än ${v} % av ${e(g)}</small></div></div>`).join('')}</div>` : ''}
 
-      <div class="sektion-rubrik in" style="--i:6"><div><h3>${elit() ? 'Atletiska förmågor' : 'Din grundform'}</h3><span class="liten">Bygg nerifrån – grunden först</span></div></div>
-      <div class="kort sc-trappa-kort in" style="--i:6"><div class="trappa">${steg.slice().reverse().map(([t, u, s], k, a) => `<div class="trappsteg" style="--n:${a.length - 1 - k};--s:${s}"><em class="tal">${a.length - k}</em><div class="trapp-text"><b>${t}</b><small>${u}</small><span class="trapp-matare" aria-hidden="true"><i></i></span></div><strong class="tal">${Math.round(s * 100)}</strong></div>`).join('')}</div></div>
+      ${T.trappa ? `<div class="sektion-rubrik in" style="--i:6"><div><h3>${elit() ? 'Atletiska förmågor' : 'Din grundform'}</h3><span class="liten">Bygg nerifrån – grunden först</span></div></div>
+      <div class="kort sc-trappa-kort in" style="--i:6"><div class="trappa">${steg.slice().reverse().map(([t, u, s], k, a) => `<div class="trappsteg" style="--n:${a.length - 1 - k};--s:${s}"><em class="tal">${a.length - k}</em><div class="trapp-text"><b>${t}</b><small>${u}</small><span class="trapp-matare" aria-hidden="true"><i></i></span></div><strong class="tal">${Math.round(s * 100)}</strong></div>`).join('')}</div></div>` : ''}
 
       <div class="sektion-rubrik in" style="--i:7"><h3>Medicinska värden</h3><span class="chip">${ik('las')}Skyddat</span></div>
       <div class="kort sc-med in" style="--i:7"><div class="sc-med-sudd" aria-hidden="true">${['EKG', 'Spirometri', 'Blodprov', 'Blodtryck'].map((t) => `<div><b>${t}</b><span></span></div>`).join('')}</div>
         <div class="sc-med-las">${ik('las')}<b>Visas efter läkarens granskning</b><small>Ett normalt värde bevisar inte att man är frisk och ett avvikande värde är ingen diagnos.</small></div></div>
 
-      <div class="kort in" style="--i:8;margin-top:12px"><div class="kort-rubrik"><h3>Ditt paket</h3><span class="liten">${elit() ? 'Med uppföljning online' : 'Hälsokartläggning'}</span></div>
+      ${T.paket ? `<div class="kort in" style="--i:8;margin-top:12px"><div class="kort-rubrik"><h3>Ditt paket</h3><span class="liten">${elit() ? 'Med uppföljning online' : 'Hälsokartläggning'}</span></div>
         <div class="pk-rad" role="group" aria-label="Paket">${[['bas', 'Bas', 'Riskprofil', 0], ['plus', 'Bas+', 'Fördjupad', 1], ['plusplus', 'Bas++', 'Mest komplett', 2]].map(([k, t, u, n]) => `<button type="button" class="pk" data-g="paket" data-v="${k}" data-steg="${n}" aria-pressed="${(st.paket || (elit() ? 'plusplus' : 'bas')) === k}">
           ${n ? '<span class="pk-ram" aria-hidden="true"><i></i></span>' : ''}<span class="pk-sken" aria-hidden="true"></span>${n === 2 ? '<em class="pk-premium">Premium</em>' : ''}
           <b class="pk-namn">${t.replace(/(\+\+?)$/, '<span class="pk-plus">$1</span>')}</b><small>${u}</small><span class="pk-bock" aria-hidden="true">${ik('bock')}</span></button>`).join('')}</div>
-        <div class="notis" style="margin-top:12px">${ik('info')}<span>Rapporten skapas automatiskt av dina svar och testvärden, kontrolleras av specialist och är ingen diagnos – vi hänvisar vidare när något behöver följas upp.</span></div></div>
+        <div class="notis" style="margin-top:12px">${ik('info')}<span>Rapporten skapas automatiskt av dina svar och testvärden, kontrolleras av specialist och är ingen diagnos – vi hänvisar vidare när något behöver följas upp.</span></div></div>` : ''}
       <p class="exempel in" style="--i:9;margin-top:16px">Exempeldata i prototypen</p>`;
   }
   function formularArk() {
@@ -1216,7 +1235,7 @@
         <div class="jg-id">
           <div class="jg-avatar"><span class="jg-avatar-ring" aria-hidden="true"></span><span class="jg-avatar-bild">${bok}</span><span class="jg-avatar-niva">${ik(elit() ? 'blixt' : 'sol')}</span></div>
           <h2>${e(visNamn())}</h2>
-          <p class="jg-meta"><span>Medlem sedan ${e(medlem)}</span><i aria-hidden="true"></i><span>${elit() ? 'Elit' : 'Motionär'}</span></p>
+          <p class="jg-meta"><span>Medlem sedan ${e(medlem)}</span><i aria-hidden="true"></i><span>${ICARE ? (elit() ? 'Distansmonitorering' : 'Egenmonitorering') : elit() ? 'Elit' : 'Motionär'}</span></p>
         </div>
         <div class="jg-poang">
           <div class="jg-matare">${ring(hp, `<b class="tal" data-rakna="${hp}">0</b><small>poäng</small>`, 'jg-poang-ring')}<svg class="jg-streck" viewBox="0 0 120 120" aria-hidden="true">${streck}</svg></div>
@@ -1247,7 +1266,7 @@
         : `<button class="kort jg-mal jg-mal-tom" data-g="mal-ark"><span class="ikonruta">${ik('mal')}</span><div class="jg-mal-text"><b>Välj ett mål</b><small>Appen lägger upp veckan efter det</small></div>${ik('hoger')}</button>`}</div>
 
       ${rub(3, 'Upplägg', '<span class="jg-dampad">Byter design direkt</span>')}
-      <div class="jg-upplagg in" style="--i:4">${[['motionar', 'Motionär', 'Ljust och lugnt'], ['elit', 'Elit', 'Mörkt och datatätt']].map(([v, t, u]) => `<button class="jg-lage" data-g="byt-niva" data-v="${v}" aria-pressed="${niva() === v}" data-tilt>
+      <div class="jg-upplagg in" style="--i:4">${(ICARE ? [['motionar', 'Egenmonitorering', 'Mät hemma'], ['elit', 'Distansmonitorering', 'Vård i hemmet']] : [['motionar', 'Motionär', 'Ljust och lugnt'], ['elit', 'Elit', 'Mörkt och datatätt']]).map(([v, t, u]) => `<button class="jg-lage" data-g="byt-niva" data-v="${v}" aria-pressed="${niva() === v}" data-tilt>
         <span class="jg-mini jg-mini-${v}" aria-hidden="true"><i class="m-topp"></i><i class="m-ring"></i><i class="m-rad"></i><i class="m-rad m-kort"></i><i class="m-ruta"></i><i class="m-ruta"></i><i class="m-flik"></i></span>
         <span class="jg-lage-text"><b>${t}</b><small>${u}</small></span><span class="jg-lage-bock">${ik('bock')}</span></button>`).join('')}</div>
 
@@ -1265,7 +1284,7 @@
       <div class="jg-kopplingar in" style="--i:6">${[['hjarta', 'Apple Hälsa', st.halsa?.kopplad ? 'Kopplad · exempeldata' : 'Steg, puls, sömn, pass'], ['klocka', 'Klockor', 'Watch, Garmin, Polar'], ['matt', 'Våg', 'Vikt via Hälsa']].map(([i, t, u], n) => `<button class="jg-koppling tryck" data-g="verktyg" data-v="halsa" style="--n:${n}"><span class="ikonruta" data-ton="${n ? 'is' : 'rod'}">${ik(i)}</span><b>${t}</b><small>${u}</small></button>`).join('')}</div>
 
       ${rub(6, 'Ditt team')}
-      <div class="kort jg-team in" style="--i:7">${LANDS ? '<span class="profilbild">MT</span><div><b>Medicinska teamet</b><small>Landslagets stab · exempel</small></div>' : '<span class="profilbild">DR</span><div><b>Dale Reese</b><small>Testansvarig · Uperformance</small></div>'}<span class="chip" data-ton="ok"><i class="online"></i>Ditt team</span></div>
+      <div class="kort jg-team in" style="--i:7">${ICARE ? '<span class="profilbild ic-sk">SK</span><div><b>Sjuksköterska Karin</b><small>Din vårdkontakt · exempel</small></div>' : LANDS ? '<span class="profilbild">MT</span><div><b>Medicinska teamet</b><small>Landslagets stab · exempel</small></div>' : '<span class="profilbild">DR</span><div><b>Dale Reese</b><small>Testansvarig · Uperformance</small></div>'}<span class="chip" data-ton="ok"><i class="online"></i>Ditt team</span></div>
 
       ${rub(7, 'Inställningar')}
       <div class="jg-inst in" style="--i:8">${inst.map(([k, i, t, h, ton]) => `<button class="jg-inst-rad" data-g="${k === 'notiser' ? 'notiser' : k === 'coach' ? 'coach-ark' : k === 'schema' ? 'ts-schema' : 'jag-inst'}" data-k="${k}" ${k === 'notiser' ? `role="switch" aria-checked="${st.notiser !== false}"` : ''}><span class="ikonruta" data-ton="${ton}">${ik(i)}</span><b>${t}</b>${h}</button>`).join('')}</div>
@@ -2171,8 +2190,8 @@
       toast(`${namn}: ${pass.length ? pass.map((x) => `${x.typ} ${x.min} min`).join(', ') : 'vilodag'}${ci ? ` · dagsform ${dagsform(ci)}` : ''}`); },
     forbered: (b) => { st.forbered = st.forbered || {}; st.forbered[b.dataset.k] = !st.forbered[b.dataset.k]; b.setAttribute('aria-pressed', st.forbered[b.dataset.k]); spara(); summa();
       const n = FORBERED.filter(([k]) => st.forbered[k]).length, sek = b.closest('.sc-forbered'); $('.tal', sek).textContent = `${n}/${FORBERED.length}`; $('.matare i', sek).style.setProperty('--v', `${n / FORBERED.length * 100}%`);
-      if (n === FORBERED.length) { const r0 = b.getBoundingClientRect(); konfetti(`${r0.left + r0.width / 2}px`, `${r0.top}px`); toast('Du är redo för testdagen'); } },
-    'kalender-fil': () => { const d = dagar(14), ds = dagStr(d).replace(/-/g, ''); const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Uperformance//Halsoappen//SV', 'BEGIN:VEVENT', `UID:testdag-${ds}@uperformance`, `DTSTART:${ds}T083000`, `DTEND:${ds}T103000`, 'SUMMARY:Testdag – Uperformance', 'DESCRIPTION:Stationerna A–C. Plats meddelas.', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+      if (n === FORBERED.length) { const r0 = b.getBoundingClientRect(); konfetti(`${r0.left + r0.width / 2}px`, `${r0.top}px`); toast(ICARE ? 'Du är redo för avstämningen' : LANDS ? 'Du är redo för fystestet' : 'Du är redo för testdagen'); } },
+    'kalender-fil': () => { const d = dagar(14), ds = dagStr(d).replace(/-/g, ''); const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Uperformance//Halsoappen//SV', 'BEGIN:VEVENT', `UID:testdag-${ds}@uperformance`, `DTSTART:${ds}T083000`, `DTEND:${ds}T103000`, ICARE ? 'SUMMARY:Avstämning med vården (exempel)' : LANDS ? 'SUMMARY:Fystest – landslaget (exempel)' : 'SUMMARY:Testdag – Uperformance', ICARE ? 'DESCRIPTION:Videosamtal med din vårdkontakt.' : 'DESCRIPTION:Stationerna A–C. Plats meddelas.', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
       const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = 'testdag-uperformance.ics'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); toast('Testdagen sparas i kalendern'); },
     'boka-om': () => toast('Ombokning öppnas i nästa version'),
     formular: () => formularArk(),
