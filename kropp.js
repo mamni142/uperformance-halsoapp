@@ -928,6 +928,14 @@ void main(){
     float vinkel = atan(vObj.x, vObj.z); bas = mix(vec3(0.07, 0.32, 0.78), vec3(0.13, 0.45, 0.95), 0.5 + 0.5 * sin(vinkel * 70.0)); glans = 0.05;
   } else if (vTyp < 2.5) { // tofsen: luddig gul ull
     float f = hash(floor(vObj * 1400.0)); bas = vec3(1.0, 0.8, 0.05) * (0.78 + 0.3 * f); n = normalize(n + (vec3(hash(vObj * 731.0), hash(vObj * 317.0), hash(vObj * 173.0)) - 0.5) * 0.9); glans = 0.0;
+  } else if (vTyp > 3.5 && vTyp < 4.5) { // tubhalsduk: blå med gula ränder
+    float r2 = fract(vUV.y * 34.0); bas = mix(vec3(0.1, 0.4, 0.9), vec3(1.0, 0.8, 0.05), step(0.72, r2)); bas *= 0.92 + 0.08 * sin(atan(vObj.x, vObj.z) * 60.0); glans = 0.04;
+  } else if (vTyp > 4.5 && vTyp < 5.5) { // handskar: mörka med blå mudd
+    bas = mix(vec3(0.06, 0.08, 0.13), vec3(0.1, 0.4, 0.9), smoothstep(0.035, 0.045, vUV.y)); glans = 0.3; rund = 24.0;
+  } else if (vTyp > 5.5 && vTyp < 6.5) { // stavar: kolfiber, gult handtagsband och korg
+    bas = vUV.y > 0.93 ? vec3(0.05) : vUV.y > 0.86 ? vec3(1.0, 0.8, 0.05) : vec3(0.16, 0.18, 0.22); glans = 0.6; rund = 40.0;
+  } else if (vTyp > 6.5 && vTyp < 7.5) { // skidor: gul ovansida med blå mittrand, mörk kant
+    bas = abs(vUV.x - 0.5) < 0.16 ? vec3(0.08, 0.36, 0.86) : vec3(1.0, 0.8, 0.05); if (n.y < 0.5) bas = vec3(0.08, 0.1, 0.14); glans = 0.5; rund = 36.0;
   } else { // nummerlappen: tryckt tyg med rundade hörn
     vec2 q = abs(vUV - 0.5) * 2.0; vec2 d = max(q - vec2(0.82, 0.78), 0.0); if (q.x > 1.0 || q.y > 1.0 || length(d / vec2(0.18, 0.22)) > 1.0) discard;
     bas = texture2D(uTex, vec2(vUV.x, 1.0 - vUV.y)).rgb; glans = 0.18; rund = 30.0;
@@ -1442,6 +1450,26 @@ void main(){
         for (let i = 0; i <= ST; i++) for (let j = 0; j <= SL; j++) { const th = i / ST * Math.PI, ph = j / SL * Math.PI * 2, nx = Math.sin(th) * Math.cos(ph), ny = Math.cos(th), nz = Math.sin(th) * Math.sin(ph);
           ut.push(T[0] + nx * R0, T[1] + ny * R0, T[2] + nz * R0, nx, ny, nz, 2, 0, 0); }
         for (let i = 0; i < ST; i++) for (let j = 0; j < SL; j++) { const a = bas + i * (SL + 1) + j, b = a + SL + 1; ind.push(a, a + 1, b, a + 1, b + 1, b); }
+        // tubhalsduk runt halsen
+        const iHals = (v) => { const y = D[v * 9 + 1]; return y > topp * 0.805 && y < topp * 0.855 && Math.abs(D[v * 9]) < 0.095; };
+        skal(iHals, () => 4, () => 0.014, (v) => [0, D[v * 9 + 1]]);
+        // handskar: händerna (låga, långt ut åt sidorna)
+        const hand = { v: [0, 0, 0, 0, -9], h: [0, 0, 0, 0, -9] };
+        const iHand = (v) => { const y = D[v * 9 + 1]; return y > topp * 0.4 && y < topp * 0.54 && Math.abs(D[v * 9]) > 0.215; };
+        for (let v = 0; v < nv; v++) if (iHand(v)) { const sd = D[v * 9] > 0 ? 'v' : 'h', h = hand[sd]; h[0] += D[v * 9]; h[1] += D[v * 9 + 1]; h[2] += D[v * 9 + 2]; h[3]++; h[4] = Math.max(h[4], D[v * 9 + 1]); }
+        skal(iHand, () => 5, () => 0.0065, (v) => [0, hand[D[v * 9] > 0 ? 'v' : 'h'][4] - D[v * 9 + 1]]);
+        // cylinder mellan två punkter (stavarna) – v går från 0 (spets) till 1 (handtag)
+        const cyl = (a, b, ra, rb, typ, v0 = 0, v1 = 1, seg = 12) => { const d = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], L = Math.hypot(...d), t = d.map((x) => x / L);
+          const u0 = Math.abs(t[1]) < 0.9 ? [0, 1, 0] : [1, 0, 0], e1 = [t[1] * u0[2] - t[2] * u0[1], t[2] * u0[0] - t[0] * u0[2], t[0] * u0[1] - t[1] * u0[0]], l1 = Math.hypot(...e1); e1[0] /= l1; e1[1] /= l1; e1[2] /= l1;
+          const e2 = [t[1] * e1[2] - t[2] * e1[1], t[2] * e1[0] - t[0] * e1[2], t[0] * e1[1] - t[1] * e1[0]], b0 = ut.length / 9;
+          for (let k = 0; k <= 1; k++) for (let j = 0; j <= seg; j++) { const f = j / seg * Math.PI * 2, n = [0, 1, 2].map((i) => e1[i] * Math.cos(f) + e2[i] * Math.sin(f)), p = k ? b : a, rr = k ? rb : ra;
+            ut.push(p[0] + n[0] * rr, p[1] + n[1] * rr, p[2] + n[2] * rr, n[0], n[1], n[2], typ, 0, k ? v1 : v0); }
+          for (let j = 0; j < seg; j++) { const a0 = b0 + j, a1 = b0 + seg + 1 + j; ind.push(a0, a0 + 1, a1, a0 + 1, a1 + 1, a1); } };
+        for (const sd of ['v', 'h']) { const h = hand[sd]; if (h[3] < 5) continue; const c = [h[0] / h[3], h[1] / h[3], h[2] / h[3]], ut0 = Math.sign(c[0]);
+          const grepp = [c[0], c[1] + 0.075, c[2] + 0.01], spets = [c[0] + ut0 * 0.11, 0.0, c[2] + 0.16];
+          cyl(spets, grepp, 0.006, 0.0085, 6, 0, 0.86, 10); cyl(grepp, [grepp[0], grepp[1] + 0.04, grepp[2]], 0.012, 0.011, 6, 0.93, 1, 10);
+          const k0 = [spets[0] + (grepp[0] - spets[0]) * 0.09, spets[1] + (grepp[1] - spets[1]) * 0.09, spets[2] + (grepp[2] - spets[2]) * 0.09];
+          cyl(k0, [k0[0], k0[1] + 0.008, k0[2]], 0.038, 0.012, 6, 0.95, 0.95, 16); }
         // nummerlappen på bröstet
         const X0 = 0.085, Y0 = topp * 0.655, Y1 = topp * 0.74;
         const iLapp = (v) => { const x = D[v * 9], y = D[v * 9 + 1], z = D[v * 9 + 2]; return Math.abs(x) < X0 + 0.02 && y > Y0 - 0.02 && y < Y1 + 0.02 && z > 0 && D[v * 9 + 5] > 0.3; };

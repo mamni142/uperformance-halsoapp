@@ -859,7 +859,7 @@
           <div class="notis">${ik('info')}<span>Ett normalt värde bevisar inte att man är frisk och ett avvikande värde är ingen diagnos. Medicinsk data hålls skild från din hälsodata.</span></div></div>`;
     }
     return `${topp('Din kropp')}
-      <section class="kv-scen in" style="--i:1" data-lage="${kroppLage}">${LANDS ? `<div class="ls-kv-bg" aria-hidden="true"><i></i><i></i><i></i><span>${Array.from({ length: 16 }, (_, n) => `<b style="--x:${(n * 37 + 7) % 100}%;--t:${7 + (n % 4) * 2}s;--d:${-(n * .9).toFixed(1)}s;--s:${(1.5 + (n % 3) * .8).toFixed(1)}px"></b>`).join('')}</span></div>` : ''}
+      <section class="kv-scen in" style="--i:1" data-lage="${kroppLage}">${LANDS ? `<div class="ls-kv-bg" aria-hidden="true"><i></i><i></i><i></i><span>${Array.from({ length: 16 }, (_, n) => `<b style="--x:${(n * 37 + 7) % 100}%;--t:${7 + (n % 4) * 2}s;--d:${-(n * .9).toFixed(1)}s;--s:${(1.5 + (n % 3) * .8).toFixed(1)}px"></b>`).join('')}</span>${kvLandskap()}</div>` : ''}
         <div class="kv-lage" role="group" aria-label="Visa" style="--n:${KV_LAGEN.indexOf(kroppLage)};--fran:${fran}"><span class="kv-lage-markor" aria-hidden="true"></span>${seg.map(([v, t, i]) => `<button type="button" data-g="kropp-lage" data-v="${v}" aria-pressed="${kroppLage === v}">${ik(i)}<span>${t}</span></button>`).join('')}</div>
         <div data-kropp-plats></div>
         ${kroppLage === 'med' ? `<div class="kropp-las">${ik('las')}<b>Skyddat</b><span>Bara du och medicinsk personal</span></div>` : ''}
@@ -872,6 +872,17 @@
       <div class="sektion-rubrik kv-rubrik in" style="--i:8"><h3>Snart i appen</h3><span class="chip" data-ton="is">Kommer</span></div>
       <div class="kopplingar kv-snart in" style="--i:8">${(LANDS ? [['puls', 'Rösten', '"Det hugger i vänster knä"'], ['skidor', 'Teknikanalys', 'Kameran jämför vänster och höger i spåret'], ['hjarta', 'Klockan', 'Återhämtning efter passen']] : [['puls', 'Rösten', '"Det hugger i vänster knä"'], ['rorlighet', 'Rörelseanalys', 'Kameran mäter rörligheten'], ['hjarta', 'Klockan', 'Återhämtning per dag']]).map(([i, t, u]) => `<div class="koppling"><span class="ikonruta" data-ton="is">${ik(i)}</span><b>${t}</b><small>${e(u)}</small></div>`).join('')}</div>
       <div class="notis kv-notis in" style="--i:9">${ik('info')}<span>Kroppskartan är ingen diagnos. Vid ihållande eller ökande besvär hänvisar vi dig vidare till rätt specialist eller vården.</span></div>`;
+  }
+  // Kroppens bakgrund i landslaget: fjäll i två lager, granskog och två svenska flaggor som vajar på krönen.
+  function kvLandskap() {
+    const gran = (x, y, h) => `<path d="M${x} ${y - h}L${x + h * .32} ${y - h * .45}H${x + h * .16}L${x + h * .42} ${y}H${x - h * .42}L${x - h * .16} ${y - h * .45}H${x - h * .32}Z"/>`;
+    const skog = Array.from({ length: 22 }, (_, i) => { const x = 6 + i * 18.4 + ((i * 7) % 5), y = 112 + ((i * 13) % 6), h = 13 + ((i * 11) % 9); return Math.abs(x - 200) < 70 ? '' : gran(x, y, h); }).join('');
+    const flagga = (x, y, d) => `<g class="kv-flagga" transform="translate(${x} ${y})"><line x1="0" y1="0" x2="0" y2="-26"/><g class="kv-duk" style="animation-delay:${d}s"><rect x="0" y="-26" width="15" height="9.5" rx="1" fill="#0b5cc2"/><rect x="4.5" y="-26" width="2.6" height="9.5" fill="#ffcd00"/><rect x="0" y="-22.4" width="15" height="2.4" fill="#ffcd00"/></g></g>`;
+    return `<svg class="kv-landskap" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <path class="kv-fj1" d="M0 120V70L38 52L70 64L112 36L150 58L178 48L214 62L250 30L292 56L326 44L362 60L400 46V120Z"/>
+      <path class="kv-fj1-sno" d="M112 36L124 44L118 46L106 40ZM250 30L264 40L256 42L244 36Z"/>
+      <path class="kv-fj2" d="M0 120V92Q60 78 120 90T240 88T400 84V120Z"/>
+      ${flagga(112, 37, 0)}${flagga(250, 31, -.8)}<g class="kv-skog">${skog}</g></svg>`;
   }
   // Landslaget: vad tekniken belastar (allmän bild, ingen mätning) – tryck på en rad så visas området på kroppen.
   const TEKNIK = [

@@ -133,3 +133,15 @@ body[data-niva="motionar"] .ls-kv-bg b { background: #9cc4ee; }
 .ls-spar-fot { display: grid; grid-template-columns: 16px 1fr; gap: 6px; margin: 10px 0 0; font-size: 12px; color: var(--text-3); }
 .ls-spar-fot svg { width: 14px; height: 14px; margin-top: 1px; }
 @media (prefers-reduced-motion: reduce) { .ls-kv-bg *, .ls-spar *, .ls-s-akare > i::after { animation: none !important; } .ls-spar-markor { transition: none; } }
+
+/* 08 Kroppens bakgrund: fjäll, granskog och svenska flaggor som vajar (bara transform) */
+.kv-landskap { position: absolute; left: 0; right: 0; bottom: 18%; width: 100%; height: 34%; }
+.kv-fj1 { fill: #123a6e; opacity: .75; } .kv-fj1-sno { fill: #dfeeff; opacity: .55; } .kv-fj2 { fill: #0c2a52; opacity: .85; }
+.kv-skog path { fill: #0a2244; opacity: .9; }
+.kv-flagga line { stroke: #cfdcec; stroke-width: 1; }
+.kv-duk { transform-box: fill-box; transform-origin: 0 50%; animation: kv-vaja 2.6s ease-in-out infinite; }
+@keyframes kv-vaja { 0%, 100% { transform: skewY(0) scaleX(1); } 50% { transform: skewY(-7deg) scaleX(.9); } }
+body[data-niva="motionar"] .kv-fj1 { fill: #b9d3ef; opacity: .7; } body[data-niva="motionar"] .kv-fj1-sno { fill: #fff; opacity: .9; }
+body[data-niva="motionar"] .kv-fj2 { fill: #d6e6f7; opacity: .9; } body[data-niva="motionar"] .kv-skog path { fill: #8fb0cf; opacity: .8; }
+body[data-niva="motionar"] .kv-flagga line { stroke: #7f95ad; }
+@media (prefers-reduced-motion: reduce) { .kv-duk { animation: none; } }
