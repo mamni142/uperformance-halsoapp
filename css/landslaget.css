@@ -118,3 +118,10 @@ body[data-tema="landslaget"][data-niva="elit"] .flik-kapsel .flik-markor::before
 @keyframes ls-fl-pop { from { transform: scale(0) rotate(-45deg); } }
 @keyframes ls-fl-ljus { 0% { opacity: 0; transform: scale(.4); } 30% { opacity: .9; } 100% { opacity: 0; transform: scale(3.4); } }
 @media (prefers-reduced-motion: reduce) { .ls-flinga, .ls-fl-armar path, .ls-fl-topp, .ls-fl-ljus { animation: none !important; } .ls-fl-armar path { stroke-dashoffset: 0; } }
+
+/* 11 Ordmärket i introt: rent vitt, ett guldljus sveper över en gång, mjuk skugga; raden under i ljust blått */
+.ls-ordmarke { background: linear-gradient(100deg, #fff 0 38%, #ffe680 45%, #ffcd00 50%, #ffe680 55%, #fff 62% 100%) !important; background-size: 320% 100% !important;
+  -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; filter: drop-shadow(0 2px 14px rgba(0, 25, 70, .55));
+  animation: ls-ord2 1.9s cubic-bezier(.4, 0, .2, 1) 1.3s both !important; }
+@keyframes ls-ord2 { from { opacity: 0; transform: translateY(8px) scale(.97); background-position: 100% 0; } 30% { opacity: 1; transform: none; } to { opacity: 1; transform: none; background-position: 0 0; } }
+body[data-tema="landslaget"] .splash-ord p { color: #a9cfff !important; opacity: .9; }
