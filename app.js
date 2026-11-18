@@ -1391,11 +1391,18 @@
     return elit() ? 39 * 60 + 40 : 54 * 60 + 10;
   }
   // Loppets partners – namnen som text tills partnernas egna loggfiler finns (inga efterritade loggor). Källan visas.
+  // Loggfiler från partnerna läggs i partner/ och skrivs in här (namn → fil). Saknas filen visas namnet som ordmärke.
+  const PARTNER_LOGGA = { ASICS: 'partner/asics.svg', Polestar: 'partner/polestar.svg', Stadium: 'partner/stadium.svg', Volvokoncernen: 'partner/volvo.svg', Garmin: 'partner/garmin.svg', Chiquita: 'partner/chiquita.svg', 'Radisson Blu Scandinavia': 'partner/radisson.svg', STC: 'partner/stc.svg' }; // SVG från Wikimedia Commons; övriga som namn tills partnernas filer finns
+  function sponsorRemsa(l) {
+    const p = l.partner; if (!p) return '';
+    return `<div class="lp-sponsorer" aria-label="Huvudpartners: ${e(p.huvud.map(([n]) => n).join(', '))}"><span class="lp-s-etikett">Huvudpartners</span><span class="lp-s-rad">${p.huvud.map(([n], i) => PARTNER_LOGGA[n]
+      ? (n === 'Polestar' ? `<span class="lp-s-polestar" style="--n:${i}"><img class="lp-s-logga" src="${PARTNER_LOGGA[n]}" alt="">POLESTAR</span>` : `<img class="lp-s-logga" src="${PARTNER_LOGGA[n]}" alt="${e(n)}" style="--n:${i}">`) : `<b class="lp-s-ord" style="--n:${i}">${e(n)}</b>`).join('<i aria-hidden="true"></i>')}</span></div>`;
+  }
   function partnerHtml(l) {
     const p = l.partner; if (!p) return '';
-    const rad = (rubrik, lista) => `<div class="lp-p-grupp"><span class="lp-p-etikett">${rubrik}</span><div class="lp-p-chips">${lista.map((n, i) => `<span class="lp-p-chip" style="--n:${i}">${e(n)}</span>`).join('')}</div></div>`;
+    const rad = (rubrik, lista) => `<div class="lp-p-grupp"><span class="lp-p-etikett">${rubrik}</span><div class="lp-p-chips">${lista.map((n, i) => PARTNER_LOGGA[n] ? `<span class="lp-p-chip lp-p-chip-logga" style="--n:${i}"><img src="${PARTNER_LOGGA[n]}" alt="${e(n)}"></span>` : `<span class="lp-p-chip" style="--n:${i}">${e(n)}</span>`).join('')}</div></div>`;
     return `<section class="lp-partner" aria-labelledby="lp-p-rubrik"><div class="lp-p-topp"><h3 id="lp-p-rubrik">${e(l.namn)}s partners</h3><span class="lp-p-kalla">Källa: ${e(p.kalla)}</span></div>
-      <div class="lp-p-huvud">${p.huvud.map(([n, u], i) => `<div class="lp-p-kort" style="--n:${i}"><b class="lp-p-namn">${e(n)}</b><small>${e(u)}</small></div>`).join('')}</div>
+      <div class="lp-p-huvud">${p.huvud.map(([n, u], i) => `<div class="lp-p-kort" style="--n:${i}">${PARTNER_LOGGA[n] ? `<span class="lp-p-loggarad"><img class="lp-p-logga" src="${PARTNER_LOGGA[n]}" alt="${n === 'Polestar' ? '' : e(n)}">${n === 'Polestar' ? '<b class="lp-p-ordmarke">POLESTAR</b>' : ''}</span>` : `<b class="lp-p-namn">${e(n)}</b>`}<small>${e(u)}</small></div>`).join('')}</div>
       ${rad('Evenemangspartners', p.evenemang)}${rad('Mediepartners', p.media)}${rad('Leverantörer', [...new Set(p.leverantorer)])}</section>`;
   }
   function loppKort(i) {
@@ -1415,7 +1422,7 @@
     let inne = '';
     if (vy === 'karta') inne = `
       <div class="lp-kartram"><canvas class="lp-3d" role="img" aria-label="Karta i 3D över ${e(l.namn)} med rundan färgad efter farten"></canvas><div class="lp-live" data-lp-live><b class="tal">${fmt(l.km, 1)}</b><small>km</small><span class="lp-zon">Exempelpass · från klockan</span></div>
-        <span class="lp-skiss">Schematisk bana</span></div>
+        <span class="lp-skiss">Schematisk bana</span>${sponsorRemsa(l)}</div>
       <div class="lp-legend">${FART.map(([max, k, t], n) => `<span data-z="${k}"><i></i>${t}<small>${n === 0 ? `< 7` : n === 3 ? '13+' : `${FART[n - 1][0]}–${max}`} km/h</small></span>`).join('')}</div>
       <button class="knapp knapp-sek knapp-bred lp-spela" data-g="lopp-spela">${ik('uppdatera')}Spela upp rundan</button>
       <dl class="lp-fakta"><div><dt>Tid</dt><dd class="tal">${tidText(f.sek)}</dd></div><div><dt>Snittempo</dt><dd class="tal">${tempoText(f.tempo)}<small>/km</small></dd></div><div><dt>Snabbast</dt><dd class="tal">km ${f.snabb + 1}</dd></div></dl>

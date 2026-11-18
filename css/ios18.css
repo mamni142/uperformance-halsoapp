@@ -43,3 +43,48 @@ body[data-niva="elit"] .idag-vy .bento-topp .ikonruta[data-ton="is"] + .bento-na
 .lp-p-chip { padding: 6px 11px; border-radius: 999px; font: 650 .76rem var(--font-rubrik); letter-spacing: .01em; color: var(--text-2); background: var(--yta); box-shadow: inset 0 0 0 .5px var(--kant);
   animation: ts-in .4s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--n) * 25ms + .25s); }
 @media (prefers-reduced-motion: reduce) { .lp-p-kort, .lp-p-chip { animation: none; } }
+
+/* Huvudpartners överst i 3D-kartan: en glasremsa med ordmärkena (eller loggorna när filerna finns) */
+.lp-kartram:has(.lp-sponsorer) .lp-skiss { top: 78px; bottom: auto; right: 14px; z-index: 2; }
+.lp-sponsorer { position: absolute; z-index: 2; top: 10px; left: 10px; right: 10px; display: grid; gap: 4px; justify-items: center; padding: 8px 12px 9px; border-radius: 16px;
+  background: var(--lg-yta-tat, rgba(20, 34, 48, .72)); -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5);
+  box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .35), inset 0 0 0 .5px var(--lg-kant, rgba(255, 255, 255, .14)), 0 10px 24px -16px rgba(0, 0, 0, .5); animation: lp-s-in .6s cubic-bezier(.2, .8, .2, 1) both .5s; }
+.lp-s-etikett { font: 600 .56rem var(--font-brod); letter-spacing: .14em; text-transform: uppercase; color: var(--text-3); }
+.lp-s-rad { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
+.lp-s-rad > i { width: 3px; height: 3px; border-radius: 50%; background: var(--text-3); opacity: .6; }
+.lp-s-ord { font: 800 .82rem/1 var(--font-rubrik); letter-spacing: .1em; text-transform: uppercase; color: var(--text); white-space: nowrap; animation: lp-s-ord .5s ease both; animation-delay: calc(var(--n) * 90ms + .75s); }
+.lp-s-logga { height: 16px; width: auto; max-width: 70px; object-fit: contain; animation: lp-s-ord .5s ease both; animation-delay: calc(var(--n) * 90ms + .75s); }
+body[data-niva="elit"] .lp-s-logga { filter: brightness(0) invert(1); opacity: .92; }
+@keyframes lp-s-in { from { opacity: 0; transform: translateY(-8px) scale(.97); } }
+@keyframes lp-s-ord { from { opacity: 0; transform: translateY(4px); filter: blur(3px); } }
+@media (prefers-reduced-motion: reduce) { .lp-sponsorer, .lp-s-ord, .lp-s-logga { animation: none; } }
+
+.lp-s-logga { height: 18px; max-width: 74px; }
+.lp-s-logga[alt="Polestar"] { height: 22px; }
+.lp-p-logga { height: 22px; width: auto; max-width: 110px; object-fit: contain; object-position: left center; margin-bottom: 4px; }
+.lp-p-logga[alt="Polestar"] { height: 26px; }
+body[data-niva="elit"] .lp-p-logga { filter: brightness(0) invert(1); opacity: .92; }
+
+.lp-p-chip-logga { display: inline-grid; place-items: center; padding: 6px 14px; min-height: 30px; }
+.lp-p-chip-logga img { height: 15px; width: auto; max-width: 92px; object-fit: contain; display: block; }
+body[data-niva="elit"] .lp-p-chip-logga img { filter: brightness(0) invert(1); opacity: .9; }
+/* kilometerchippet ligger i kartan nere till vänster, med luft */
+.lp-kartram .lp-live { position: absolute !important; left: 12px; bottom: 12px; margin: 0 !important; z-index: 2; }
+
+/* loggorna: flerfärgade på en ljus platta i mörkt läge (ingen invertering som gör dem till fläckar), Polestar med ordmärket */
+.lp-p-chip-logga img[alt="Chiquita"] { height: 22px; }
+.lp-p-chip-logga img[alt="Radisson Blu Scandinavia"] { height: 17px; }
+body[data-niva="elit"] .lp-p-chip-logga { background: #f6f4ef; box-shadow: none; }
+body[data-niva="elit"] .lp-p-chip-logga img { filter: none; opacity: 1; }
+.lp-p-loggarad { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.lp-p-loggarad .lp-p-logga { margin-bottom: 0; }
+.lp-p-ordmarke { font: 700 .92rem/1 var(--font-rubrik); letter-spacing: .32em; color: var(--text); }
+.lp-s-polestar { display: inline-flex; align-items: center; gap: 5px; font: 700 .7rem/1 var(--font-rubrik); letter-spacing: .26em; color: var(--text); white-space: nowrap; animation: lp-s-ord .5s ease both; animation-delay: calc(var(--n) * 90ms + .75s); }
+.lp-s-polestar .lp-s-logga { height: 15px !important; animation: none; }
+.lp-s-logga[alt="STC"] { height: 15px; }
+.lp-p-logga[alt="STC"] { height: 20px; }
+.lp-s-rad { gap: 9px !important; flex-wrap: nowrap; overflow: hidden; }
+.lp-s-rad > * { flex: none; }
+.lp-s-logga { max-width: 64px !important; height: 16px !important; }
+.lp-s-polestar { font-size: .62rem !important; letter-spacing: .22em !important; }
+.lp-s-polestar .lp-s-logga { height: 13px !important; }
