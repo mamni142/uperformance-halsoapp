@@ -1527,26 +1527,35 @@
       <svg class="ls-hero-fj ls-hero-fj2" viewBox="0 0 400 100" preserveAspectRatio="none"><path d="${fj(50, 5, 30)}"/><path transform="translate(400 0)" d="${fj(50, 5, 30)}"/></svg>
       ${lsBacke()}<div class="ls-hero-sno">${sno}</div></div>`;
   }
-  // En åkare i SVG (fötterna i 0,0, åker åt höger): benen, armen och staven pendlar i takt (SMIL). farg = tröjan.
-  function akareSvg(farg, b, nr) {
-    const sv = (v, c) => `<animateTransform attributeName="transform" type="rotate" values="${v}" dur=".9s" repeatCount="indefinite" begin="${b}s"/>`;
-    return `<g transform="scale(.82)"><line class="ls-ak-skida" x1="-9" y1="0" x2="10" y2="0"/>
-      <g>${sv('-18 0 -8;16 0 -8;-18 0 -8')}<line x1="0" y1="-8" x2="1" y2="0"/></g><g>${sv('16 0 -8;-18 0 -8;16 0 -8')}<line x1="0" y1="-8" x2="-1" y2="0"/></g>
-      <line x1="0" y1="-8" x2="4" y2="-15" style="stroke:${farg}"/><circle cx="5.4" cy="-17.6" r="2.2" class="ls-ak-huvud"/>
-      <g>${sv('24 3 -13;-30 3 -13;24 3 -13')}<line class="ls-ak-stav" x1="3" y1="-13" x2="-7" y2="1"/></g>
-      ${nr ? '<circle cx="2.2" cy="-11.5" r="1.3" class="ls-ak-nr"/>' : ''}</g>`;
+  // En åkare i landslagets dräkt (blå med gula detaljer), sedd från sidan i diagonalgång: knäna böjs, armar och stavar
+  // pendlar mot benen, kroppen guppar. Fötterna i 0,0, åker åt höger. SMIL: points/transform, inget som ritar om layouten.
+  function akareSvg(b, takt, ledare) {
+    const T = takt.toFixed(2), halv = (+b - takt / 2).toFixed(2);
+    const an = (attr, v, beg) => `<animate attributeName="${attr}" dur="${T}s" begin="${beg}s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" keyTimes="0;.5;1" values="${v}"/>`;
+    const ben = (beg) => `<polyline class="ak-ben" points="0,-10 3,-5 5.5,0">${an('points', '0,-10 3,-5 5.5,0;0,-10 -1.5,-5.2 -6,-.8;0,-10 3,-5 5.5,0', beg)}</polyline>
+      <line class="ak-skida" x1="-2" y1="0" x2="13" y2="0">${an('x1', '-2;-13.5;-2', beg)}${an('x2', '13;1.5;13', beg)}${an('y1', '0;-.9;0', beg)}${an('y2', '0;-.3;0', beg)}</line>`;
+    const arm = (beg) => `<polyline class="ak-arm" points="4,-17 7.5,-14 10,-12">${an('points', '4,-17 7.5,-14 10,-12;4,-17 1.5,-14 -3,-12.5;4,-17 7.5,-14 10,-12', beg)}</polyline>
+      <line class="ak-stav" x1="10" y1="-12" x2="6.5" y2="0.5">${an('x1', '10;-3;10', beg)}${an('y1', '-12;-12.5;-12', beg)}${an('x2', '6.5;-12;6.5', beg)}${an('y2', '0.5;-1.5;0.5', beg)}</line>`;
+    return `<g><animateTransform attributeName="transform" type="translate" dur="${(takt / 2).toFixed(2)}s" begin="${b}s" repeatCount="indefinite" values="0 0;0 -.7;0 0" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" keyTimes="0;.5;1"/>
+      <g class="ak-bak">${ben(halv)}${arm(b)}</g>
+      <line class="ak-kropp" x1="0" y1="-10" x2="4" y2="-17"/><line class="ak-rand" x1="1.2" y1="-12" x2="3.2" y2="-15.5"/>
+      ${ben(b)}${arm(halv)}<circle class="ak-huvud" cx="5.6" cy="-19.2" r="1.9"/><path class="ak-mossa" d="M3.7 -19.6 a1.95 1.95 0 0 1 3.9 0 z"/>
+      ${ledare ? '<rect class="ak-nr" x="1.2" y="-15.3" width="2.6" height="2.2" rx=".4" transform="rotate(-30 2.5 -14.2)"/>' : ''}</g>`;
   }
-  // En backe till höger om hälsningen där tre åkare tävlar över krönet.
+  // Över hela hjälten: landslaget tävlar längs ett spår som börjar lågt till vänster (under texten), klättrar mot
+  // krönet till höger och går ned bakom kanten – saktare i backen, fortare nedför. Små, men blågula och i rörelse.
   function lsBacke() {
-    const spar = 'M-30 56 L0 52 C30 48 55 30 85 24 C115 18 135 16 158 22 C180 28 196 40 230 46';
-    const akare = (n, farg, nr) => { const b = (-n * 1.15).toFixed(2);
-      return `<g class="ls-ak"><animateMotion dur="9s" begin="${b}s" repeatCount="indefinite" rotate="auto" path="${spar}"/>
-        <animate attributeName="opacity" dur="9s" begin="${b}s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;.1;.88;1"/>${akareSvg(farg, b, nr)}</g>`; };
-    return `<svg class="ls-backe" viewBox="0 0 200 64" preserveAspectRatio="xMaxYMax meet" aria-hidden="true">
-      <defs><linearGradient id="ls-backe-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
-      <path class="ls-backe-yta" d="M0 64 L0 52 C30 48 55 30 85 24 C115 18 135 16 158 22 C180 28 196 40 200 41 L200 64 Z"/>
-      <path class="ls-backe-spar" d="M0 52 C30 48 55 30 85 24 C115 18 135 16 158 22 C180 28 196 40 200 41"/>
-      ${akare(2, '#6db6ff', 0)}${akare(1, '#ffffff', 0)}${akare(0, '#ffcd00', 1)}</svg>`;
+    const spar = 'M-30 99 L60 98 C130 97 200 95 262 91 C292 89 306 80 326 64 C342 51 358 46 375 50 C395 56 410 66 440 72';
+    const ryggen = 'M0 98.5 L60 98 C130 97 200 95 262 91 C292 89 306 80 326 64 C342 51 358 46 375 50 C395 56 400 60 400 61';
+    const lag = [[0, 1.02, 1], [.55, .98, 0], [1.25, 1.06, 0], [2.3, 1, 0], [3.1, .96, 0]];
+    const akare = ([bak, takt, ledare], n) => { const b = (-bak).toFixed(2);
+      return `<g class="ls-ak" data-n="${n}"><animateMotion dur="16s" begin="${b}s" repeatCount="indefinite" rotate="auto" path="${spar}" calcMode="linear" keyPoints="0;.64;.85;1" keyTimes="0;.5;.87;1"/>
+        <animate attributeName="opacity" dur="16s" begin="${b}s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;.06;.94;1"/>
+        <g transform="scale(.9)">${akareSvg(b, takt, ledare)}</g></g>`; };
+    return `<svg class="ls-backe" viewBox="0 0 400 100" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+      <defs><linearGradient id="ls-backe-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+      <path class="ls-backe-yta" d="${ryggen} L400 100 L0 100 Z"/><path class="ls-backe-spar" d="${ryggen}"/>
+      ${lag.slice().reverse().map((x, i) => akare(x, lag.length - 1 - i)).join('')}</svg>`;
   }
   // Säsongen: från barmark till Vasaloppet (första söndagen i mars) – en åkare glider fram till där vi är, nedräkning till loppet.
   function sasongKort(i) {
@@ -1560,7 +1569,7 @@
       <div class="ls-s-topp"><div><span class="ogon utan">Säsongen ${ar - 1}/${String(ar).slice(2)}</span><h3>${FAS[nuFas][0]}</h3><small>Nu: ${e(FAS[nuFas][0].toLowerCase())} · nästa ${e((FAS[nuFas + 1] || FAS[3])[0].toLowerCase())}</small></div>
         <div class="ls-s-ned"><b class="tal" data-rakna="${dgr}">0</b><small>dagar till<br>Vasaloppet</small></div></div>
       <div class="ls-s-bana"><svg viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><path class="ls-s-spar" d="M0 30 C60 30 90 12 150 14 C210 16 240 30 300 22"/><path class="ls-s-spar ls-s-spar-klar" pathLength="1" d="M0 30 C60 30 90 12 150 14 C210 16 240 30 300 22"/></svg>
-        <span class="ls-s-akare" aria-hidden="true"><svg viewBox="-14 -24 28 28">${akareSvg('#ffcd00', 0, 1)}</svg><i></i></span>
+        <span class="ls-s-akare" aria-hidden="true"><b>Idag</b><i></i></span>
         ${FAS.map(([t, u], n) => `<span class="ls-s-fas" data-n="${n}" style="--p:${VIS[n] * 100}%" ${n <= nuFas ? 'data-klar' : ''}><i></i><b>${e(t)}</b><small>${e(u)}</small></span>`).join('')}</div>
       <p class="ls-s-fot">${ik('info')}<span>Säsongens faser och Vasaloppets datum som exempel – landslagets eget program läggs in här.</span></p></section>`;
   }
