@@ -904,6 +904,40 @@ const vec3 INK = vec3(0.043, 0.082, 0.125); const vec3 ROD = vec3(0.93, 0.36, 0.
 const vec3 MINTD = vec3(0.2, 0.66, 0.54);
 float ringAA(float d, float px, float fw){ return 1.0 - smoothstep(px * fw * 0.5, px * fw * 0.5 + fw, abs(d)); }\n`;
 
+  /* Tillbehör (landslaget): mössan och nummerlappen är skal som följer avatarens egen hud (hörnen flyttade ut längs
+     normalen), tofsen ett klot. Egna shaders och buffertar – kroppen ritas exakt som förut. aAo = typ (0 mössa, 1 kant,
+     2 tofs, 3 lapp), aReg/aKurv = u/v (lappens textur, mössans höjd). */
+  const TB_VS = `
+attribute vec3 aPos; attribute vec3 aNor; attribute float aAo; attribute float aReg; attribute float aKurv;
+uniform mat4 uVP, uM; varying vec3 vObj; varying vec3 vVar; varying vec3 vNor; varying float vTyp; varying vec2 vUV;
+void main(){ vec4 w = uM * vec4(aPos, 1.0); vObj = aPos; vVar = w.xyz; vNor = (uM * vec4(aNor, 0.0)).xyz; vTyp = aAo; vUV = vec2(aReg, aKurv); gl_Position = uVP * w; }`;
+  const TB_FS = `
+#if __VERSION__ >= 300\n#define texture2D texture\n#endif\nuniform vec3 uKamPos, uLjus; uniform float uLjust, uAvsloj, uTid; uniform sampler2D uTex;
+varying vec3 vObj; varying vec3 vVar; varying vec3 vNor; varying float vTyp; varying vec2 vUV;
+float hash(vec3 p){ return fract(sin(dot(p, vec3(12.9898, 78.233, 37.719))) * 43758.5453); }
+void main(){
+  if (vObj.y > uAvsloj) discard;
+  vec3 n = normalize(vNor), v = normalize(uKamPos - vVar), l = normalize(-uLjus);
+  vec3 bas; float glans = 0.12, rund = 18.0;
+  if (vTyp < 0.5) { // stickad mössa: resårränder runt om, en gul rand och mjuk ull
+    float vinkel = atan(vObj.x, vObj.z); float rib = 0.5 + 0.5 * sin(vinkel * 46.0);
+    bas = mix(vec3(0.1, 0.4, 0.9), vec3(0.17, 0.52, 1.0), rib);
+    float h = vUV.y; bas = mix(bas, vec3(1.0, 0.8, 0.0), smoothstep(0.052, 0.058, h) * (1.0 - smoothstep(0.072, 0.078, h)));
+    bas *= 0.92 + 0.08 * hash(floor(vObj * 900.0)); glans = 0.05;
+  } else if (vTyp < 1.5) { // uppvikt kant: tätare resår
+    float vinkel = atan(vObj.x, vObj.z); bas = mix(vec3(0.07, 0.32, 0.78), vec3(0.13, 0.45, 0.95), 0.5 + 0.5 * sin(vinkel * 70.0)); glans = 0.05;
+  } else if (vTyp < 2.5) { // tofsen: luddig gul ull
+    float f = hash(floor(vObj * 1400.0)); bas = vec3(1.0, 0.8, 0.05) * (0.78 + 0.3 * f); n = normalize(n + (vec3(hash(vObj * 731.0), hash(vObj * 317.0), hash(vObj * 173.0)) - 0.5) * 0.9); glans = 0.0;
+  } else { // nummerlappen: tryckt tyg med rundade hörn
+    vec2 q = abs(vUV - 0.5) * 2.0; vec2 d = max(q - vec2(0.82, 0.78), 0.0); if (q.x > 1.0 || q.y > 1.0 || length(d / vec2(0.18, 0.22)) > 1.0) discard;
+    bas = texture2D(uTex, vec2(vUV.x, 1.0 - vUV.y)).rgb; glans = 0.18; rund = 30.0;
+  }
+  float dif = max(dot(n, l), 0.0) * 0.7 + 0.45;
+  float kant = pow(1.0 - max(dot(n, v), 0.0), 3.0);
+  float sp = pow(max(dot(reflect(-l, n), v), 0.0), rund) * glans;
+  vec3 c = bas * dif + sp + kant * mix(vec3(0.35, 0.6, 1.0), vec3(0.5), uLjust) * 0.35;
+  gl_FragColor = vec4(c, 1.0);
+}`;
   const KROPP_VS = `${FARGER}
 attribute vec3 aPos; attribute vec3 aNor; attribute float aAo; attribute float aReg; attribute float aKurv;
 uniform mat4 uVP, uM; uniform float uAndas, uUt, uSpegel, uFokId;
@@ -1386,7 +1420,47 @@ void main(){
       natBuf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, natBuf); gl.bufferData(gl.ARRAY_BUFFER, r.data, gl.STATIC_DRAW);
       natInd = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, natInd); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, r.index, gl.STATIC_DRAW);
       natAntal = r.index.length; natTyp = r.index instanceof Uint16Array ? gl.UNSIGNED_SHORT : gl.UNSIGNED_INT;
+      if (opts.tillbehor === 'landslaget') byggTillbehor(r);
     };
+    let tbBuf = null, tbInd = null, tbAntal = 0, tbTex = null;
+    function byggTillbehor(r) {
+      try {
+        const D = r.data, I = r.index, nv = D.length / 9; let topp = -9, toppI = 0;
+        for (let v = 0; v < nv; v++) if (D[v * 9 + 1] > topp) { topp = D[v * 9 + 1]; toppI = v; }
+        const ut = [], ind = [], karta = new Map();
+        // skalet: hörn i ett område flyttas ut längs normalen; trianglar där alla tre hörnen ingår följer med
+        const skal = (valj, typFor, off, uvFor) => { karta.clear();
+          for (let t = 0; t < I.length; t += 3) { const a = I[t], b = I[t + 1], c = I[t + 2]; if (!valj(a) || !valj(b) || !valj(c)) continue;
+            for (const v of [a, b, c]) { if (!karta.has(v)) { const x = D[v * 9], y = D[v * 9 + 1], z = D[v * 9 + 2], nx = D[v * 9 + 3], ny = D[v * 9 + 4], nz = D[v * 9 + 5], o = off(v), [u, w] = uvFor(v);
+              karta.set(v, ut.length / 9); ut.push(x + nx * o, y + ny * o, z + nz * o, nx, ny, nz, typFor(v), u, w); } ind.push(karta.get(v)); } } };
+        // mössan: över en lutande kant (lägre bak, högre över pannan), kronan lite högre som en riktig mössa
+        const kantY = (z) => topp - 0.098 + z * 0.26, hojd = (v) => D[v * 9 + 1] - kantY(D[v * 9 + 2]);
+        const iHuvud = (v) => D[v * 9 + 1] > topp - 0.2 && Math.abs(D[v * 9]) < 0.13 && hojd(v) > 0;
+        skal(iHuvud, (v) => (hojd(v) < 0.03 ? 1 : 0), (v) => { const h = hojd(v); return 0.011 + (h < 0.03 ? 0.006 : 0) + Math.max(0, h - 0.07) * 0.32; }, (v) => [0, hojd(v)]);
+        // tofsen: ett klot ovanpå kronan
+        const T = [D[toppI * 9], topp + 0.044, D[toppI * 9 + 2] - 0.012], R0 = 0.033, bas = ut.length / 9, ST = 16, SL = 24;
+        for (let i = 0; i <= ST; i++) for (let j = 0; j <= SL; j++) { const th = i / ST * Math.PI, ph = j / SL * Math.PI * 2, nx = Math.sin(th) * Math.cos(ph), ny = Math.cos(th), nz = Math.sin(th) * Math.sin(ph);
+          ut.push(T[0] + nx * R0, T[1] + ny * R0, T[2] + nz * R0, nx, ny, nz, 2, 0, 0); }
+        for (let i = 0; i < ST; i++) for (let j = 0; j < SL; j++) { const a = bas + i * (SL + 1) + j, b = a + SL + 1; ind.push(a, a + 1, b, a + 1, b + 1, b); }
+        // nummerlappen på bröstet
+        const X0 = 0.085, Y0 = topp * 0.655, Y1 = topp * 0.74;
+        const iLapp = (v) => { const x = D[v * 9], y = D[v * 9 + 1], z = D[v * 9 + 2]; return Math.abs(x) < X0 + 0.02 && y > Y0 - 0.02 && y < Y1 + 0.02 && z > 0 && D[v * 9 + 5] > 0.3; };
+        skal(iLapp, () => 3, () => 0.007, (v) => [(D[v * 9] + X0) / (2 * X0), (D[v * 9 + 1] - Y0) / (Y1 - Y0)]);
+        // triangelns ordning: kontrollera att tofsens trianglar vetter utåt (samma som kroppens framsidor)
+        tbBuf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, tbBuf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(ut), gl.STATIC_DRAW);
+        const stor = ut.length / 9 > 65535; tbInd = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tbInd);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, stor ? new Uint32Array(ind) : new Uint16Array(ind), gl.STATIC_DRAW); tbAntal = ind.length; tbStor = stor;
+        // lappens tryck: gul med blå kant, SVERIGE och nummer 1 (ingen förbundslogga)
+        const cv = document.createElement('canvas'); cv.width = 256; cv.height = 256; const g = cv.getContext('2d');
+        g.fillStyle = '#ffd21a'; g.fillRect(0, 0, 256, 256); g.fillStyle = '#0b4fae'; g.fillRect(0, 0, 256, 58); g.fillRect(0, 226, 256, 30);
+        g.fillStyle = '#fff'; g.font = '800 40px system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('SVERIGE', 128, 31);
+        g.fillStyle = '#0b2f6b'; g.font = '800 150px system-ui, sans-serif'; g.fillText('1', 128, 146);
+        tbTex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tbTex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, cv);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      } catch (err) { tbAntal = 0; }
+    }
+    let tbStor = false;
     const bygg = () => {
       P = {
         fram: program(KROPP_VS, KROPP_FS(0)), bak: program(KROPP_VS, KROPP_FS(1)), spegel: program(KROPP_VS, KROPP_FS(2)),
@@ -1394,6 +1468,7 @@ void main(){
         golv: program(GOLV_VS, GOLV_FS), punkt: program(PUNKT_VS, PUNKT_FS), skiva: program(SKIVA_VS, SKIVA_FS),
       };
       if (Object.values(P).some((x) => !x)) return false;
+      if (opts.tillbehor) P.tb = program(TB_VS, TB_FS) || undefined;
       golvBuf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, golvBuf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
       P_ANTAL = Math.min(innerWidth, innerHeight) < 600 ? 26 : 40;
       const d = []; let fro = 7;
@@ -1529,6 +1604,15 @@ void main(){
         gl.colorMask(false, false, false, false); satt(P.djup, gem); gl.drawElements(gl.TRIANGLES, natAntal, natTyp, 0);
         gl.colorMask(true, true, true, true); gl.depthFunc(gl.LEQUAL); gl.depthMask(false);
         satt(P.fram, gem); gl.drawElements(gl.TRIANGLES, natAntal, natTyp, 0);
+        // 5b) tillbehören (landslaget): mössa, tofs och nummerlapp – med djup mot kroppen
+        if (tbAntal && P.tb) { avAttr(); gl.depthMask(true); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE);
+          gl.bindBuffer(gl.ARRAY_BUFFER, tbBuf); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, tbInd);
+          gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 36, 0); gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 36, 12);
+          gl.enableVertexAttribArray(2); gl.vertexAttribPointer(2, 1, gl.FLOAT, false, 36, 24); gl.enableVertexAttribArray(3); gl.vertexAttribPointer(3, 1, gl.FLOAT, false, 36, 28);
+          gl.enableVertexAttribArray(4); gl.vertexAttribPointer(4, 1, gl.FLOAT, false, 36, 32);
+          gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tbTex); satt(P.tb, gem); if (P.tb.u.uTex) gl.uniform1i(P.tb.u.uTex, 0);
+          gl.drawElements(gl.TRIANGLES, tbAntal, tbStor ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT, 0);
+          gl.depthMask(false); gl.enable(gl.CULL_FACE); kroppAttr(); }
         // 6) skenet runt kroppen
         gl.cullFace(gl.FRONT); satt(P.sken, { ...gem, uUt: B < 520 ? 0.028 : 0.022 });
         gl.drawElements(gl.TRIANGLES, natAntal, natTyp, 0);

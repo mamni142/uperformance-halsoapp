@@ -100,7 +100,7 @@
     try {
       if (window.UPKropp?.montera) {
         kroppForm = onskadForm();
-        kropp = window.UPKropp.montera(scen, { lage: niva(), kropp: kroppForm, interaktiv: true, autoVrid: true, etiketter: true });
+        kropp = window.UPKropp.montera(scen, { lage: niva(), kropp: kroppForm, interaktiv: true, autoVrid: true, etiketter: true, tillbehor: LANDS ? 'landslaget' : '' });
         kropp.onVal?.((id, p) => kroppVald(id, p));
         return;
       }
