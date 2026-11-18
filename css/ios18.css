@@ -1,0 +1,27 @@
+/* iOS 18-finputs – laddas allra sist. Hälsorutorna som i appen Hälsa: namnet i rutans tonfärg med liten symbol, pil uppe till höger,
+   stort tal, lugn yta utan tung skugga. */
+.idag-vy .bento-ruta { border-radius: 22px !important; padding: 14px 15px 14px !important; }
+body[data-niva="motionar"] .idag-vy .bento-ruta { background: #fff !important; box-shadow: 0 0 0 .5px rgba(11, 21, 32, .05), 0 1px 2px rgba(11, 21, 32, .04), 0 10px 24px -18px rgba(24, 54, 83, .3) !important; }
+.idag-vy .bento-topp { position: relative; display: flex !important; align-items: center; gap: 6px !important; min-height: 22px !important; margin-bottom: 10px !important; }
+.idag-vy .bento-topp .ikonruta { width: auto !important; height: auto !important; padding: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; color: var(--accent-text); }
+.idag-vy .bento-topp .ikonruta svg { width: 16px !important; height: 16px !important; }
+.idag-vy .bento-topp .ikonruta[data-ton="gul"] { color: #f08c1a; }
+.idag-vy .bento-topp .ikonruta[data-ton="is"] { color: #2f8cf0; }
+.idag-vy .bento-topp .ikonruta[data-ton="rod"] { color: #ef5a3c; }
+body[data-niva="elit"] .idag-vy .bento-topp .ikonruta[data-ton="gul"] { color: #ffb347; }
+body[data-niva="elit"] .idag-vy .bento-topp .ikonruta[data-ton="is"] { color: #7ab8ff; }
+.idag-vy .bento-topp .bento-namn { color: var(--accent-text) !important; font: 600 15px/18px var(--font-rubrik) !important; letter-spacing: -.01em !important; }
+.idag-vy .bento-topp .ikonruta[data-ton="gul"] + .bento-namn { color: #e07f0f !important; }
+.idag-vy .bento-topp .ikonruta[data-ton="is"] + .bento-namn { color: #2a7fe0 !important; }
+.idag-vy .bento-topp .ikonruta[data-ton="rod"] + .bento-namn { color: #e0502f !important; }
+body[data-niva="elit"] .idag-vy .bento-topp .ikonruta[data-ton="gul"] + .bento-namn { color: #ffb347 !important; }
+body[data-niva="elit"] .idag-vy .bento-topp .ikonruta[data-ton="is"] + .bento-namn { color: #7ab8ff !important; }
+.idag-vy .bento-ruta:not(.bred) .bento-topp::after { content: ''; margin-left: auto; width: 7px; height: 7px; border-right: 2px solid var(--text-3); border-top: 2px solid var(--text-3); transform: rotate(45deg); opacity: .6; }
+.idag-vy .bento-tal { font: 700 34px/1 var(--font-rubrik) !important; letter-spacing: -.03em !important; }
+.idag-vy .bento-tal small { font: 600 15px var(--font-rubrik) !important; letter-spacing: 0 !important; color: var(--text-3); margin-left: 2px; }
+.idag-vy .bento-under { font: 500 13px/17px var(--font-brod) !important; color: var(--text-2) !important; }
+
+/* Tempokalkylatorns rad: etikett till vänster, tiden till höger */
+.lp-verktyg .jg-ci label { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.lp-verktyg .jg-ci-namn { display: inline-flex; align-items: center; gap: 8px; }
+.lp-verktyg .jg-ci-tal { font: 700 1.1rem var(--font-rubrik); }

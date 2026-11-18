@@ -1320,8 +1320,9 @@
       vatten: '', parker: [[170, 150, 80, 50]], broar: [], platser: [[90, 180, 'Start och mål', 'b'], [252, 132, 'Vändpunkt', 'h']], backar: [] },
   ];
   // Ett gemensamt gatunät (huvudgator tjockare) och kvarter – samma för alla banor, bara som bakgrund.
-  const GATOR = ['M0 30 C80 40 160 20 340 34', 'M0 84 C100 90 220 72 340 80', 'M0 176 C90 168 200 186 340 172', 'M0 226 C120 232 220 216 340 228', 'M30 0 C40 80 20 160 36 250',
-    'M112 0 C104 70 124 170 108 250', 'M196 0 C204 90 184 160 202 250', 'M286 0 C276 80 298 170 284 250', 'M0 0 L150 120', 'M340 10 L210 140'].map((d, i) => `<path d="${d}" class="${i % 3 ? '' : 'stor'}"/>`).join('');
+  const GATOR_D = ['M0 30 C80 40 160 20 340 34', 'M0 84 C100 90 220 72 340 80', 'M0 176 C90 168 200 186 340 172', 'M0 226 C120 232 220 216 340 228', 'M30 0 C40 80 20 160 36 250',
+    'M112 0 C104 70 124 170 108 250', 'M196 0 C204 90 184 160 202 250', 'M286 0 C276 80 298 170 284 250', 'M0 0 L150 120', 'M340 10 L210 140'];
+  const GATOR = GATOR_D.map((d, i) => `<path d="${d}" class="${i % 3 ? '' : 'stor'}"/>`).join('');
   const KVARTER = Array.from({ length: 54 }, (_, i) => { const x = (i % 9) * 38 + 6 + ((i * 7) % 5), y = Math.floor(i / 9) * 42 + 6 + ((i * 11) % 6); return `<rect x="${x}" y="${y}" width="${24 + (i * 5) % 9}" height="${26 + (i * 3) % 8}" rx="3"/>`; }).join('');
   const FART = [[7, 'gar', 'Går', 'is'], [10, 'jogg', 'Joggar', 'ok'], [13, 'spring', 'Springer', 'gul'], [99, 'tar', 'Tar i', 'rod']];
   const fartZon = (kmh) => FART.find(([max]) => kmh < max);
@@ -1393,13 +1394,13 @@
       <span class="lp-kort-tal"><span><small>Mål</small><b class="tal">${tidText(s.mal)}</b></span><span><small>Prognos</small><b class="tal">${tidText(prog)}</b></span>
         <span data-ton="${under ? 'ok' : 'gul'}"><small>Läge</small><b>${under ? 'Före målet' : 'Efter målet'}</b></span></span></button>`;
   }
-  function loppArk(vy = 'karta') {
+  function loppArk(vy = 'karta', { bara = false } = {}) {
     const l = loppNu(), s = loppSt(), v = exempelRunda(l), f = rundaFakta(l, v), prog = riegel(basta10(), 10, l.km), malTempo = s.mal / l.km;
     const flikar = [['karta', 'Rundan'], ['verktyg', 'Verktyg'], ['lopp', 'Lopp']];
     const delar = l.km > 20 ? [5, 10, 15, l.km] : l.km > 9 ? [2.5, 5, 7.5, l.km] : [1, 2.5, 4, l.km];
     let inne = '';
     if (vy === 'karta') inne = `
-      <div class="lp-kartram">${kartaSvg(l)}<div class="lp-live" data-lp-live><b class="tal">${fmt(l.km, 1)}</b><small>km</small><span class="lp-zon">Exempelpass · från klockan</span></div>
+      <div class="lp-kartram"><canvas class="lp-3d" role="img" aria-label="Karta i 3D över ${e(l.namn)} med rundan färgad efter farten"></canvas><div class="lp-live" data-lp-live><b class="tal">${fmt(l.km, 1)}</b><small>km</small><span class="lp-zon">Exempelpass · från klockan</span></div>
         <span class="lp-skiss">Schematisk bana</span></div>
       <div class="lp-legend">${FART.map(([max, k, t], n) => `<span data-z="${k}"><i></i>${t}<small>${n === 0 ? `< 7` : n === 3 ? '13+' : `${FART[n - 1][0]}–${max}`} km/h</small></span>`).join('')}</div>
       <button class="knapp knapp-sek knapp-bred lp-spela" data-g="lopp-spela">${ik('uppdatera')}Spela upp rundan</button>
@@ -1426,16 +1427,106 @@
     if (vy === 'lopp') inne = `<p class="jg-ark-ingress">Välj loppet du siktar på. Datum och anmälan hittar du hos arrangören.</p>
       <div class="lp-lista">${LOPP.map((x, n) => `<button class="lp-rad" data-g="lopp-val" data-v="${x.id}" aria-pressed="${x.id === l.id}" style="--n:${n}"><span class="lp-rad-karta" aria-hidden="true">${kartaSvg(x, { spela: false })}</span>
         <span class="lp-rad-text"><b>${e(x.namn)}</b><small>${e(x.stad)} · ${e(x.typ)} · ${e(x.nar)}</small></span><span class="bock">${ik('bock')}</span></button>`).join('')}</div>`;
+    const ni0 = bara && !arkLager.hidden ? $('.ark .lp-inne', arkLager) : null;
+    if (ni0) { ni0.dataset.vy = vy; ni0.innerHTML = inne; delete ni0.dataset.gar; ni0.style.animation = 'none'; void ni0.offsetWidth; ni0.style.animation = ''; forbered(ni0); return loppEfter($('.ark', arkLager), true); }
     ark(`<div class="ark-rubrik jg-ark-rubrik"><span class="ikonruta" data-ton="is">${ik('plats')}</span><div><span class="ogon utan">${e(l.stad)} · ${e(l.nar)}</span><h2>${e(l.namn)}</h2></div><button class="ikonknapp" data-stang-ark aria-label="Stäng">${ik('stang')}</button></div>
       <div class="segment lp-segment" role="tablist"><span class="segment-markor"></span>${flikar.map(([k, t]) => `<button type="button" role="tab" data-g="lopp-flik" data-v="${k}" aria-pressed="${vy === k}">${t}</button>`).join('')}</div>
       <div class="lp-inne" data-vy="${vy}">${inne}</div>`,
-    { efter: (a) => { const sg = $('.lp-segment', a), mk = $('.segment-markor', sg); mk.style.transition = 'none'; segmentMarkor(sg); void mk.offsetWidth; mk.style.transition = ''; cancelAnimationFrame(spokRaf); const svg = $('.lp-kartram .lp-karta', a);
+    { efter: (a) => loppEfter(a, false) });
+    function loppEfter(a, bara0) { if (!bara0) { const sg = $('.lp-segment', a), mk = $('.segment-markor', sg); mk.style.transition = 'none'; segmentMarkor(sg); void mk.offsetWidth; mk.style.transition = ''; } cancelAnimationFrame(spokRaf); karta3dNu?.stopp(); karta3dNu = null; const cv3 = $('.lp-3d', a); if (cv3) karta3dNu = karta3d(cv3, l, v); const svg = $('.lp-kartram .lp-karta', a);
       if (svg) { fargaRunda(svg, v); const p = $('[data-lp-bana]', svg), pt = p.getPointAtLength(0); $('[data-lp-spok]', svg)?.setAttribute('transform', `translate(${pt.x} ${pt.y})`); }
       $$('.lp-kort-karta .lp-karta, .lp-rad-karta .lp-karta', a).forEach((x) => fargaRunda(x, exempelRunda(LOPP.find((y) => x.getAttribute('aria-label').includes(y.namn)) || l)));
       const r = $('[data-lp-mal]', a); if (r) { reglageFarg(r); r.addEventListener('input', () => { reglageFarg(r); const m = +r.value, tp = m / l.km; s.mal = m; spara();
         $('[data-lp-maltal]', a).textContent = tidText(m); $('[data-lp-tempo]', a).textContent = tempoText(tp); $('[data-lp-kmh]', a).textContent = fmt(l.km / (m / 3600), 1);
-        $('[data-lp-delar]', a).innerHTML = delar.map((d) => `<li><span>${d === l.km ? 'Mål' : `${fmt(d, 1)} km`}</span><b class="tal">${tidText(tp * d)}</b></li>`).join(''); }); } } });
+        $('[data-lp-delar]', a).innerHTML = delar.map((d) => `<li><span>${d === l.km ? 'Mål' : `${fmt(d, 1)} km`}</span><b class="tal">${tidText(tp * d)}</b></li>`).join(''); }); } }
   }
+
+  /* ---- 12d kartan i 3D: lutad kamera, byggnader, vatten, parker, gator och rundan som upphöjt band (canvas 2D, egen projektion) ---- */
+  // Punkter längs en SVG-väg (mäts i en dold svg – getPointAtLength kräver att vägen sitter i dokumentet).
+  let matSvg = null;
+  function vagPunkter(d, n) {
+    if (!matSvg) { matSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); matSvg.setAttribute('aria-hidden', 'true'); matSvg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden'; document.body.appendChild(matSvg); }
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path'); p.setAttribute('d', d); matSvg.appendChild(p);
+    const L = p.getTotalLength(), ut = Array.from({ length: n }, (_, i) => { const q = p.getPointAtLength(L * i / (n - 1)); return [q.x, q.y]; }); p.remove(); return ut;
+  }
+  const FARG_HEX = () => (document.body.dataset.niva === 'motionar' ? { gar: '#5a9be0', jogg: '#22b58d', spring: '#e7a522', tar: '#e0603f' } : { gar: '#8fc3f7', jogg: '#6fdcbc', spring: '#f3c35a', tar: '#f08a6c' });
+  function karta3d(cv, l, v) {
+    const ljus = document.body.dataset.niva === 'motionar', F = FARG_HEX();
+    const P = ljus ? { mark: '#e6eae4', mark2: '#dde3dc', vatten: '#9ec6ea', vattenKant: '#bcd8f1', park: '#bcdcb4', gata: '#ffffff', gataStor: '#ffffff', tak: '#f7f8f6', sidaA: '#d4dad6', sidaB: '#c3cbc7', text: '#20303c', textKant: 'rgba(255,255,255,.9)', fonster: null, dimma: 'rgba(238,241,236,' }
+      : { mark: '#152230', mark2: '#111c28', vatten: '#173450', vattenKant: '#21476b', park: '#1d3a2e', gata: 'rgba(255,255,255,.07)', gataStor: 'rgba(255,255,255,.12)', tak: '#24384a', sidaA: '#1a2b3b', sidaB: '#132231', text: '#e8eef2', textKant: 'rgba(11,21,32,.9)', fonster: 'rgba(255,214,140,', dimma: 'rgba(14,24,34,' };
+    const rutt = vagPunkter(l.bana, v.length + 1), vatten = l.vatten ? vagPunkter(l.vatten, 90) : null;
+    const gator = GATOR_D.map((d, i) => ({ p: vagPunkter(d, 40), stor: i % 3 === 0 }));
+    const nara = (x, y, r) => rutt.some(([a, b]) => (a - x) ** 2 + (b - y) ** 2 < r * r);
+    const iVatten = (x, y) => { if (!vatten) return false; let inne = false; for (let i = 0, j = vatten.length - 1; i < vatten.length; j = i++) { const [xi, yi] = vatten[i], [xj, yj] = vatten[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inne = !inne; } return inne; };
+    const iPark = (x, y) => (l.parker || []).some(([px, py, rx, ry]) => ((x - px) / rx) ** 2 + ((y - py) / ry) ** 2 < 1.15);
+    // Byggnader: kvarteren som lådor med höjd – inte där banan, vattnet eller parkerna går
+    const hus = []; for (let i = 0; i < 80; i++) { const x = (i % 10) * 34 + 6 + ((i * 7) % 9), y = Math.floor(i / 10) * 31 + 4 + ((i * 11) % 7), w = 14 + (i * 5) % 10, d = 13 + (i * 3) % 9;
+      const cx = x + w / 2, cy = y + d / 2; if (nara(cx, cy, 17) || iVatten(cx, cy) || iPark(cx, cy) || x + w > 336 || y + d > 246) continue; hus.push({ x, y, w, d, h: 5 + ((i * 37) % 23) * (Math.abs(cx - 170) < 90 ? 1.2 : .7), f: (i * 13) % 7 }); }
+    let W = 0, H = 0, dpr = 1, raf = 0, t0 = performance.now(), spel = null, cam = { yaw: -.32, tilt: .2 };
+    const g = cv.getContext('2d');
+    const storlek = () => { dpr = Math.min(2, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); };
+    storlek();
+    // Projektion: banan i kartans enheter (340 × 250, mitten 170,125), höjd uppåt. Kameran lutar (tilt) och vrider sig (yaw).
+    const proj = (x, y, h = 0) => { const X = x - 170, Z = y - 125, c = Math.cos(cam.yaw), s = Math.sin(cam.yaw), xr = X * c - Z * s, zr = X * s + Z * c;
+      const ct = Math.cos(cam.tilt), st = Math.sin(cam.tilt), D = 430, djup = D - zr * st - h * ct, f = W * .98 * D / 340;
+      return [W / 2 + f * xr / djup, H * .56 + f * (zr * ct - h * st) / djup, djup, f / djup]; };
+    const poly = (pts, h = 0) => { g.beginPath(); pts.forEach(([x, y], i) => { const [a, b] = proj(x, y, h); i ? g.lineTo(a, b) : g.moveTo(a, b); }); };
+    function rita(nu0) {
+      g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+      // marken med en mjuk ton mot horisonten
+      poly([[-60, -60], [400, -60], [400, 310], [-60, 310]]); const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, P.mark2); gr.addColorStop(1, P.mark); g.fillStyle = gr; g.fill();
+      (l.parker || []).forEach(([px, py, rx, ry]) => { poly(Array.from({ length: 28 }, (_, i) => [px + Math.cos(i / 28 * 6.283) * rx, py + Math.sin(i / 28 * 6.283) * ry])); g.fillStyle = P.park; g.fill(); });
+      if (vatten) { poly(vatten); g.fillStyle = P.vatten; g.fill(); g.strokeStyle = P.vattenKant; g.lineWidth = 2; g.stroke();
+        // ljusglitter på vattnet som rör sig
+        g.save(); poly(vatten); g.clip(); g.globalAlpha = ljus ? .35 : .25; g.strokeStyle = '#fff'; g.lineWidth = 1;
+        for (let k = 0; k < 9; k++) { const x0 = ((k * 47 + nu0 / 90) % 380) - 20, y0 = 112 + (k % 3) * 9; const [a, b] = proj(x0, y0), [c2, d2] = proj(x0 + 14, y0 + 1); g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2); g.stroke(); } g.restore(); }
+      gator.forEach(({ p, stor }) => { g.beginPath(); p.forEach(([x, y], i) => { const [a, b] = proj(x, y); i ? g.lineTo(a, b) : g.moveTo(a, b); }); g.strokeStyle = stor ? P.gataStor : P.gata; g.lineWidth = (stor ? 4.5 : 2.4) * proj(170, 125)[3] * 1.4; g.lineCap = 'round'; g.stroke(); });
+      // rundans skugga på marken
+      g.beginPath(); rutt.forEach(([x, y], i) => { const [a, b] = proj(x + 1.5, y + 2); i ? g.lineTo(a, b) : g.moveTo(a, b); }); g.strokeStyle = ljus ? 'rgba(24,54,83,.18)' : 'rgba(0,0,0,.45)'; g.lineWidth = 7; g.lineJoin = 'round'; g.stroke();
+      // byggnader bakifrån och fram, sidorna skuggade efter kamerans vinkel
+      g.fillStyle = ljus ? 'rgba(24,54,83,.1)' : 'rgba(0,0,0,.28)'; for (const b of hus) { const o = b.h * .45; poly([[b.x, b.y], [b.x + b.w, b.y], [b.x + b.w + o, b.y + b.d + o * .6], [b.x + o, b.y + b.d + o * .6]]); g.fill(); }
+      const sorterade = hus.map((b) => ({ b, d: proj(b.x + b.w / 2, b.y + b.d / 2)[2] })).sort((a, b) => b.d - a.d);
+      for (const { b } of sorterade) { const c = [[b.x, b.y], [b.x + b.w, b.y], [b.x + b.w, b.y + b.d], [b.x, b.y + b.d]];
+        for (let k = 0; k < 4; k++) { const [x1, y1] = c[k], [x2, y2] = c[(k + 1) % 4], m1 = proj(x1, y1), m2 = proj(x2, y2), t1 = proj(x1, y1, b.h), t2 = proj(x2, y2, b.h);
+          const normal = (m2[0] - m1[0]) * (t1[1] - m1[1]) - (m2[1] - m1[1]) * (t1[0] - m1[0]); if (normal > 0) continue;
+          g.beginPath(); g.moveTo(m1[0], m1[1]); g.lineTo(m2[0], m2[1]); g.lineTo(t2[0], t2[1]); g.lineTo(t1[0], t1[1]); g.closePath(); g.fillStyle = k % 2 ? P.sidaA : P.sidaB; g.fill();
+          if (P.fonster && b.h > 9) { g.fillStyle = `${P.fonster}${.35 + (b.f % 3) * .15})`; for (let r = 1; r < b.h / 4; r++) for (let q = 1; q < 4; q++) { if ((r * 7 + q * 3 + b.f) % 4) continue; const u = q / 4, hh = r * 4, [wx, wy] = proj(x1 + (x2 - x1) * u, y1 + (y2 - y1) * u, hh); g.fillRect(wx - .7, wy - .7, 1.4, 1.4); } } }
+        poly(c, b.h); g.fillStyle = P.tak; g.fill(); }
+      // rundan: upphöjt band i fartens färger, det som inte är sprunget (under uppspelning) dämpat
+      const sp = spel ? Math.min(1, (nu0 - spel.t0) / spel.T) : 1, slut = Math.floor(sp * v.length);
+      g.lineCap = 'round'; g.lineJoin = 'round';
+      for (const pass of [0, 1]) for (let i = 0; i < v.length; i++) { const p1 = rutt[i], p2 = rutt[i + 1] || p1, [a, b] = proj(p1[0], p1[1], 1.6), [c2, d2] = proj(p2[0], p2[1], 1.6), z = fartZon(v[i])[1], s0 = proj(p1[0], p1[1])[3];
+        g.globalAlpha = (i < slut ? 1 : .16) * (pass ? 1 : ljus ? .22 : .35); g.strokeStyle = F[z]; g.lineWidth = pass ? Math.max(2, 3.6 * s0 * 1.3) : Math.max(6, 11 * s0 * 1.3); g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2); g.stroke(); }
+      g.globalAlpha = 1;
+      // ett ljus som löper längs banan när den inte spelas upp
+      if (!spel && !lugn) { const k = Math.floor(((nu0 / 5200) % 1) * v.length); for (let j = 0; j < 6; j++) { const i = (k - j + v.length) % v.length, p2 = rutt[i + 1] || rutt[i], [a, b] = proj(rutt[i][0], rutt[i][1], 1.8), [c2, d2] = proj(p2[0], p2[1], 1.8);
+        g.globalAlpha = (1 - j / 6) * .85; g.strokeStyle = '#fff'; g.lineWidth = 1.8; g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2); g.stroke(); } g.globalAlpha = 1; }
+      // nålar för platserna – start och mål med pulserande ring på marken
+      l.platser.forEach(([x, y, t, s]) => { const start = s === 'b', [a, b] = proj(x, y), [c2, d2] = proj(x, y, start ? 22 : 16);
+        if (start) { const fas = ((nu0 / 2200) % 1); poly(Array.from({ length: 24 }, (_, i) => [x + Math.cos(i / 24 * 6.283) * (4 + fas * 16), y + Math.sin(i / 24 * 6.283) * (4 + fas * 16)])); g.strokeStyle = `rgba(126,224,195,${(1 - fas) * .8})`; g.lineWidth = 2; g.stroke(); }
+        g.strokeStyle = ljus ? 'rgba(11,21,32,.45)' : 'rgba(255,255,255,.5)'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2); g.stroke();
+        g.beginPath(); g.arc(c2, d2, start ? 5 : 3.6, 0, 6.283); g.fillStyle = start ? '#7ee0c3' : (ljus ? '#fff' : '#e8eef2'); g.fill(); g.lineWidth = 1.6; g.strokeStyle = start ? '#0b1520' : (ljus ? '#20303c' : '#0b1520'); g.stroke();
+        g.font = `600 ${start ? 10.5 : 10}px Manrope, system-ui, sans-serif`; const tw = g.measureText(t).width, tx = Math.min(W - 8 - tw / 2, Math.max(8 + tw / 2, c2)); g.textAlign = 'center'; g.lineWidth = 3.4; g.lineJoin = 'round'; g.strokeStyle = P.textKant; g.strokeText(t, tx, d2 - 9); g.fillStyle = P.text; g.fillText(t, tx, d2 - 9); });
+      // löparen under uppspelningen
+      if (spel) { const i = Math.min(v.length - 1, slut), q = (sp * v.length) - i, x = rutt[i][0] + (rutt[Math.min(i + 1, v.length)][0] - rutt[i][0]) * q, y = rutt[i][1] + (rutt[Math.min(i + 1, v.length)][1] - rutt[i][1]) * q, z = fartZon(v[i]), [a, b] = proj(x, y, 2.5);
+        const glod = g.createRadialGradient(a, b, 0, a, b, 16); glod.addColorStop(0, F[z[1]]); glod.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = glod; g.globalAlpha = .7; g.beginPath(); g.arc(a, b, 16, 0, 6.283); g.fill(); g.globalAlpha = 1;
+        g.beginPath(); g.arc(a, b, 5, 0, 6.283); g.fillStyle = '#fff'; g.fill(); g.lineWidth = 3; g.strokeStyle = F[z[1]]; g.stroke();
+        spel.info && (spel.info.innerHTML = `<b class="tal">${fmt(sp * l.km, 1)}</b><small>km</small><span class="lp-zon" data-z="${z[1]}">${z[2]} · ${fmt(v[i], 1)} km/h</span>`);
+        if (sp >= 1) { const k = spel.knapp; spel = null; if (k) k.innerHTML = `${ik('uppdatera')}Spela upp igen`; } }
+      // dimma mot horisonten
+      const dm = g.createLinearGradient(0, 0, 0, H * .35); dm.addColorStop(0, `${P.dimma}1)`); dm.addColorStop(1, `${P.dimma}0)`); g.fillStyle = dm; g.fillRect(0, 0, W, H * .35);
+    }
+    function steg(nu0) {
+      if (!cv.isConnected || arkLager.hidden) { ro.disconnect(); raf = 0; return; } const t = (nu0 - t0) / 1000, e0 = Math.min(1, t / 1.8), ease = 1 - (1 - e0) ** 3;
+      cam.tilt = .2 + ease * .78; cam.yaw = -.32 + ease * .2 + (lugn ? 0 : Math.sin(t * .16) * .2);
+      rita(nu0); if (!lugn || spel || e0 < 1) raf = requestAnimationFrame(steg);
+    }
+    if (lugn) { cam.tilt = .98; cam.yaw = -.12; rita(performance.now()); } else raf = requestAnimationFrame(steg);
+    const ro = new ResizeObserver(() => { storlek(); if (lugn) rita(performance.now()); }); ro.observe(cv);
+    return { spela(knapp, info) { spel = { t0: performance.now(), T: lugn ? 1 : 8000, knapp, info }; if (knapp) knapp.innerHTML = `${ik('klocka')}Spelar upp …`; if (lugn) { spel.t0 -= 1; rita(performance.now()); } else if (!raf) raf = requestAnimationFrame(steg); },
+      stopp() { cancelAnimationFrame(raf); ro.disconnect(); } };
+  }
+  let karta3dNu = null;
 
   /* ---- 13 arken ---- */
   const arkLager = $('#ark');
@@ -1621,8 +1712,8 @@
       kroppLage = b.dataset.v; kroppLageForra = kroppLage; G['kropp-lage'].pagar = true; setTimeout(() => { G['kropp-lage'].pagar = false; hem('kropp', { in: 'mjuk' }); }, lugn ? 0 : 340); },
     'lopp-ark': () => { stangArk(); setTimeout(() => loppArk(), arkLager.hidden ? 0 : 360); },
     'lopp-flik': (b) => { if (b.getAttribute('aria-pressed') === 'true') return; const g = b.parentElement; $$('button', g).forEach((x) => x.setAttribute('aria-pressed', x === b)); segmentMarkor(g);
-      cancelAnimationFrame(spokRaf); const inne = $('.lp-inne', arkLager); if (inne) inne.dataset.gar = ''; setTimeout(() => loppArk(b.dataset.v), lugn ? 0 : 230); },
-    'lopp-spela': (b) => { const svg = $('.lp-kartram .lp-karta', arkLager); if (svg) spelaRunda(svg, exempelRunda(loppNu()), loppNu(), b); },
+      cancelAnimationFrame(spokRaf); const inne = $('.lp-inne', arkLager); if (inne) inne.dataset.gar = ''; clearTimeout(G['lopp-flik'].t); G['lopp-flik'].t = setTimeout(() => loppArk(b.dataset.v, { bara: true }), lugn ? 0 : 180); },
+    'lopp-spela': (b) => { if (karta3dNu) return karta3dNu.spela(b, $('[data-lp-live]', arkLager)); const svg = $('.lp-kartram .lp-karta', arkLager); if (svg) spelaRunda(svg, exempelRunda(loppNu()), loppNu(), b); },
     'lopp-garmin': () => toast('Kopplingen till klockan öppnas i nästa version'),
     'lopp-val': (b) => { const l = LOPP.find((x) => x.id === b.dataset.v); if (!l) return; const s0 = loppSt(); s0.id = l.id; s0.mal = Math.round(l.km * (elit() ? 260 : 330) / 60) * 60; spara();
       loppArk('karta'); toast(`${l.namn} är ditt lopp`); if (flik === 'idag') setTimeout(() => { const k = $('.lp-kort', nu); if (k) { k.outerHTML = loppKort(4); const ny = $('.lp-kort', nu); ny.classList.remove('in'); const x = $('.lp-karta', ny); if (x) fargaRunda(x, exempelRunda(l)); } }, 400); },
