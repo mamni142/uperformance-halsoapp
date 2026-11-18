@@ -32,7 +32,7 @@ body[data-tema="landslaget"] .idag-vy > .valkomst > :not(.ls-hero) { position: r
 .ls-s-ned { display: grid; justify-items: end; text-align: right; }
 .ls-s-ned b { font: 600 42px/1 var(--font-siffror) !important; letter-spacing: -.03em; background: linear-gradient(180deg, #ffe066, #ffcd00 60%, #e0a800); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .ls-s-ned small { margin-top: 2px; font: 600 11px/1.2 var(--font-brod); color: var(--text-3); }
-.ls-s-bana { position: relative; height: 92px; margin: 16px 2px 0; }
+.ls-s-bana { position: relative; height: 92px; margin: 34px 2px 0; }
 .ls-s-bana svg { position: absolute; left: 0; right: 0; top: 0; width: 100%; height: 40px; overflow: visible; }
 .ls-s-spar { fill: none; stroke: var(--kant-2); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 6 5; vector-effect: non-scaling-stroke; }
 .ls-s-spar-klar { stroke: #ffcd00; filter: drop-shadow(0 0 4px rgba(255, 205, 0, .6));

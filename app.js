@@ -226,7 +226,7 @@
         <span class="splash-puls"></span><span class="splash-puls" style="animation-delay:1.85s"></span><span class="splash-halo"></span>
         <span class="komet" aria-hidden="true"></span>
         <svg viewBox="0 0 396 396"><path class="splash-spar" d="M198,10c103.9,0,188,84,188,187.5s-84.1,187.5-188,187.5S10,301,10,197.5,94.1,10,198,10Z"/><path class="splash-ring" d="M198,10c103.9,0,188,84,188,187.5s-84.1,187.5-188,187.5S10,301,10,197.5,94.1,10,198,10Z"/>
-        ${LANDS ? '<path class="splash-u ls-flinga" d="M198 110v176M122 154l152 88M122 242l152-88M198 110l-18 18M198 110l18 18M198 286l-18-18M198 286l18-18M122 154l25 4M122 154l9 23M274 242l-25-4M274 242l-9-23M122 242l9-23M122 242l25-4M274 154l-9 23M274 154l-25 4"/>' : ''}<path class="splash-u${LANDS ? ' ls-dold' : ''}" d="M177.5,127.8v88.6c0,7.3,1.6,13,4.7,17.3,3.3,4.1,8.4,6.2,15.5,6.2s12.4-2.1,15.8-6.2c3.4-4.3,5.1-10.1,5.1-17.3v-88.6h49.1v88.6c0,14.9-3.1,27.8-9.3,38.4-6.2,10.5-14.7,18.4-25.5,23.8-10.8,5.3-22.9,8-36.2,8s-25.2-2.7-35.5-8c-10.2-5.3-18.2-13.2-24-23.8-5.8-10.5-8.7-23.3-8.7-38.4v-88.6h49.1-.1Z"/></svg>
+        ${LANDS ? flingaSvg() : ''}<path class="splash-u${LANDS ? ' ls-dold' : ''}" d="M177.5,127.8v88.6c0,7.3,1.6,13,4.7,17.3,3.3,4.1,8.4,6.2,15.5,6.2s12.4-2.1,15.8-6.2c3.4-4.3,5.1-10.1,5.1-17.3v-88.6h49.1v88.6c0,14.9-3.1,27.8-9.3,38.4-6.2,10.5-14.7,18.4-25.5,23.8-10.8,5.3-22.9,8-36.2,8s-25.2-2.7-35.5-8c-10.2-5.3-18.2-13.2-24-23.8-5.8-10.5-8.7-23.3-8.7-38.4v-88.6h49.1-.1Z"/></svg>
       </div>
       <div class="splash-ord">${LANDS ? '<b class="ls-ordmarke" aria-label="Längdlandslaget">Längdlandslaget</b>' : '<svg viewBox="440 140 840 120" class="ordmarke" aria-label="Uperformance"><use href="#logo" width="1274.2" height="395"/></svg>'}<p>${(LANDS ? 'Koncept av Uperformance' : 'Hälsa med elitstandard').split('').map((t, i) => `<span style="--k:${i}">${t === ' ' ? '&nbsp;' : t}</span>`).join('')}</p></div>
       <div class="intro-laddar" aria-hidden="true"><i></i></div>`, { in: 'tona', klass: 'splash' });
@@ -1526,6 +1526,19 @@
       <svg class="ls-hero-fj ls-hero-fj1" viewBox="0 0 400 100" preserveAspectRatio="none"><path d="${fj(26, 8, 34)}"/><path transform="translate(400 0)" d="${fj(26, 8, 34)}"/></svg>
       <svg class="ls-hero-fj ls-hero-fj2" viewBox="0 0 400 100" preserveAspectRatio="none"><path d="${fj(50, 5, 30)}"/><path transform="translate(400 0)" d="${fj(50, 5, 30)}"/></svg>
       ${lsBacke()}<div class="ls-hero-sno">${sno}</div></div>`;
+  }
+  // Introts snöflinga: sex armar med två par grenar och en kristall i spetsen, en sexkant i mitten.
+  // Armarna ritas fram en i taget, flingan vrider sig på plats med en fjäder, spetsarna tänds och ett ljus glider över.
+  function flingaSvg() {
+    const C = 198, p = (r, v) => [(C + Math.cos(v) * r).toFixed(1), (C + Math.sin(v) * r).toFixed(1)];
+    const arm = (k) => { const v = -Math.PI / 2 + k * Math.PI / 3, gren = (r, l) => [-1, 1].map((sd) => { const [x0, y0] = p(r, v), [x1, y1] = [(+x0 + Math.cos(v + sd * .95) * l).toFixed(1), (+y0 + Math.sin(v + sd * .95) * l).toFixed(1)]; return `M${x0} ${y0}L${x1} ${y1}`; }).join('');
+      const [a, b] = p(24, v), [c, d] = p(84, v), [tx, ty] = p(92, v);
+      return `<path pathLength="1" style="--k:${k}" d="M${a} ${b}L${c} ${d}${gren(44, 26)}${gren(66, 17)}"/><rect class="ls-fl-topp" style="--k:${k}" x="${(tx - 6).toFixed(1)}" y="${(ty - 6).toFixed(1)}" width="12" height="12" rx="2.5" transform="rotate(${(v * 180 / Math.PI + 45).toFixed(1)} ${tx} ${ty})"/>`; };
+    const hex = Array.from({ length: 6 }, (_, k) => p(18, -Math.PI / 2 + k * Math.PI / 3).join(' ')).join(' L');
+    return `<g class="ls-flinga"><defs><linearGradient id="ls-fl-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1a6"/><stop offset=".45" stop-color="#ffcd00"/><stop offset="1" stop-color="#e39f00"/></linearGradient>
+      <radialGradient id="ls-fl-ljus"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+      <g class="ls-fl-armar">${Array.from({ length: 6 }, (_, k) => arm(k)).join('')}<path class="ls-fl-mitt" pathLength="1" d="M${hex} Z"/></g>
+      <circle class="ls-fl-ljus" cx="${C}" cy="${C}" r="26" fill="url(#ls-fl-ljus)"/></g>`;
   }
   // En åkare i landslagets dräkt (blå med gula detaljer), sedd från sidan i diagonalgång: knäna böjs, armar och stavar
   // pendlar mot benen, kroppen guppar. Fötterna i 0,0, åker åt höger. SMIL: points/transform, inget som ritar om layouten.

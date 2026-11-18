@@ -38,9 +38,6 @@ body[data-tema="landslaget"][data-niva="motionar"] .mh-lista [data-n="0"] .mh-na
 .ls-marke b { font: 800 15px/1 var(--font-rubrik); letter-spacing: .14em; color: var(--text); }
 .ls-marke small { font: 600 10.5px/1 var(--font-brod); letter-spacing: .04em; color: var(--accent-text); }
 .ls-dold { display: none !important; }
-.ls-flinga { fill: none !important; stroke: #ffcd00 !important; stroke-width: 16 !important; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 900; stroke-dashoffset: 900;
-  animation: ls-flinga 1.6s cubic-bezier(.4, 0, .2, 1) .8s forwards !important; transform-box: fill-box; transform-origin: center; filter: drop-shadow(0 0 14px rgba(255, 205, 0, .55)); }
-@keyframes ls-flinga { 60% { stroke-dashoffset: 0; transform: rotate(0); } to { stroke-dashoffset: 0; transform: rotate(60deg); } }
 body[data-tema="landslaget"] .splash-ring { stroke: #4da3ff !important; }
 body[data-tema="landslaget"] .up-notis-ikon { background: linear-gradient(160deg, #0b5cc2, #041733) !important; color: #ffcd00 !important; }
 body[data-tema="landslaget"] .intro-norrsken i:nth-child(1) { background: radial-gradient(closest-side, rgba(77, 163, 255, .55), transparent) !important; }
@@ -76,10 +73,9 @@ body[data-tema="landslaget"] .valkomst-text, body[data-tema="landslaget"] .valko
 .ls-valla-fot { display: grid; grid-template-columns: 16px 1fr; gap: 6px; margin: 10px 0 0; font-size: 12px; color: var(--text-3); }
 .ls-valla-fot svg { width: 14px; height: 14px; margin-top: 1px; }
 
-@media (prefers-reduced-motion: reduce) { body[data-tema="landslaget"] .idag-vy > .valkomst::before, body[data-tema="landslaget"] .idag-vy > .valkomst::after, .ls-ordmarke, .ls-flinga { animation: none !important; } .ls-flinga { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { body[data-tema="landslaget"] .idag-vy > .valkomst::before, body[data-tema="landslaget"] .idag-vy > .valkomst::after, .ls-ordmarke { animation: none !important; } }
 
 /* 05 Rättningar: flingan syns, landslagets loggor (JPG/PNG med vit botten) på vita plattor i alla lägen – aldrig inverterade */
-.ls-flinga { opacity: 1 !important; }
 img[src*="partner/landslaget/"] { filter: none !important; opacity: 1 !important; background: #fff; border-radius: 6px; padding: 2px 4px; object-fit: contain; }
 .lp-s-rad img[src*="partner/landslaget/"] { height: 22px !important; max-width: 62px !important; }
 .lp-p-chip-logga:has(img[src*="partner/landslaget/"]) { background: #fff !important; padding: 4px 8px !important; }
@@ -107,3 +103,18 @@ body[data-tema="landslaget"] .flik-kapsel .flik-markor::before { box-shadow: ins
 body[data-tema="landslaget"][data-niva="elit"] .flik-kapsel .flik-markor::before { box-shadow: inset 0 1px 0 var(--fl-droppe-kant), inset 0 0 0 .5px rgba(109, 182, 255, .45), 0 0 16px -6px rgba(77, 163, 255, .6) !important; }
 /* säsongskortets åkare: blå ikon i guldbricka med blå ring */
 .ls-s-akare { color: #0a3470 !important; box-shadow: 0 6px 14px -6px rgba(200, 150, 0, .8), 0 0 0 3px rgba(11, 62, 128, .9), 0 0 0 5px rgba(255, 205, 0, .35) !important; }
+
+/* 10 Introts snöflinga (flingaSvg): armarna ritas fram, flingan vrids på plats med en fjäder, spetsarna tänds, ett ljus glider över */
+.ls-flinga { transform-box: view-box; transform-origin: 198px 198px; animation: ls-fl-in 2.4s cubic-bezier(.22, 1.2, .36, 1) .55s both, ls-fl-andas 5s ease-in-out 3.2s infinite;
+  filter: drop-shadow(0 0 10px rgba(255, 205, 0, .45)) drop-shadow(0 4px 10px rgba(0, 0, 0, .25)); }
+.ls-fl-armar path { fill: none; stroke: url(#ls-fl-g); stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1;
+  animation: ls-fl-rita .85s cubic-bezier(.4, 0, .2, 1) calc(.7s + var(--k, 0) * .09s) forwards; }
+.ls-fl-armar .ls-fl-mitt { stroke-width: 8; animation-delay: .6s; }
+.ls-fl-topp { fill: url(#ls-fl-g); transform-box: fill-box; transform-origin: center; animation: ls-fl-pop .55s cubic-bezier(.2, 1.6, .4, 1) calc(1.35s + var(--k) * .07s) both; }
+.ls-fl-ljus { opacity: 0; transform-box: fill-box; transform-origin: center; animation: ls-fl-ljus 1.3s ease-out 1.9s both; }
+@keyframes ls-fl-rita { to { stroke-dashoffset: 0; } }
+@keyframes ls-fl-in { from { transform: rotate(-40deg) scale(.82); opacity: 0; } 18% { opacity: 1; } to { transform: rotate(0) scale(1); opacity: 1; } }
+@keyframes ls-fl-andas { 50% { transform: rotate(6deg) scale(1.02); } }
+@keyframes ls-fl-pop { from { transform: scale(0) rotate(-45deg); } }
+@keyframes ls-fl-ljus { 0% { opacity: 0; transform: scale(.4); } 30% { opacity: .9; } 100% { opacity: 0; transform: scale(3.4); } }
+@media (prefers-reduced-motion: reduce) { .ls-flinga, .ls-fl-armar path, .ls-fl-topp, .ls-fl-ljus { animation: none !important; } .ls-fl-armar path { stroke-dashoffset: 0; } }
