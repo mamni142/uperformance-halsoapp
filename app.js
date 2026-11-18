@@ -1058,7 +1058,7 @@
     const streck = Array.from({ length: 48 }, (_, i) => `<line x1="60" y1="1.5" x2="60" y2="${i % 4 ? 5.5 : 8}" transform="rotate(${i * 7.5} 60 60)" ${i / 48 < hp / 100 ? `class="pa" style="--n:${i}"` : ''}/>`).join('');
     const lage = hp >= 75 ? 'Stark vecka' : hp >= 60 ? 'Stabil vecka' : 'Tid för återhämtning';
     const pass = e((PASS.find((x) => x[0] === p.pass)?.[1] || '–').replace(' pass', '').replace(' eller fler', '+'));
-    const inst = [['coach', 'gnista', 'Coach och påminnelser', `<span class="chip jg-tid">${e(TONER.find(([k]) => k === coach().ton)[1])}</span>`, 'is'], ['schema', 'kalender', 'Träningsschema', `<span class="chip jg-tid tal">${schema().filter(Boolean).length} pass/v</span>`, 'ok'],
+    const inst = [['coach', 'gnista', 'Coach', `<span class="jg-inst-varde"><span class="chip jg-tid">${e(TONER.find(([k]) => k === coach().ton)[1])}</span>${ik('hoger')}</span>`, 'is'], ['schema', 'kalender', 'Träningsschema', `<span class="jg-inst-varde"><span class="chip jg-tid tal">${schema().filter(Boolean).length} pass/v</span>${ik('hoger')}</span>`, 'ok'],
       ['notiser', 'info', 'Notiser', `<span class="vaxel" role="switch" aria-checked="${st.notiser !== false}" aria-hidden="true"></span>`, ''],
       ['export', 'dokument', 'Exportera mina data', ik('hoger'), 'gul'], ['integritet', 'skold', 'Integritet och samtycke', ik('hoger'), '']];
     return `${topp('Jag')}
@@ -1303,7 +1303,7 @@
       partner: { kalla: 'goteborgsvarvet.se/partners',
         huvud: [['ASICS', 'Huvudpartner i Varvetfamiljen'], ['Polestar', 'Officiell klockbil · Polestar 4'], ['Stadium', 'Huvudpartner sedan 2025'], ['STC', 'Uppvärmning under Varvetveckan']],
         evenemang: ['Volvokoncernen', 'Göteborg Energi', 'Garmin', 'Vitamin Well', 'Biotherm', 'Almondy', 'Dannebacken', 'Cramo', 'Norion Bank', 'Solar Sverige', 'Skinome'],
-        media: ['Mix Megapol', 'Göteborgs-Posten', "Runner's World", 'Löpning & Livet'],
+        media: ['Mix Megapol', 'Göteborgs-Posten', "Runner's World"],
         leverantorer: ['ProPud', 'Chiquita', 'Radisson Blu Scandinavia', 'Therabody', 'Cramo', 'HLR Konsulten', 'Learnifier'],
         tid: 'Garmin' },
       bana: 'M150 214 C112 214 70 196 52 168 C40 150 38 128 40 104 C42 84 58 70 84 64 C120 56 168 52 206 58 C236 62 248 76 244 96 C240 112 228 122 226 134 C224 150 240 160 262 166 C284 172 290 192 270 204 C246 218 196 222 150 214',

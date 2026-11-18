@@ -93,3 +93,28 @@ body[data-niva="elit"] .lp-p-chip-logga.lp-p-vit { background: var(--yta) !impor
 .lp-p-chip-logga img[alt="Mix Megapol"] { height: 24px; }
 .lp-p-chip-logga img[alt="Dannebacken"] { height: 22px; }
 .lp-p-chip-logga img[alt="Cramo"] { height: 16px; max-width: 110px; }
+
+/* Jag i iOS 18-stil – grupperade listor som i Inställningar, lugn hjälte */
+.jg-hjalte-sken, .jg-avatar-ring { display: none !important; }
+.jg-avatar-bild { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), 0 12px 28px -14px rgba(15, 110, 87, .55) !important; }
+.jg-hjalte h2 { font: 700 28px/1.1 var(--font-rubrik) !important; letter-spacing: -.025em !important; }
+.jg-mal-lista { display: block !important; border-radius: 22px; overflow: hidden; background: var(--yta); box-shadow: 0 0 0 .5px var(--kant), 0 10px 24px -18px rgba(24, 54, 83, .28); }
+body[data-niva="elit"] .jg-mal-lista { background: rgba(246, 244, 239, .05); }
+.jg-mal-lista .jg-mal { margin: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; border: 0 !important; }
+.jg-mal-lista .jg-mal + .jg-mal { box-shadow: inset 64px .5px 0 -64px var(--kant-2) !important; }
+.jg-mal-lista .jg-mal + .jg-mal::before { content: ''; position: absolute; left: 68px; right: 0; top: 0; height: .5px; background: var(--kant-2); }
+.jg-mal-lista .jg-mal { position: relative; }
+.jg-inst-rad b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.jg-inst-rad .chip.jg-tid { background: none !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; min-height: 0 !important; font: 500 15px var(--font-brod) !important; color: var(--text-3) !important; }
+.jg-inst-varde { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.jg-inst-varde svg { width: 14px; height: 14px; color: var(--text-3); opacity: .7; }
+
+/* Partnerremsan: loggorna i samma gråskala och vikt, jämnt fördelade, tunna avdelare – som en partnerrad i iOS */
+.lp-sponsorer { padding: 9px 14px 10px !important; gap: 6px !important; border-radius: 18px !important; }
+.lp-s-etikett { font: 600 .54rem var(--font-brod) !important; letter-spacing: .18em !important; opacity: .85; }
+.lp-s-rad { justify-content: space-between !important; gap: 0 !important; }
+.lp-s-rad > i { width: .5px !important; height: 14px !important; border-radius: 0 !important; background: var(--kant-2) !important; opacity: 1 !important; }
+.lp-s-logga, .lp-s-polestar { filter: grayscale(1) brightness(.35); opacity: .9; }
+body[data-niva="elit"] .lp-s-logga, body[data-niva="elit"] .lp-s-polestar .lp-s-logga { filter: brightness(0) invert(1) !important; opacity: .82; }
+body[data-niva="elit"] .lp-s-polestar { filter: none; color: rgba(246, 244, 239, .82); }
+.lp-s-polestar .lp-s-logga { filter: none !important; }
