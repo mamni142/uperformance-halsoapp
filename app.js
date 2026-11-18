@@ -913,7 +913,7 @@
     if (kroppLage === 'ont') {
       innehall = `<div class="sektion-rubrik kv-rubrik in" style="--i:2"><h3>Var känns det?</h3><span class="liten">Eller tryck på kroppen</span></div>
         <div class="kv-snabb in" style="--i:2">${SNABBVAL.map(([k, t, ids]) => { const hit = zoner.filter((z) => (ids || [k]).includes(z.id)), aktiv = hit.length > 0;
-          return `<button class="kv-snabbval" data-g="snabbval" data-k="${k}" aria-pressed="${aktiv}">${aktiv ? `<i class="kv-prick" data-ton="${nivaTon(Math.max(...hit.map((z) => z.niva)))}"></i>` : ''}<span>${t}</span></button>`; }).join('')}</div>
+          const mx = aktiv ? Math.max(...hit.map((z) => z.niva)) : 0; return `<button class="kv-snabbval" data-g="snabbval" data-k="${k}" aria-pressed="${aktiv}" ${aktiv ? `data-ton="${nivaTon(mx)}"` : ''}>${aktiv ? `<b class="kv-niva tal" aria-label="${mx} av 10">${mx}</b>` : ''}<span>${t}</span></button>`; }).join('')}</div>
         ${zoner.length ? `<div class="sektion-rubrik kv-rubrik in" style="--i:3"><h3>Smärtdagbok</h3><span class="liten">${zoner.length} ${zoner.length === 1 ? 'område' : 'områden'} · 14 dagar</span></div>
         <div class="kv-zoner">${zoner.map((z, n) => { const v = dagbok(z.id, z.niva), forst = v[0], ton = nivaTon(z.niva), egen = dagbokEgen(z.id);
           const trend = z.niva < forst ? ['Minskar', 'ok'] : z.niva > forst ? ['Ökar', 'rod'] : ['Oförändrad', 'is'];
@@ -972,10 +972,20 @@
         <g clip-path="url(#kv-fl-${n})"><rect x="0" y="-32" width="17" height="15" fill="#006aa7"/><rect x="5" y="-32" width="2" height="15" fill="#fecc02"/><rect x="0" y="-25.1" width="17" height="2" fill="#fecc02"/>
           <rect x="-16" y="-32" width="48" height="15" fill="url(#kv-fv-${n})"><animateTransform attributeName="transform" type="translate" from="0 0" to="8 0" dur="1.3s" begin="${d}s" repeatCount="indefinite"/></rect></g></g>`; };
     return `<svg class="kv-landskap" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <defs><linearGradient id="kv-ns-g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cf5c8" stop-opacity="0"/><stop offset=".35" stop-color="#7cf5c8" stop-opacity=".85"/><stop offset=".8" stop-color="#3fd3a8" stop-opacity=".35"/><stop offset="1" stop-color="#3fd3a8" stop-opacity="0"/></linearGradient>
+        <linearGradient id="kv-ns-g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a98bff" stop-opacity="0"/><stop offset=".3" stop-color="#8f9bff" stop-opacity=".6"/><stop offset=".75" stop-color="#4da3ff" stop-opacity=".3"/><stop offset="1" stop-color="#4da3ff" stop-opacity="0"/></linearGradient>
+        <linearGradient id="kv-ns-strg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity=".25"/></linearGradient><pattern id="kv-ns-str" width="7" height="120" patternUnits="userSpaceOnUse"><rect width="7" height="120" fill="url(#kv-ns-strg)"/></pattern>
+        <mask id="kv-ns-m" maskUnits="userSpaceOnUse" x="-60" y="-40" width="520" height="160"><rect x="-60" y="-40" width="520" height="160" fill="url(#kv-ns-str)"/></mask>
+        <radialGradient id="kv-ns-sken" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#7cf5c8" stop-opacity=".35"/><stop offset="1" stop-color="#7cf5c8" stop-opacity="0"/></radialGradient></defs>
+      <g class="kv-ns" aria-hidden="true">
+        <g class="kv-ns-slaja kv-ns-1" mask="url(#kv-ns-m)"><path d="M-40 -10 C40 6 90 -14 150 2 S270 22 330 0 S420 -10 460 6 L460 70 C400 52 350 66 290 54 S170 38 110 56 S20 60 -40 48 Z" fill="url(#kv-ns-g1)"/></g>
+        <g class="kv-ns-slaja kv-ns-2" mask="url(#kv-ns-m)"><path d="M-40 10 C60 -4 120 18 200 6 S320 -6 400 12 L460 14 L460 62 C380 46 300 60 220 48 S80 58 -40 52 Z" fill="url(#kv-ns-g2)"/></g>
+        <g class="kv-ns-slaja kv-ns-3" mask="url(#kv-ns-m)"><path d="M60 0 C110 10 160 -6 220 4 S300 14 340 2 L340 58 C300 50 250 60 200 52 S110 50 60 56 Z" fill="url(#kv-ns-g1)" opacity=".7"/></g>
+        <ellipse class="kv-ns-glod" cx="200" cy="46" rx="230" ry="26" fill="url(#kv-ns-sken)"/></g>
       <path class="kv-fj1" d="M0 120V70L38 52L70 64L112 36L150 58L178 48L214 62L250 30L292 56L326 44L362 60L400 46V120Z"/>
       <path class="kv-fj1-sno" d="M112 36L103.6 41.6L107.6 40.6L110.4 43.2L113.6 41L116.6 42.4L120.4 41.1ZM250 30L241 38L245.4 37.1L248.6 39.8L251.6 37.2L255 38.2L258.4 35.5Z"/>
       <path class="kv-fj2" d="M0 120V92Q60 78 120 90T240 88T400 84V120Z"/>
-      ${flagga(112, 37.5, 0, 0)}${flagga(250, 31.5, 1, -.9)}<g class="kv-skog">${skog}</g></svg>`;
+      <path class="kv-fj-sken" d="M0 120V70L38 52L70 64L112 36L150 58L178 48L214 62L250 30L292 56L326 44L362 60L400 46V120Z"/><g class="kv-skog">${skog}</g></svg>`;
   }
   // Landslaget: vad tekniken belastar (allmän bild, ingen mätning) – tryck på en rad så visas området på kroppen.
   const TEKNIK = [

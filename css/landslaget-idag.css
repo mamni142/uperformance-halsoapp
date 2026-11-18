@@ -142,3 +142,21 @@ body[data-niva="motionar"] .ls-kv-bg b { background: #9cc4ee; }
 body[data-niva="motionar"] .kv-fj1 { fill: #b9d3ef; opacity: .7; } body[data-niva="motionar"] .kv-fj1-sno { fill: #fff; opacity: .9; }
 body[data-niva="motionar"] .kv-fj2 { fill: #d6e6f7; opacity: .9; } body[data-niva="motionar"] .kv-skog path { fill: #8fb0cf; opacity: .8; }
 body[data-niva="motionar"] .kv-stang { fill: #8fa3b9; } body[data-niva="motionar"] .kv-flagga { filter: drop-shadow(0 1px 1px rgba(20, 50, 90, .25)); }
+
+/* 09 Norrsken bland bergen på Kropp (2026-11-19): slöjor av strålar som böljar bakom de bortre fjällen, ett grönt sken faller på snön.
+   Bara transform/opacitet i looparna; flaggorna är borttagna. */
+.kv-landskap { height: 46% !important; overflow: visible; }
+.kv-ns { mix-blend-mode: screen; }
+.kv-ns-slaja { transform-box: view-box; transform-origin: 200px 60px; }
+.kv-ns-1 { animation: kv-ns-a 14s ease-in-out infinite alternate; }
+.kv-ns-2 { animation: kv-ns-b 19s ease-in-out -6s infinite alternate; opacity: .85; }
+.kv-ns-3 { animation: kv-ns-c 9s ease-in-out -3s infinite alternate; }
+@keyframes kv-ns-a { 0% { transform: translateX(-18px) skewX(-8deg) scaleY(.92); opacity: .7; } 50% { opacity: 1; } 100% { transform: translateX(22px) skewX(10deg) scaleY(1.12); opacity: .8; } }
+@keyframes kv-ns-b { 0% { transform: translateX(20px) skewX(9deg) scaleY(1.08); opacity: .5; } 50% { opacity: .9; } 100% { transform: translateX(-24px) skewX(-7deg) scaleY(.9); opacity: .6; } }
+@keyframes kv-ns-c { 0% { transform: translateX(-10px) scaleY(.85); opacity: .35; } 100% { transform: translateX(14px) scaleY(1.2); opacity: .9; } }
+.kv-ns-glod { transform-box: fill-box; transform-origin: center; animation: kv-ns-glod 7s ease-in-out infinite; }
+@keyframes kv-ns-glod { 50% { transform: scaleX(1.08); opacity: .55; } }
+.kv-fj-sken { fill: url(#kv-ns-sken); opacity: .55; mix-blend-mode: screen; pointer-events: none; animation: kv-ns-glod 7s ease-in-out infinite; transform-box: fill-box; transform-origin: 50% 0; }
+body[data-niva="motionar"] .kv-ns { mix-blend-mode: multiply; opacity: .55; }
+body[data-niva="motionar"] .kv-fj-sken { opacity: .25; mix-blend-mode: normal; }
+@media (prefers-reduced-motion: reduce) { .kv-ns-slaja, .kv-ns-glod, .kv-fj-sken { animation: none; } }

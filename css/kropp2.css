@@ -1,0 +1,30 @@
+/* Kropp, finish (2026-11-19): snabbvalen "Var känns det?" som iOS-rutor i alla tre versionerna, och norrskenet på Kropp mjukare.
+   Laddas sist. */
+
+/* 01 Snabbvalen: tio egna rutor med luft emellan, valt område i temats ton med smärtnivån som bricka */
+.kv-snabb { gap: 6px !important; padding: 0 !important; background: none !important; box-shadow: none !important; border-radius: 0 !important; }
+.kv-snabbval { position: relative; min-height: 46px !important; padding: 0 4px !important; border-radius: 15px !important; font: 600 13px/1.15 var(--font-rubrik) !important; letter-spacing: -.01em;
+  color: var(--text) !important; text-align: center; background: var(--yta) !important; box-shadow: 0 1px 2px rgba(15, 30, 50, .05), 0 6px 16px -12px rgba(15, 30, 50, .22), inset 0 0 0 .5px var(--kant) !important;
+  transition: transform .18s cubic-bezier(.3, .7, .3, 1), background .3s, box-shadow .3s, color .3s !important; }
+body[data-niva="elit"] .kv-snabbval { background: rgba(246, 244, 239, .06) !important; box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .1), inset 0 1px 0 rgba(255, 255, 255, .06) !important; }
+.kv-snabbval:hover { box-shadow: 0 1px 2px rgba(15, 30, 50, .05), 0 10px 20px -12px rgba(15, 30, 50, .3), inset 0 0 0 .5px var(--kant) !important; }
+.kv-snabbval:active { transform: scale(.94); }
+.kv-snabbval span { display: block; overflow-wrap: anywhere; }
+.kv-snabbval[aria-pressed="true"] { --kv-t: #e5674f; color: #b43c25 !important; background: color-mix(in srgb, var(--kv-t) 13%, var(--yta)) !important;
+  box-shadow: inset 0 0 0 1.2px color-mix(in srgb, var(--kv-t) 55%, transparent), 0 8px 18px -12px color-mix(in srgb, var(--kv-t) 70%, transparent) !important; }
+.kv-snabbval[aria-pressed="true"][data-ton="gul"] { --kv-t: #e8a21a; color: #8a5a00 !important; }
+.kv-snabbval[aria-pressed="true"][data-ton="ok"] { --kv-t: #2fbf95; color: #13775c !important; }
+body[data-niva="elit"] .kv-snabbval[aria-pressed="true"] { color: #ffb4a3 !important; background: color-mix(in srgb, var(--kv-t) 20%, transparent) !important; }
+body[data-niva="elit"] .kv-snabbval[aria-pressed="true"][data-ton="gul"] { color: #ffd27a !important; }
+.kv-niva { position: absolute; top: -6px; right: -4px; display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px;
+  font: 700 11px/1 var(--font-siffror); color: #fff; background: var(--kv-t, #e5674f); box-shadow: 0 0 0 2px var(--bg, #fff), 0 3px 8px -2px color-mix(in srgb, var(--kv-t, #e5674f) 70%, transparent);
+  animation: kv-niva-in .5s cubic-bezier(.2, 1.6, .4, 1) both; }
+body[data-niva="elit"] .kv-niva { box-shadow: 0 0 0 2px #0b1520; }
+@keyframes kv-niva-in { from { transform: scale(0); } }
+.kv-snabbval .kv-prick { display: none !important; }
+@media (max-width: 360px) { .kv-snabbval { font-size: 11.5px !important; } }
+
+/* 02 Norrskenet på Kropp (landslaget): mjukare strålar och tunnare slöjor, ljusa läget som pastell */
+.kv-ns { opacity: .8; }
+body[data-niva="motionar"] .kv-ns { mix-blend-mode: normal; opacity: .32; }
+@media (prefers-reduced-motion: reduce) { .kv-niva { animation: none; } }
