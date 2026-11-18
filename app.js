@@ -24,6 +24,19 @@
   document.documentElement.dataset.tema = TEMA; document.body.dataset.tema = TEMA;
   if (LANDS) document.title = 'Längdlandslaget – Hälsoappen · koncept av Uperformance';
   const MATCH = LANDS ? 'Tävling' : 'Match';
+  // Landslagets bakgrund bakom introt, välkommen och frågorna: norrsken, stjärnor, fjäll i två djup, snöfall och skidspår som ritas med en guldprick.
+  if (LANDS) {
+    const bg = document.createElement('div'); bg.className = 'ls-bg'; bg.setAttribute('aria-hidden', 'true');
+    const fjall = (h, top, n) => { const p = Array.from({ length: n + 1 }, (_, i) => [i * 800 / n, i % 2 ? top + 58 + ((i * 13) % 3) * 8 : top + ((i * 37) % 5) * 7]); let d = `M0 ${h} L0 ${p[0][1]}`; for (let i = 0; i < n; i++) { const mx = (p[i][0] + p[i + 1][0]) / 2, my = (p[i][1] + p[i + 1][1]) / 2; d += ` Q${p[i][0].toFixed(0)} ${p[i][1].toFixed(0)} ${mx.toFixed(0)} ${my.toFixed(0)}`; } return d + ` L800 ${p[n][1]} L800 ${h} Z`; };
+    const stj = Array.from({ length: 34 }, (_, i) => `<i style="--x:${(i * 53) % 100}%;--y:${(i * 29) % 46}%;--s:${(.6 + (i % 4) * .35).toFixed(2)};--d:${(-(i * .7) % 5).toFixed(2)}s"></i>`).join('');
+    const sno = Array.from({ length: 48 }, (_, i) => `<b style="--x:${(i * 41 + 7) % 100}%;--s:${(1.2 + (i % 4) * .9).toFixed(1)}px;--t:${(7 + (i % 5) * 2.2).toFixed(1)}s;--d:${(-(i * .61)).toFixed(2)}s;--v:${((i % 7) - 3) * 9}px;--o:${(.35 + (i % 3) * .2).toFixed(2)}"></b>`).join('');
+    bg.innerHTML = `<div class="ls-bg-ns"><i></i><i></i><i></i><i></i></div><div class="ls-bg-stj">${stj}</div><span class="ls-bg-glod"></span>
+      <svg class="ls-bg-fjall ls-bg-fjarran" viewBox="0 0 800 200" preserveAspectRatio="none"><path d="${fjall(200, 40, 10)}"/><path transform="translate(800 0)" d="${fjall(200, 40, 10)}"/></svg>
+      <svg class="ls-bg-fjall ls-bg-nara" viewBox="0 0 800 200" preserveAspectRatio="none"><path d="${fjall(200, 80, 6)}"/><path transform="translate(800 0)" d="${fjall(200, 80, 6)}"/></svg>
+      <svg class="ls-bg-spar" viewBox="0 0 400 120" preserveAspectRatio="none"><path class="ls-spar-a" pathLength="1" d="M-10 110 C80 96 150 70 220 64 C290 58 340 34 410 20"/><path class="ls-spar-b" pathLength="1" d="M-10 118 C80 104 150 78 220 72 C290 66 340 42 410 28"/></svg>
+      <span class="ls-bg-akare"><i></i></span><div class="ls-bg-sno">${sno}</div>`;
+    app.insertBefore(bg, skarmLager);
+  }
 
   /* ---- 02 lagring och exempeldata ---- */
   const NYCKEL = LANDS ? 'up-halsa-landslaget-v1' : 'up-halsa-v1';

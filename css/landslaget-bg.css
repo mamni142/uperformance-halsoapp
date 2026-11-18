@@ -1,0 +1,62 @@
+/* Landslagets bakgrund på de första sidorna (intro, välkommen, frågor, nivåval) och fler animeringar i landslagets anda.
+   Bara transform/opacitet i looparna. Laddas efter landslaget.css. */
+.ls-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 1s ease;
+  background: radial-gradient(120% 70% at 50% 0%, #0a3470 0%, #062452 35%, #041733 70%); }
+body[data-tema="landslaget"]:not([data-sida]) .ls-bg { opacity: 1; }
+body[data-tema="landslaget"]:not([data-sida]) .skarm { background: transparent !important; }
+body[data-tema="landslaget"] .intro-norrsken, body[data-tema="landslaget"] .intro-golv { opacity: .35 !important; }
+/* norrsken: fyra ljusband som böljar i olika takt */
+.ls-bg-ns { position: absolute; left: -30%; right: -30%; top: -8%; height: 62%; filter: blur(22px); }
+.ls-bg-ns i { position: absolute; left: 0; right: 0; height: 34%; border-radius: 50%; mix-blend-mode: screen; transform-origin: 50% 100%; opacity: .7; }
+.ls-bg-ns i:nth-child(1) { top: 8%; background: linear-gradient(90deg, transparent, rgba(70, 230, 190, .75) 30%, rgba(77, 163, 255, .6) 60%, transparent); animation: ls-band 13s ease-in-out infinite alternate; }
+.ls-bg-ns i:nth-child(2) { top: 24%; background: linear-gradient(90deg, transparent 10%, rgba(77, 163, 255, .7) 40%, rgba(140, 120, 255, .45) 70%, transparent); animation: ls-band 17s ease-in-out -4s infinite alternate-reverse; }
+.ls-bg-ns i:nth-child(3) { top: 40%; background: linear-gradient(90deg, transparent 20%, rgba(255, 205, 0, .35) 45%, rgba(70, 230, 190, .4) 70%, transparent); animation: ls-band 21s ease-in-out -9s infinite alternate; }
+.ls-bg-ns i:nth-child(4) { top: 14%; height: 18%; background: linear-gradient(90deg, transparent 30%, rgba(200, 255, 240, .5) 55%, transparent 80%); animation: ls-band 9s ease-in-out -2s infinite alternate-reverse; }
+@keyframes ls-band { 0% { transform: translateX(-12%) skewX(-18deg) scaleY(.8); opacity: .45; } 50% { opacity: .85; } 100% { transform: translateX(12%) skewX(14deg) scaleY(1.25); opacity: .55; } }
+/* stjärnor som blinkar */
+.ls-bg-stj i { position: absolute; left: var(--x); top: var(--y); width: calc(var(--s) * 2px); height: calc(var(--s) * 2px); border-radius: 50%; background: #fff; opacity: .6;
+  box-shadow: 0 0 6px rgba(255, 255, 255, .8); animation: ls-blink 4.6s ease-in-out var(--d) infinite; }
+@keyframes ls-blink { 50% { opacity: .15; transform: scale(.6); } }
+/* gult sken bakom fjällen som andas, som solen under horisonten */
+.ls-bg-glod { position: absolute; left: 50%; bottom: 14%; width: 140%; height: 46%; transform: translateX(-50%); border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 205, 0, .28), rgba(255, 160, 40, .1) 55%, transparent); animation: ls-glod 7s ease-in-out infinite; }
+@keyframes ls-glod { 50% { opacity: .55; transform: translateX(-50%) scale(1.06, .94); } }
+/* fjällen: två lager som glider långsamt (parallax) */
+.ls-bg-fjall { position: absolute; left: 0; bottom: 0; width: 200%; height: 30%; animation: ls-fjall 90s linear infinite; }
+.ls-bg-fjarran { bottom: 9%; height: 26%; animation-duration: 140s; }
+.ls-bg-fjarran path { fill: #10427f; opacity: .85; }
+.ls-bg-fjarran { filter: drop-shadow(0 -1.5px 0 rgba(220, 240, 255, .5)); }
+.ls-bg-nara path { fill: #0a2550; }
+.ls-bg-nara { filter: drop-shadow(0 -2px 0 rgba(200, 230, 255, .35)); }
+@keyframes ls-fjall { to { transform: translateX(-50%); } }
+/* skidspåren ritas fram och en guldprick (åkaren) glider längs spåret */
+.ls-bg-spar { position: absolute; left: 0; right: 0; bottom: 2%; width: 100%; height: 22%; }
+.ls-bg-spar path { fill: none; stroke: rgba(200, 230, 255, .55); stroke-width: 1.4; stroke-dasharray: 1; stroke-dashoffset: 1; animation: ls-rita 3.2s cubic-bezier(.4, 0, .2, 1) .6s forwards; vector-effect: non-scaling-stroke; }
+.ls-bg-spar .ls-spar-b { animation-delay: .8s; }
+@keyframes ls-rita { to { stroke-dashoffset: 0; } }
+.ls-bg-akare { position: absolute; left: 0; bottom: 2%; width: 100%; height: 22%; }
+.ls-bg-akare i { position: absolute; left: 0; bottom: 0; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: #ffcd00; box-shadow: 0 0 12px 4px rgba(255, 205, 0, .65); opacity: 0;
+  animation: ls-akare 9s cubic-bezier(.45, 0, .3, 1) 2s infinite; }
+@keyframes ls-akare { 0% { transform: translate(-4vw, -4%); opacity: 0; } 8% { opacity: 1; } 30% { transform: translate(30vw, -24vh); } 55% { transform: translate(55vw, -38vh); }
+  85% { opacity: 1; } 100% { transform: translate(104vw, -78vh); opacity: 0; } }
+/* snöfall i tre djup */
+.ls-bg-sno b { position: absolute; top: -12px; left: var(--x); width: var(--s); height: var(--s); border-radius: 50%; background: #fff; opacity: var(--o);
+  box-shadow: 0 0 4px rgba(255, 255, 255, .7); animation: ls-sno var(--t) linear var(--d) infinite; will-change: transform; }
+@keyframes ls-sno { 0% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(var(--v), 52vh, 0); } 100% { transform: translate3d(calc(var(--v) * -.6), 106vh, 0); } }
+
+/* Fler animeringar i landslagets anda: plusknappen glimmar i guld, välkomstens rubrik skimrar blått–gult, vallaguidens tal studsar */
+body[data-tema="landslaget"] .flik-plus { overflow: hidden; }
+body[data-tema="landslaget"] .flik-plus::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .7) 50%, transparent 65%); transform: translateX(-120%); animation: ls-glim 5s ease-in-out 2s infinite; }
+@keyframes ls-glim { 0% { transform: translateX(-120%); } 30%, 100% { transform: translateX(120%); } }
+body[data-tema="landslaget"] .skimmer { background: linear-gradient(100deg, #6db6ff, #ffcd00, #ffe066, #6db6ff) !important; background-size: 300% 100% !important;
+  -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; }
+.ls-termo::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(180, 220, 255, .35); }
+.ls-valla .ls-temp { display: inline-block; animation: ls-temp .5s cubic-bezier(.2, 1.4, .35, 1); }
+@keyframes ls-temp { from { transform: scale(.7); opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .ls-bg *, body[data-tema="landslaget"] .flik-plus::after, .ls-valla .ls-temp { animation: none !important; } .ls-bg-spar path { stroke-dashoffset: 0; } }
+
+/* fjällens snötoppar: en ljus kant som blänker till ibland */
+.ls-bg-fjall { overflow: visible; }
+.ls-bg-fjarran { bottom: 12% !important; height: 30% !important; }
+.ls-bg-nara { height: 26% !important; }
