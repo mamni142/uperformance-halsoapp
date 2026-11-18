@@ -196,3 +196,9 @@ body[data-niva="elit"] .sc-trappa-kort .trappa { background: rgba(246, 244, 239,
 body[data-niva] .sc-trappa-kort .trappsteg { border-radius: 0 !important; background: none !important; box-shadow: none !important; position: relative; }
 .sc-trappa-kort .trappsteg + .trappsteg::before { content: ''; position: absolute; top: 0; left: 54px; right: 0; height: .5px; background: var(--kant-2); }
 .sc-trappa-kort .trapp-text b { font: 600 15px var(--font-rubrik) !important; }
+
+/* Tal + enhet som i Hälsa – EN regel för hela appen: enheten är alltid 46 % av talets storlek, halvfet, grå, på samma baslinje */
+:root body :is(.tal, .bento-tal, [data-procent], .lp-fakta dd, .tg-tal b, .jg-mal-tal b, .stor-niva, .lp-live b, .skapar-tal) > small {
+  font-family: var(--font-brod) !important; font-size: .46em !important; font-weight: 600 !important; line-height: 1 !important; letter-spacing: 0 !important;
+  color: var(--text-3) !important; margin-left: .1em !important; vertical-align: baseline !important; text-transform: none !important; opacity: 1 !important; }
+:root body :is(.tal, .bento-tal) > small:first-child { margin-left: 0 !important; margin-right: .1em !important; }
