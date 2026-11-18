@@ -63,3 +63,70 @@ body[data-tema="landslaget"][data-niva="motionar"] .idag-vy :is(> .kort, .bento-
 
 /* hjältens fjäll tydligare */
 .ls-hero-fj1 path { opacity: .95 !important; } body[data-niva="elit"] .ls-hero-fj1 path { fill: #1d5aa3 !important; } body[data-niva="elit"] .ls-hero-fj2 path { fill: #0f3a75 !important; opacity: .95 !important; }
+
+/* 04 Backen bakom hälsningen: tre åkare tävlar över krönet (SMIL, bara transform/opacitet) */
+.ls-backe { position: absolute; right: 0; bottom: calc(18px + 79px); width: 50%; height: 52px; overflow: visible;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%); mask-image: linear-gradient(90deg, transparent, #000 22%); }
+.ls-backe-yta { fill: url(#ls-backe-g); }
+.ls-backe-spar { fill: none; stroke: rgba(230, 242, 255, .55); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.ls-ak line { stroke: #e8f2ff; stroke-width: 2.2; stroke-linecap: round; }
+.ls-ak .ls-ak-skida, .ls-s-akare .ls-ak-skida { stroke-width: 1.6; }
+.ls-ak .ls-ak-stav, .ls-s-akare .ls-ak-stav { stroke-width: 1.1; opacity: .9; }
+.ls-ak-huvud { fill: #e8f2ff; } .ls-ak-nr { fill: #0a3470; }
+.ls-ak { filter: drop-shadow(0 0 3px rgba(150, 200, 255, .55)); }
+body[data-niva="motionar"] .ls-backe-spar { stroke: rgba(10, 52, 112, .4); }
+body[data-niva="motionar"] .ls-backe-yta { fill: rgba(255, 255, 255, .55); }
+body[data-niva="motionar"] .ls-ak line, body[data-niva="motionar"] .ls-s-akare line { stroke: #0a3470; } body[data-niva="motionar"] :is(.ls-ak, .ls-s-akare) .ls-ak-huvud { fill: #0a3470; }
+body[data-niva="motionar"] .ls-ak { filter: none; }
+body[data-niva="motionar"] .ls-ak-nr { fill: #ffcd00; }
+
+/* 05 Säsongskortets åkare: en riktig åkare som står på spåret och lutar med det (ersätter brickan) */
+.ls-s-akare { width: 36px !important; height: 36px !important; margin: 0 !important; display: block !important; border-radius: 0 !important;
+  background: none !important; box-shadow: none !important; offset-anchor: 50% 86%; offset-rotate: auto !important; }
+.ls-s-akare svg { display: block; width: 36px !important; height: 36px !important; overflow: visible; animation: none !important; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .35)); }
+.ls-s-akare line { stroke: #f2f7ff; stroke-width: 2.2; stroke-linecap: round; } .ls-s-akare .ls-ak-huvud { fill: #f2f7ff; } .ls-s-akare .ls-ak-nr { fill: #0a3470; }
+.ls-s-akare > i { position: absolute; left: 50%; top: 86%; width: 8px; height: 8px; margin: -4px; border-radius: 50%; background: #ffcd00;
+  box-shadow: 0 0 10px 3px rgba(255, 205, 0, .55); animation: ls-s-glod 1.8s ease-in-out 2.1s infinite; }
+@keyframes ls-s-glod { 50% { transform: scale(1.35); opacity: .7; } }
+
+/* 06 Kropp: vinterscen bakom kroppen – norrsken och lätt snöfall */
+body[data-tema="landslaget"] .kv-scen { position: relative; isolation: isolate; }
+.ls-kv-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; border-radius: inherit;
+  -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent); mask-image: linear-gradient(180deg, #000 60%, transparent); }
+.ls-kv-bg > i { position: absolute; left: -30%; right: -30%; height: 30%; border-radius: 50%; mix-blend-mode: screen; filter: blur(18px); opacity: .55; }
+.ls-kv-bg > i:nth-child(1) { top: 4%; background: linear-gradient(90deg, transparent, rgba(70, 230, 190, .55) 35%, rgba(77, 163, 255, .5) 65%, transparent); animation: ls-band 14s ease-in-out infinite alternate; }
+.ls-kv-bg > i:nth-child(2) { top: 16%; background: linear-gradient(90deg, transparent 15%, rgba(120, 140, 255, .45) 45%, rgba(255, 205, 0, .22) 75%, transparent); animation: ls-band 18s ease-in-out -6s infinite alternate-reverse; }
+.ls-kv-bg > i:nth-child(3) { top: 9%; height: 16%; background: linear-gradient(90deg, transparent 35%, rgba(220, 255, 245, .4) 55%, transparent 75%); animation: ls-band 10s ease-in-out -3s infinite alternate; }
+body[data-niva="motionar"] .ls-kv-bg > i { opacity: .3; mix-blend-mode: multiply; }
+.ls-kv-bg b { position: absolute; top: -8px; left: var(--x); width: var(--s); height: var(--s); border-radius: 50%; background: #fff; opacity: .55; animation: ls-kvsno var(--t) linear var(--d) infinite; }
+body[data-niva="motionar"] .ls-kv-bg b { background: #9cc4ee; }
+@keyframes ls-kvsno { to { transform: translate3d(14px, 540px, 0); } }
+
+/* 07 Kroppen i spåret */
+.ls-spar { background: radial-gradient(90% 110% at 100% 0%, rgba(255, 205, 0, .13), transparent 55%), radial-gradient(80% 100% at 0% 100%, rgba(77, 163, 255, .16), transparent 60%), var(--yta) !important; }
+.ls-spar-ikon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; color: #072a5c; background: linear-gradient(160deg, #ffe066, #ffcd00); box-shadow: 0 6px 14px -8px rgba(200, 150, 0, .9); }
+.ls-spar-ikon svg { width: 20px; height: 20px; }
+.ls-spar-val { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); margin: 14px 0 10px; padding: 3px; border-radius: 999px; background: rgba(var(--t-rgb, 127 140 160) / .14); background: color-mix(in srgb, var(--text) 9%, transparent); }
+.ls-spar-markor { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc((100% - 6px) / 3); border-radius: 999px; background: linear-gradient(160deg, #ffe066, #ffcd00);
+  box-shadow: 0 4px 12px -6px rgba(200, 150, 0, .9); transform: translateX(calc(var(--n) * 100%)); transition: transform .45s cubic-bezier(.32, .72, 0, 1); }
+.ls-spar-val button { position: relative; z-index: 1; height: 34px; border: 0; background: none; color: var(--text-2); font: 600 13.5px var(--font-rubrik); border-radius: 999px; cursor: pointer; transition: color .3s; }
+.ls-spar-val button[aria-pressed="true"] { color: #072a5c; }
+.ls-spar-text { margin: 0 0 8px; font-size: 13.5px; line-height: 1.4; color: var(--text-2); min-height: 38px; }
+.ls-spar-lista { display: grid; gap: 2px; }
+.ls-spar-rad { display: grid; grid-template-columns: minmax(0, 1fr) 96px 16px; align-items: center; gap: 12px; width: 100%; padding: 10px 2px; border: 0; background: none; color: inherit; text-align: left; cursor: pointer;
+  border-top: .5px solid var(--kant); }
+.ls-spar-rad:first-child { border-top: 0; }
+.ls-spar-rad > svg { width: 14px; height: 14px; color: var(--text-3); }
+.ls-spar-namn { display: grid; gap: 1px; min-width: 0; } .ls-spar-namn b { font: 600 14.5px var(--font-rubrik); }
+.ls-spar-namn small { font-size: 12px; color: var(--text-3); } .ls-spar-namn small[data-ton="rod"] { color: #ff7a5c; } .ls-spar-namn small[data-ton="gul"] { color: #e0a800; }
+.ls-spar-stapel { height: 6px; border-radius: 6px; background: color-mix(in srgb, var(--text) 10%, transparent); overflow: hidden; }
+.ls-spar-stapel i { display: block; height: 100%; width: var(--b); border-radius: inherit; background: linear-gradient(90deg, #3b8ff0, #6db6ff); transform-origin: left; animation: ls-spar-v .7s cubic-bezier(.2, .8, .2, 1) both calc(.15s + var(--k) * .06s); }
+.ls-spar-rad[data-niva="3"] .ls-spar-stapel i { background: linear-gradient(90deg, #ffcd00, #ffe066); }
+@keyframes ls-spar-v { from { transform: scaleX(0); } }
+[data-byte].ls-spar-text, [data-byte].ls-spar-lista .ls-spar-rad { animation: ls-spar-in .4s cubic-bezier(.2, .8, .2, 1) both; }
+[data-byte].ls-spar-lista .ls-spar-rad { animation-delay: calc(var(--k) * .04s); }
+@keyframes ls-spar-in { from { opacity: 0; transform: translateY(6px); } }
+.ls-spar-fot { display: grid; grid-template-columns: 16px 1fr; gap: 6px; margin: 10px 0 0; font-size: 12px; color: var(--text-3); }
+.ls-spar-fot svg { width: 14px; height: 14px; margin-top: 1px; }
+@media (prefers-reduced-motion: reduce) { .ls-kv-bg *, .ls-spar *, .ls-s-akare > i { animation: none !important; } .ls-spar-markor { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .ls-ak { display: none; } }

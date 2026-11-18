@@ -859,7 +859,7 @@
           <div class="notis">${ik('info')}<span>Ett normalt värde bevisar inte att man är frisk och ett avvikande värde är ingen diagnos. Medicinsk data hålls skild från din hälsodata.</span></div></div>`;
     }
     return `${topp('Din kropp')}
-      <section class="kv-scen in" style="--i:1" data-lage="${kroppLage}">
+      <section class="kv-scen in" style="--i:1" data-lage="${kroppLage}">${LANDS ? `<div class="ls-kv-bg" aria-hidden="true"><i></i><i></i><i></i><span>${Array.from({ length: 16 }, (_, n) => `<b style="--x:${(n * 37 + 7) % 100}%;--t:${7 + (n % 4) * 2}s;--d:${-(n * .9).toFixed(1)}s;--s:${(1.5 + (n % 3) * .8).toFixed(1)}px"></b>`).join('')}</span></div>` : ''}
         <div class="kv-lage" role="group" aria-label="Visa" style="--n:${KV_LAGEN.indexOf(kroppLage)};--fran:${fran}"><span class="kv-lage-markor" aria-hidden="true"></span>${seg.map(([v, t, i]) => `<button type="button" data-g="kropp-lage" data-v="${v}" aria-pressed="${kroppLage === v}">${ik(i)}<span>${t}</span></button>`).join('')}</div>
         <div data-kropp-plats></div>
         ${kroppLage === 'med' ? `<div class="kropp-las">${ik('las')}<b>Skyddat</b><span>Bara du och medicinsk personal</span></div>` : ''}
@@ -868,9 +868,26 @@
           <span class="kv-sammanfattning" data-ton="${sumTon}"><i></i>${e(sammanfattning)}</span></div>
       </section>
       ${innehall}
+      ${LANDS && kroppLage === 'ont' ? sparKort(7) : ''}
       <div class="sektion-rubrik kv-rubrik in" style="--i:8"><h3>Snart i appen</h3><span class="chip" data-ton="is">Kommer</span></div>
-      <div class="kopplingar kv-snart in" style="--i:8">${[['puls', 'Rösten', '"Det hugger i vänster knä"'], ['rorlighet', 'Rörelseanalys', 'Kameran mäter rörligheten'], ['hjarta', 'Klockan', 'Återhämtning per dag']].map(([i, t, u]) => `<div class="koppling"><span class="ikonruta" data-ton="is">${ik(i)}</span><b>${t}</b><small>${e(u)}</small></div>`).join('')}</div>
+      <div class="kopplingar kv-snart in" style="--i:8">${(LANDS ? [['puls', 'Rösten', '"Det hugger i vänster knä"'], ['skidor', 'Teknikanalys', 'Kameran jämför vänster och höger i spåret'], ['hjarta', 'Klockan', 'Återhämtning efter passen']] : [['puls', 'Rösten', '"Det hugger i vänster knä"'], ['rorlighet', 'Rörelseanalys', 'Kameran mäter rörligheten'], ['hjarta', 'Klockan', 'Återhämtning per dag']]).map(([i, t, u]) => `<div class="koppling"><span class="ikonruta" data-ton="is">${ik(i)}</span><b>${t}</b><small>${e(u)}</small></div>`).join('')}</div>
       <div class="notis kv-notis in" style="--i:9">${ik('info')}<span>Kroppskartan är ingen diagnos. Vid ihållande eller ökande besvär hänvisar vi dig vidare till rätt specialist eller vården.</span></div>`;
+  }
+  // Landslaget: vad tekniken belastar (allmän bild, ingen mätning) – tryck på en rad så visas området på kroppen.
+  const TEKNIK = [
+    ['klassiskt', 'Klassiskt', 'Diagonalgång – frånskjutet kommer från benet, stavarna hjälper till.', [['hoft-v', 'Höft och säte', 3], ['vad-v', 'Vader', 3], ['lar-v', 'Lår', 2], ['axel-v', 'Axlar och armar', 2], ['mage', 'Bål', 2]]],
+    ['skate', 'Skate', 'Frånskjut snett åt sidan – höfterna och insidan av låren jobbar mest.', [['ljumske-v', 'Ljumske och insida lår', 3], ['hoft-v', 'Höft och säte', 3], ['lar-v', 'Lår', 3], ['axel-v', 'Axlar och armar', 2], ['fotled-v', 'Fotleder', 2]]],
+    ['stakning', 'Stakning', 'Båda stavarna samtidigt – överkroppen och bålen bär farten.', [['axel-v', 'Axlar och armar', 3], ['ovre-rygg', 'Övre rygg', 3], ['mage', 'Bål', 3], ['landrygg', 'Ländrygg', 2], ['armbage-v', 'Armbågar', 2]]]];
+  function sparKort(i) {
+    const v = TEKNIK.find((t) => t[0] === st.teknik) || TEKNIK[0], bas = (id) => id.replace(/-[vh]$/, '');
+    const ont = (id) => (st.profil.ont || []).filter((z) => bas(z.id) === bas(id)).sort((a, b) => b.niva - a.niva)[0];
+    return `<section class="kort ls-spar in" style="--i:${i}"><div class="kort-rubrik"><div><span class="ogon utan">Kroppen i spåret</span><h3 style="margin-top:4px">Vad tekniken belastar</h3></div><span class="ls-spar-ikon" aria-hidden="true">${ik('skidor')}</span></div>
+      <div class="ls-spar-val" role="group" aria-label="Teknik" style="--n:${TEKNIK.indexOf(v)}"><span class="ls-spar-markor" aria-hidden="true"></span>${TEKNIK.map(([k, t]) => `<button type="button" data-g="ls-teknik" data-v="${k}" aria-pressed="${k === v[0]}">${t}</button>`).join('')}</div>
+      <p class="ls-spar-text">${e(v[2])}</p>
+      <div class="ls-spar-lista">${v[3].map(([id, t, n], k) => { const o = ont(id);
+        return `<button class="ls-spar-rad tryck" data-g="ls-visa" data-id="${o ? o.id : id}" style="--k:${k};--b:${[0, 30, 60, 92][n]}%" data-niva="${n}"><span class="ls-spar-namn"><b>${e(t)}</b>${o ? `<small data-ton="${nivaTon(o.niva)}">Du har ont här · ${o.niva}/10</small>` : `<small>${['', 'Lite', 'Måttligt', 'Mycket'][n]}</small>`}</span>
+          <span class="ls-spar-stapel" aria-hidden="true"><i></i></span>${ik('hoger')}</button>`; }).join('')}</div>
+      <p class="ls-spar-fot">${ik('info')}<span>Allmän bild av tekniken – ingen mätning. Tryck på en rad så visas området på kroppen.</span></p></section>`;
   }
   function sidaArk(k) {
     const s = SNABBVAL.find((x) => x[0] === k); if (!s) return;
@@ -1508,7 +1525,28 @@
     return `<div class="ls-hero" aria-hidden="true"><div class="ls-hero-ns"><i></i><i></i><i></i></div><div class="ls-hero-stj">${stj}</div>
       <svg class="ls-hero-fj ls-hero-fj1" viewBox="0 0 400 100" preserveAspectRatio="none"><path d="${fj(26, 8, 34)}"/><path transform="translate(400 0)" d="${fj(26, 8, 34)}"/></svg>
       <svg class="ls-hero-fj ls-hero-fj2" viewBox="0 0 400 100" preserveAspectRatio="none"><path d="${fj(50, 5, 30)}"/><path transform="translate(400 0)" d="${fj(50, 5, 30)}"/></svg>
-      <div class="ls-hero-sno">${sno}</div></div>`;
+      ${lsBacke()}<div class="ls-hero-sno">${sno}</div></div>`;
+  }
+  // En åkare i SVG (fötterna i 0,0, åker åt höger): benen, armen och staven pendlar i takt (SMIL). farg = tröjan.
+  function akareSvg(farg, b, nr) {
+    const sv = (v, c) => `<animateTransform attributeName="transform" type="rotate" values="${v}" dur=".9s" repeatCount="indefinite" begin="${b}s"/>`;
+    return `<g transform="scale(.82)"><line class="ls-ak-skida" x1="-9" y1="0" x2="10" y2="0"/>
+      <g>${sv('-18 0 -8;16 0 -8;-18 0 -8')}<line x1="0" y1="-8" x2="1" y2="0"/></g><g>${sv('16 0 -8;-18 0 -8;16 0 -8')}<line x1="0" y1="-8" x2="-1" y2="0"/></g>
+      <line x1="0" y1="-8" x2="4" y2="-15" style="stroke:${farg}"/><circle cx="5.4" cy="-17.6" r="2.2" class="ls-ak-huvud"/>
+      <g>${sv('24 3 -13;-30 3 -13;24 3 -13')}<line class="ls-ak-stav" x1="3" y1="-13" x2="-7" y2="1"/></g>
+      ${nr ? '<circle cx="2.2" cy="-11.5" r="1.3" class="ls-ak-nr"/>' : ''}</g>`;
+  }
+  // En backe till höger om hälsningen där tre åkare tävlar över krönet.
+  function lsBacke() {
+    const spar = 'M-30 56 L0 52 C30 48 55 30 85 24 C115 18 135 16 158 22 C180 28 196 40 230 46';
+    const akare = (n, farg, nr) => { const b = (-n * 1.15).toFixed(2);
+      return `<g class="ls-ak"><animateMotion dur="9s" begin="${b}s" repeatCount="indefinite" rotate="auto" path="${spar}"/>
+        <animate attributeName="opacity" dur="9s" begin="${b}s" repeatCount="indefinite" values="0;1;1;0" keyTimes="0;.1;.88;1"/>${akareSvg(farg, b, nr)}</g>`; };
+    return `<svg class="ls-backe" viewBox="0 0 200 64" preserveAspectRatio="xMaxYMax meet" aria-hidden="true">
+      <defs><linearGradient id="ls-backe-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+      <path class="ls-backe-yta" d="M0 64 L0 52 C30 48 55 30 85 24 C115 18 135 16 158 22 C180 28 196 40 200 41 L200 64 Z"/>
+      <path class="ls-backe-spar" d="M0 52 C30 48 55 30 85 24 C115 18 135 16 158 22 C180 28 196 40 200 41"/>
+      ${akare(2, '#6db6ff', 0)}${akare(1, '#ffffff', 0)}${akare(0, '#ffcd00', 1)}</svg>`;
   }
   // Säsongen: från barmark till Vasaloppet (första söndagen i mars) – en åkare glider fram till där vi är, nedräkning till loppet.
   function sasongKort(i) {
@@ -1522,7 +1560,7 @@
       <div class="ls-s-topp"><div><span class="ogon utan">Säsongen ${ar - 1}/${String(ar).slice(2)}</span><h3>${FAS[nuFas][0]}</h3><small>Nu: ${e(FAS[nuFas][0].toLowerCase())} · nästa ${e((FAS[nuFas + 1] || FAS[3])[0].toLowerCase())}</small></div>
         <div class="ls-s-ned"><b class="tal" data-rakna="${dgr}">0</b><small>dagar till<br>Vasaloppet</small></div></div>
       <div class="ls-s-bana"><svg viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><path class="ls-s-spar" d="M0 30 C60 30 90 12 150 14 C210 16 240 30 300 22"/><path class="ls-s-spar ls-s-spar-klar" pathLength="1" d="M0 30 C60 30 90 12 150 14 C210 16 240 30 300 22"/></svg>
-        <span class="ls-s-akare" aria-hidden="true">${ik('skidor')}</span>
+        <span class="ls-s-akare" aria-hidden="true"><svg viewBox="-14 -24 28 28">${akareSvg('#ffcd00', 0, 1)}</svg><i></i></span>
         ${FAS.map(([t, u], n) => `<span class="ls-s-fas" data-n="${n}" style="--p:${VIS[n] * 100}%" ${n <= nuFas ? 'data-klar' : ''}><i></i><b>${e(t)}</b><small>${e(u)}</small></span>`).join('')}</div>
       <p class="ls-s-fot">${ik('info')}<span>Säsongens faser och Vasaloppets datum som exempel – landslagets eget program läggs in här.</span></p></section>`;
   }
@@ -1611,6 +1649,9 @@
     const ljus = document.body.dataset.niva === 'motionar', F = FARG_HEX();
     const P = ljus ? { mark: '#e6eae4', mark2: '#dde3dc', vatten: '#9ec6ea', vattenKant: '#bcd8f1', park: '#bcdcb4', gata: '#ffffff', gataStor: '#ffffff', tak: '#f7f8f6', sidaA: '#d4dad6', sidaB: '#c3cbc7', text: '#20303c', textKant: 'rgba(255,255,255,.9)', fonster: null, dimma: 'rgba(238,241,236,' }
       : { mark: '#152230', mark2: '#111c28', vatten: '#173450', vattenKant: '#21476b', park: '#1d3a2e', gata: 'rgba(255,255,255,.07)', gataStor: 'rgba(255,255,255,.12)', tak: '#24384a', sidaA: '#1a2b3b', sidaB: '#132231', text: '#e8eef2', textKant: 'rgba(11,21,32,.9)', fonster: 'rgba(255,214,140,', dimma: 'rgba(14,24,34,' };
+    const M1 = LANDS ? '#ffcd00' : '#7ee0c3', M2 = LANDS ? '#e0a800' : '#2fbf95', MR = LANDS ? '255,205,0' : '126,224,195';
+    if (LANDS) Object.assign(P, ljus ? { mark: '#f3f7fb', mark2: '#e2ebf5', vatten: '#cfe2f4', vattenKant: '#eaf3fb', park: '#d8e4ee', dimma: 'rgba(226,235,245,' }
+      : { mark: '#1b3352', mark2: '#132741', vatten: '#25496f', vattenKant: '#3b6690', park: '#16304c', dimma: 'rgba(16,36,62,' });
     const rutt = vagPunkter(l.bana, v.length + 1), vatten = l.vatten ? vagPunkter(l.vatten, 90) : null;
     const gator = GATOR_D.map((d, i) => ({ p: vagPunkter(d, 40), stor: i % 3 === 0 }));
     const nara = (x, y, r) => rutt.some(([a, b]) => (a - x) ** 2 + (b - y) ** 2 < r * r);
@@ -1619,6 +1660,10 @@
     // Byggnader: kvarteren som lådor med höjd – inte där banan, vattnet eller parkerna går
     const hus = []; for (let i = 0; i < 80; i++) { const x = (i % 10) * 34 + 6 + ((i * 7) % 9), y = Math.floor(i / 10) * 31 + 4 + ((i * 11) % 7), w = 14 + (i * 5) % 10, d = 13 + (i * 3) % 9;
       const cx = x + w / 2, cy = y + d / 2; if (nara(cx, cy, 17) || iVatten(cx, cy) || iPark(cx, cy) || x + w > 336 || y + d > 246) continue; hus.push({ x, y, w, d, h: 5 + ((i * 37) % 23) * (Math.abs(cx - 170) < 90 ? 1.2 : .7), f: (i * 13) % 7 }); }
+    // Granar (landslaget): spridda över terrängen, tätare i skogspartierna, aldrig på spåret eller sjön
+    const granar = []; if (LANDS) { for (let i = 0; i < 420; i++) { const x = (i * 97.3) % 352 - 6, y = (i * 61.7 + (i % 7) * 13) % 262 - 6, tat = iPark(x, y);
+      if (nara(x, y, 9) || iVatten(x, y) || (!tat && i % 3)) continue; granar.push({ x, y, h: 7 + ((i * 29) % 9) + (tat ? 3 : 0), b: .34 + ((i * 7) % 5) * .03 }); } hus.length = 0; }
+    const sno = LANDS ? Array.from({ length: 46 }, (_, i) => ({ x: (i * 53) % 100 / 100, y: (i * 37) % 100 / 100, s: .8 + (i % 3) * .6, v: .5 + (i % 4) * .25 })) : [];
     let W = 0, H = 0, dpr = 1, raf = 0, t0 = performance.now(), spel = null, cam = { yaw: -.32, tilt: .2 };
     const bel = (l.beloningar || []).map((b) => { const t = belT(l, b), i = Math.min(rutt.length - 1, Math.round(t * (rutt.length - 1))), img = new Image(); if (PARTNER_LOGGA[b.partner]) img.src = PARTNER_LOGGA[b.partner]; return { b, t, p: rutt[i], img }; });
     const g = cv.getContext('2d');
@@ -1635,11 +1680,16 @@
       // marken med en mjuk ton mot horisonten
       poly([[-60, -60], [400, -60], [400, 310], [-60, 310]]); const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, P.mark2); gr.addColorStop(1, P.mark); g.fillStyle = gr; g.fill();
       (l.parker || []).forEach(([px, py, rx, ry]) => { poly(Array.from({ length: 28 }, (_, i) => [px + Math.cos(i / 28 * 6.283) * rx, py + Math.sin(i / 28 * 6.283) * ry])); g.fillStyle = P.park; g.fill(); });
-      if (vatten) { poly(vatten); g.fillStyle = P.vatten; g.fill(); g.strokeStyle = P.vattenKant; g.lineWidth = 2; g.stroke();
+      if (vatten && LANDS) { // frusen sjö: isen med sprickor och ett svagt blänk
+        poly(vatten); g.fillStyle = P.vatten; g.fill(); g.strokeStyle = P.vattenKant; g.lineWidth = 1.5; g.stroke();
+        g.save(); poly(vatten); g.clip(); g.globalAlpha = ljus ? .5 : .22; g.strokeStyle = '#fff'; g.lineWidth = .8;
+        for (let k = 0; k < 7; k++) { const x0 = 20 + k * 46, y0 = 100 + (k % 3) * 14; g.beginPath(); [[0, 0], [9, 4], [15, 2], [24, 8]].forEach(([dx, dy], i) => { const [a, b] = proj(x0 + dx, y0 + dy); i ? g.lineTo(a, b) : g.moveTo(a, b); }); g.stroke(); }
+        g.globalAlpha = ljus ? .35 : .18; const bx = ((nu0 / 60) % 420) - 40; const [a, b] = proj(bx, 110), [c2, d2] = proj(bx + 30, 150); const lg = g.createLinearGradient(a, b, c2, d2); lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(.5, '#fff'); lg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = lg; poly(vatten); g.fill(); g.restore(); }
+      else if (vatten) { poly(vatten); g.fillStyle = P.vatten; g.fill(); g.strokeStyle = P.vattenKant; g.lineWidth = 2; g.stroke();
         // ljusglitter på vattnet som rör sig
         g.save(); poly(vatten); g.clip(); g.globalAlpha = ljus ? .35 : .25; g.strokeStyle = '#fff'; g.lineWidth = 1;
         for (let k = 0; k < 9; k++) { const x0 = ((k * 47 + nu0 / 90) % 380) - 20, y0 = 112 + (k % 3) * 9; const [a, b] = proj(x0, y0), [c2, d2] = proj(x0 + 14, y0 + 1); g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2); g.stroke(); } g.restore(); }
-      gator.forEach(({ p, stor }) => { g.beginPath(); p.forEach(([x, y], i) => { const [a, b] = proj(x, y); i ? g.lineTo(a, b) : g.moveTo(a, b); }); g.strokeStyle = stor ? P.gataStor : P.gata; g.lineWidth = (stor ? 4.5 : 2.4) * proj(170, 125)[3] * 1.4; g.lineCap = 'round'; g.stroke(); });
+      (LANDS ? [] : gator).forEach(({ p, stor }) => { g.beginPath(); p.forEach(([x, y], i) => { const [a, b] = proj(x, y); i ? g.lineTo(a, b) : g.moveTo(a, b); }); g.strokeStyle = stor ? P.gataStor : P.gata; g.lineWidth = (stor ? 4.5 : 2.4) * proj(170, 125)[3] * 1.4; g.lineCap = 'round'; g.stroke(); });
       // rundans skugga på marken
       g.beginPath(); rutt.forEach(([x, y], i) => { const [a, b] = proj(x + 1.5, y + 2); i ? g.lineTo(a, b) : g.moveTo(a, b); }); g.strokeStyle = ljus ? 'rgba(24,54,83,.18)' : 'rgba(0,0,0,.45)'; g.lineWidth = 7; g.lineJoin = 'round'; g.stroke();
       // byggnader bakifrån och fram, sidorna skuggade efter kamerans vinkel
@@ -1651,6 +1701,13 @@
           g.beginPath(); g.moveTo(m1[0], m1[1]); g.lineTo(m2[0], m2[1]); g.lineTo(t2[0], t2[1]); g.lineTo(t1[0], t1[1]); g.closePath(); g.fillStyle = k % 2 ? P.sidaA : P.sidaB; g.fill();
           if (P.fonster && b.h > 9) { g.fillStyle = `${P.fonster}${.35 + (b.f % 3) * .15})`; for (let r = 1; r < b.h / 4; r++) for (let q = 1; q < 4; q++) { if ((r * 7 + q * 3 + b.f) % 4) continue; const u = q / 4, hh = r * 4, [wx, wy] = proj(x1 + (x2 - x1) * u, y1 + (y2 - y1) * u, hh); g.fillRect(wx - .7, wy - .7, 1.4, 1.4); } } }
         poly(c, b.h); g.fillStyle = P.tak; g.fill(); }
+      if (granar.length) { // granarna bakifrån och fram: skugga, mörk kon i två våningar och snö på grenarna
+        const gs = granar.map((t) => ({ t, d: proj(t.x, t.y)[2] })).sort((a, b) => b.d - a.d);
+        for (const { t } of gs) { const [a, b, , sk] = proj(t.x, t.y), [c2, d2] = proj(t.x, t.y, t.h), br = t.h * t.b * sk * 1.25;
+          g.fillStyle = ljus ? 'rgba(24,54,83,.12)' : 'rgba(0,0,0,.3)'; g.beginPath(); g.ellipse(a + br * .6, b + br * .15, br * 1.1, br * .35, 0, 0, 6.283); g.fill();
+          for (const [h0, h1, w] of [[0, .62, 1], [.35, 1, .68]]) { const yb = b + (d2 - b) * h0, yt = b + (d2 - b) * h1, xb = a + (c2 - a) * h0, xt = a + (c2 - a) * h1;
+            g.beginPath(); g.moveTo(xt, yt); g.lineTo(xb + br * w, yb); g.lineTo(xb - br * w, yb); g.closePath(); g.fillStyle = ljus ? '#3f6a5a' : '#2a5873'; g.fill();
+            g.beginPath(); g.moveTo(xt, yt); g.lineTo(xt + (xb + br * w - xt) * .45, yt + (yb - yt) * .45); g.lineTo(xt + (xb - br * w * .2 - xt) * .55, yt + (yb - yt) * .4); g.closePath(); g.fillStyle = ljus ? 'rgba(255,255,255,.95)' : 'rgba(235,245,255,.9)'; g.fill(); } } }
       // rundan: upphöjt band i fartens färger, det som inte är sprunget (under uppspelning) dämpat
       const sp = spel ? Math.min(1, (nu0 - spel.t0) / spel.T) : 1, slut = Math.floor(sp * v.length);
       g.lineCap = 'round'; g.lineJoin = 'round';
@@ -1663,17 +1720,17 @@
       // belöningarna: en nål med partnerns logga i en vit bricka – låst = grå med lås, upplåst = mint med glöd
       const ul = upplast(l);
       for (const x of bel.slice().sort((a, b) => proj(b.p[0], b.p[1])[2] - proj(a.p[0], a.p[1])[2])) { const ok = ul.has(x.b.id), [a, b] = proj(x.p[0], x.p[1], 1.6), [c2, d2] = proj(x.p[0], x.p[1], 36), rr = 14;
-        if (ok) { const gl = g.createRadialGradient(c2, d2, 0, c2, d2, 26); gl.addColorStop(0, 'rgba(126,224,195,.55)'); gl.addColorStop(1, 'rgba(126,224,195,0)'); g.fillStyle = gl; g.beginPath(); g.arc(c2, d2, 26, 0, 6.283); g.fill(); }
-        g.strokeStyle = ok ? '#7ee0c3' : (ljus ? 'rgba(11,21,32,.35)' : 'rgba(255,255,255,.35)'); g.lineWidth = 1.4; g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2 + rr); g.stroke();
-        g.beginPath(); g.arc(c2, d2, rr, 0, 6.283); g.fillStyle = '#fff'; g.fill(); g.lineWidth = 2; g.strokeStyle = ok ? '#2fbf95' : (ljus ? 'rgba(11,21,32,.18)' : 'rgba(255,255,255,.5)'); g.stroke();
+        if (ok) { const gl = g.createRadialGradient(c2, d2, 0, c2, d2, 26); gl.addColorStop(0, `rgba(${MR},.55)`); gl.addColorStop(1, `rgba(${MR},0)`); g.fillStyle = gl; g.beginPath(); g.arc(c2, d2, 26, 0, 6.283); g.fill(); }
+        g.strokeStyle = ok ? M1 : (ljus ? 'rgba(11,21,32,.35)' : 'rgba(255,255,255,.35)'); g.lineWidth = 1.4; g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2 + rr); g.stroke();
+        g.beginPath(); g.arc(c2, d2, rr, 0, 6.283); g.fillStyle = '#fff'; g.fill(); g.lineWidth = 2; g.strokeStyle = ok ? M2 : (ljus ? 'rgba(11,21,32,.18)' : 'rgba(255,255,255,.5)'); g.stroke();
         if (x.img.complete && x.img.naturalWidth) { const iw = x.img.naturalWidth, ih = x.img.naturalHeight, sk = Math.min(21 / iw, 12 / ih); g.globalAlpha = ok ? 1 : .45; g.drawImage(x.img, c2 - iw * sk / 2, d2 - ih * sk / 2, iw * sk, ih * sk); g.globalAlpha = 1; }
         if (!ok) { const lx = c2 + 11, ly = d2 - 11; g.beginPath(); g.arc(lx, ly, 6.5, 0, 6.283); g.fillStyle = ljus ? '#5f6a76' : '#2a3b4c'; g.fill(); g.fillStyle = '#fff'; g.fillRect(lx - 2.6, ly - .4, 5.2, 4); g.strokeStyle = '#fff'; g.lineWidth = 1.2; g.beginPath(); g.arc(lx, ly - .6, 1.9, Math.PI, 0); g.stroke(); }
-        else { const lx = c2 + 11, ly = d2 - 11; g.beginPath(); g.arc(lx, ly, 6.5, 0, 6.283); g.fillStyle = '#2fbf95'; g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 1.7; g.beginPath(); g.moveTo(lx - 3, ly); g.lineTo(lx - 1, ly + 2.2); g.lineTo(lx + 3.2, ly - 2.4); g.stroke(); } }
+        else { const lx = c2 + 11, ly = d2 - 11; g.beginPath(); g.arc(lx, ly, 6.5, 0, 6.283); g.fillStyle = M2; g.fill(); g.strokeStyle = '#fff'; g.lineWidth = 1.7; g.beginPath(); g.moveTo(lx - 3, ly); g.lineTo(lx - 1, ly + 2.2); g.lineTo(lx + 3.2, ly - 2.4); g.stroke(); } }
       // nålar för platserna – start och mål med pulserande ring på marken
       l.platser.forEach(([x, y, t, s]) => { const start = s === 'b', [a, b] = proj(x, y), [c2, d2] = proj(x, y, start ? 22 : 16);
-        if (start) { const fas = ((nu0 / 2200) % 1); poly(Array.from({ length: 24 }, (_, i) => [x + Math.cos(i / 24 * 6.283) * (4 + fas * 16), y + Math.sin(i / 24 * 6.283) * (4 + fas * 16)])); g.strokeStyle = `rgba(126,224,195,${(1 - fas) * .8})`; g.lineWidth = 2; g.stroke(); }
+        if (start) { const fas = ((nu0 / 2200) % 1); poly(Array.from({ length: 24 }, (_, i) => [x + Math.cos(i / 24 * 6.283) * (4 + fas * 16), y + Math.sin(i / 24 * 6.283) * (4 + fas * 16)])); g.strokeStyle = `rgba(${MR},${(1 - fas) * .8})`; g.lineWidth = 2; g.stroke(); }
         g.strokeStyle = ljus ? 'rgba(11,21,32,.45)' : 'rgba(255,255,255,.5)'; g.lineWidth = 1.2; g.beginPath(); g.moveTo(a, b); g.lineTo(c2, d2); g.stroke();
-        g.beginPath(); g.arc(c2, d2, start ? 5 : 3.6, 0, 6.283); g.fillStyle = start ? '#7ee0c3' : (ljus ? '#fff' : '#e8eef2'); g.fill(); g.lineWidth = 1.6; g.strokeStyle = start ? '#0b1520' : (ljus ? '#20303c' : '#0b1520'); g.stroke();
+        g.beginPath(); g.arc(c2, d2, start ? 5 : 3.6, 0, 6.283); g.fillStyle = start ? M1 : (ljus ? '#fff' : '#e8eef2'); g.fill(); g.lineWidth = 1.6; g.strokeStyle = start ? '#0b1520' : (ljus ? '#20303c' : '#0b1520'); g.stroke();
         g.font = `600 ${start ? 10.5 : 10}px Manrope, system-ui, sans-serif`; const tw = g.measureText(t).width, tx = Math.min(W - 8 - tw / 2, Math.max(8 + tw / 2, c2)); g.textAlign = 'center'; g.lineWidth = 3.4; g.lineJoin = 'round'; g.strokeStyle = P.textKant; g.strokeText(t, tx, d2 - 9); g.fillStyle = P.text; g.fillText(t, tx, d2 - 9); });
       // löparen under uppspelningen – belöningar som passeras låses upp
       if (spel) { for (const x of bel) if (sp >= x.t - .001 && !spel.passerat.has(x.b.id)) { spel.passerat.add(x.b.id); if (lasUpp(l, x.b)) visaUpplast(l, x.b); } const i = Math.min(v.length - 1, slut), q = (sp * v.length) - i, x = rutt[i][0] + (rutt[Math.min(i + 1, v.length)][0] - rutt[i][0]) * q, y = rutt[i][1] + (rutt[Math.min(i + 1, v.length)][1] - rutt[i][1]) * q, z = fartZon(v[i]), [a, b] = proj(x, y, 2.5);
@@ -1681,6 +1738,7 @@
         g.beginPath(); g.arc(a, b, 5, 0, 6.283); g.fillStyle = '#fff'; g.fill(); g.lineWidth = 3; g.strokeStyle = F[z[1]]; g.stroke();
         spel.info && (spel.info.innerHTML = `<b class="tal">${fmt(sp * l.km, 1)}</b><small>km</small><span class="lp-zon" data-z="${z[1]}">${z[2]} · ${fmt(v[i], 1)} km/h</span>`);
         if (sp >= 1) { const k = spel.knapp; spel = null; if (k) k.innerHTML = `${ik('spela')}Spela upp igen`; } }
+      if (sno.length && !lugn) { g.fillStyle = ljus ? 'rgba(120,160,205,.55)' : 'rgba(255,255,255,.7)'; for (const p of sno) { const y = ((p.y + nu0 / 9000 * p.v) % 1) * H, x = ((p.x + Math.sin(nu0 / 1700 + p.y * 9) * .02) % 1) * W; g.beginPath(); g.arc(x, y, p.s, 0, 6.283); g.fill(); } }
       // dimma mot horisonten
       const dm = g.createLinearGradient(0, 0, 0, H * .35); dm.addColorStop(0, `${P.dimma}1)`); dm.addColorStop(1, `${P.dimma}0)`); g.fillStyle = dm; g.fillRect(0, 0, W, H * .35);
     }
@@ -1886,6 +1944,11 @@
     'bel-nollstall': () => { const s0 = loppSt(); if (s0.upplast) delete s0.upplast[loppNu().id]; spara(); loppArk('karta', { bara: true }); toast('Belöningarna är låsta igen – spela upp rundan'); },
     'bel-kod': (b) => { const k = b.dataset.kod; try { navigator.clipboard?.writeText(k); } catch (err) { /* ingen urklippstavla */ } b.classList.add('kopierad'); setTimeout(() => b.classList.remove('kopierad'), 1200); toast(`Koden ${k} är kopierad`); },
     paket: (b) => { st.paket = b.dataset.v; spara(); $$('.pk', b.parentElement).forEach((x) => x.setAttribute('aria-pressed', x === b)); summa(); },
+    'ls-teknik': (b) => { if (b.getAttribute('aria-pressed') === 'true') return; st.teknik = b.dataset.v; spara(); const k = b.closest('.ls-spar'); if (!k) return;
+      const g = $('.ls-spar-val', k); g.style.setProperty('--n', TEKNIK.findIndex((t) => t[0] === st.teknik)); g.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b));
+      const ny = document.createElement('div'); ny.innerHTML = sparKort(0); const n = ny.firstElementChild;
+      for (const c of ['.ls-spar-text', '.ls-spar-lista']) { const gammal = $(c, k), nytt = $(c, n); nytt.dataset.byte = ''; gammal.replaceWith(nytt); } },
+    'ls-visa': (b) => { const sk = b.closest('.skarm'); sk?.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); setTimeout(() => kropp?.markera?.(b.dataset.id), 380); },
     valla: (b) => { st.valla = +b.dataset.v; spara(); const k = b.closest('.ls-valla'); if (!k) return; const ny = document.createElement('div'); ny.innerHTML = vallaKort(0); const n = ny.firstElementChild; n.classList.remove('in'); k.replaceWith(n); summa(); },
     'lopp-garmin': () => toast('Kopplingen till klockan öppnas i nästa version'),
     'lopp-val': (b) => { const l = LOPP.find((x) => x.id === b.dataset.v); if (!l) return; const s0 = loppSt(); s0.id = l.id; s0.mal = Math.round(l.km * (LANDS ? (elit() ? 165 : 330) : elit() ? 260 : 330) / 60) * 60; spara();
