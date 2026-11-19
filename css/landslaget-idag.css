@@ -160,3 +160,10 @@ body[data-niva="motionar"] .kv-stang { fill: #8fa3b9; } body[data-niva="motionar
 body[data-niva="motionar"] .kv-ns { mix-blend-mode: multiply; opacity: .55; }
 body[data-niva="motionar"] .kv-fj-sken { opacity: .25; mix-blend-mode: normal; }
 @media (prefers-reduced-motion: reduce) { .kv-ns-slaja, .kv-ns-glod, .kv-fj-sken { animation: none; } }
+
+/* 10 Hjältens backe stilrenare (2026-11-19, "gillar inte prickarna … för många"): en mjuk ljus spårlinje i stället för streck, tre åkare i lugnare takt, färre snöflingor */
+.ls-backe-spar { stroke-dasharray: none !important; stroke: rgba(230, 242, 255, .35) !important; stroke-width: 1.2 !important; }
+body[data-niva="motionar"] .ls-backe-spar { stroke: rgba(10, 52, 112, .2) !important; }
+.ls-backe-yta { opacity: .7; }
+.ls-hero-sno b { opacity: .45 !important; }
+.ls-hero-stj i { opacity: .5; }

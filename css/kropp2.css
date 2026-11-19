@@ -28,3 +28,51 @@ body[data-niva="elit"] .kv-niva { box-shadow: 0 0 0 2px #0b1520; }
 .kv-ns { opacity: .8; }
 body[data-niva="motionar"] .kv-ns { mix-blend-mode: normal; opacity: .32; }
 @media (prefers-reduced-motion: reduce) { .kv-niva { animation: none; } }
+
+/* 03 Norrskenet omgjort (2026-11-19, "bakgrunden ser inte bra ut"): inga skarpa SVG-strålar – mjuka slöjor med suddiga strålar som tonar ut
+   uppåt och nedåt och böljar bakom fjällen (bara transform/opacitet i looparna) */
+.kv-ns, .kv-fj-sken { display: none !important; }
+body[data-tema="landslaget"] .ls-kv-bg > i { top: auto !important; bottom: 34%; height: 46% !important; left: -20% !important; right: -20% !important; border-radius: 0 !important;
+  mix-blend-mode: screen; filter: blur(7px) !important; opacity: .7;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 38%, #000 62%, transparent 100%), linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(180deg, transparent 0%, #000 38%, #000 62%, transparent 100%), linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); mask-composite: intersect; }
+body[data-tema="landslaget"] .ls-kv-bg > i:nth-child(1) { bottom: 30%; background: repeating-linear-gradient(90deg, rgba(110, 245, 200, .0) 0 7px, rgba(110, 245, 200, .55) 9px 12px, rgba(110, 245, 200, .0) 15px 22px),
+  linear-gradient(180deg, rgba(90, 240, 190, 0), rgba(90, 240, 190, .55) 55%, rgba(60, 200, 170, .2)); animation: kv-ns-sloja 16s ease-in-out infinite alternate !important; }
+body[data-tema="landslaget"] .ls-kv-bg > i:nth-child(2) { bottom: 40%; height: 40% !important; opacity: .55; background: repeating-linear-gradient(90deg, rgba(140, 150, 255, 0) 0 9px, rgba(140, 150, 255, .5) 11px 13px, rgba(140, 150, 255, 0) 16px 26px),
+  linear-gradient(180deg, rgba(150, 120, 255, 0), rgba(110, 150, 255, .5) 60%, rgba(77, 163, 255, .15)); animation: kv-ns-sloja2 22s ease-in-out -7s infinite alternate !important; }
+body[data-tema="landslaget"] .ls-kv-bg > i:nth-child(3) { bottom: 26%; height: 30% !important; opacity: .5; background: linear-gradient(180deg, rgba(200, 255, 235, 0), rgba(200, 255, 235, .45) 70%, rgba(200, 255, 235, 0));
+  filter: blur(14px) !important; animation: kv-ns-sloja 11s ease-in-out -3s infinite alternate-reverse !important; }
+@keyframes kv-ns-sloja { 0% { transform: translateX(-6%) skewX(-10deg) scaleY(.9); opacity: .45; } 50% { opacity: .8; } 100% { transform: translateX(6%) skewX(12deg) scaleY(1.12); opacity: .6; } }
+@keyframes kv-ns-sloja2 { 0% { transform: translateX(5%) skewX(8deg) scaleY(1.05); opacity: .35; } 100% { transform: translateX(-7%) skewX(-9deg) scaleY(.88); opacity: .65; } }
+body[data-tema="landslaget"][data-niva="motionar"] .ls-kv-bg > i { mix-blend-mode: normal; opacity: .28 !important; }
+@media (prefers-reduced-motion: reduce) { body[data-tema="landslaget"] .ls-kv-bg > i { animation: none !important; } }
+
+/* 04 Norrskenet på canvas (2026-11-19, "ser fejkt och konstig ut"): de gamla slöjorna borta, duken ligger bakom fjällen */
+body[data-tema="landslaget"] .ls-kv-bg > i { display: none !important; }
+.kv-ns-cv { position: absolute; left: 0; right: 0; bottom: 30%; width: 100%; height: 56%; mix-blend-mode: screen; opacity: .95; image-rendering: auto; filter: blur(1.5px);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 85%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 85%, transparent 100%); }
+body[data-niva="motionar"] .kv-ns-cv { mix-blend-mode: normal; opacity: .35; }
+
+/* 05 Stilrena fjäll som på startsidan (2026-11-19) och norrskenet bakom kroppen: tonas bort i mitten där glaskroppen står */
+.kv-landskap { height: 40% !important; bottom: 16% !important; }
+.kv-fj1 { fill: #10427f !important; opacity: .9 !important; filter: drop-shadow(0 -1.5px 0 rgba(220, 240, 255, .5)); }
+.kv-fj2 { fill: #0a2550 !important; opacity: 1 !important; filter: drop-shadow(0 -2px 0 rgba(200, 230, 255, .35)); }
+body[data-niva="motionar"] .kv-fj1 { fill: #b7d4f2 !important; filter: drop-shadow(0 -1.5px 0 #fff); } body[data-niva="motionar"] .kv-fj2 { fill: #e4eff9 !important; filter: drop-shadow(0 -2px 0 #fff); }
+.kv-ns-cv { bottom: 34% !important; height: 50% !important;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 28%, #000 82%, transparent 100%), radial-gradient(34% 80% at 50% 70%, transparent 55%, #000 100%);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(180deg, transparent 0%, #000 28%, #000 82%, transparent 100%), radial-gradient(34% 80% at 50% 70%, transparent 55%, #000 100%); mask-composite: intersect; }
+
+/* 06 Norrskenet tydligare, bara en smal zon bakom kroppen är tom */
+.kv-ns-cv { opacity: 1 !important; filter: blur(1px) !important;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 26%, #000 84%, transparent 100%), radial-gradient(20% 70% at 50% 72%, transparent 40%, #000 100%) !important;
+  mask-image: linear-gradient(180deg, transparent 0%, #000 26%, #000 84%, transparent 100%), radial-gradient(20% 70% at 50% 72%, transparent 40%, #000 100%) !important; }
+body[data-niva="motionar"] .kv-ns-cv { opacity: .5 !important; }
+
+/* 07 Norrskenet större: fyller himlen från fjällen och upp mot väljaren, bakgrunden djupare blå bakom */
+.kv-ns-cv { bottom: 30% !important; height: 70% !important; }
+body[data-tema="landslaget"][data-niva="elit"] .ls-kv-bg { background: radial-gradient(120% 70% at 50% 100%, #0d3a6e 0%, #081f42 55%, #050f24 100%); }
+
+/* 08 Bakgrunden smälter in i sidan: tonas in uppifrån och ut nedåt, ingen hård kant under rubriken */
+body[data-tema="landslaget"] .ls-kv-bg { -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 66%, transparent 100%) !important;
+  mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 66%, transparent 100%) !important; border-radius: 0 !important; }
+body[data-tema="landslaget"][data-niva="elit"] .ls-kv-bg { background: radial-gradient(110% 60% at 50% 78%, rgba(13, 58, 110, .9) 0%, rgba(8, 31, 66, .6) 55%, transparent 100%) !important; }

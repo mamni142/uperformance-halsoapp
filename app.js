@@ -944,7 +944,7 @@
           <div class="notis">${ik('info')}<span>Ett normalt värde bevisar inte att man är frisk och ett avvikande värde är ingen diagnos. Medicinsk data hålls skild från din hälsodata.</span></div></div>`;
     }
     return `${topp('Din kropp')}
-      <section class="kv-scen in" style="--i:1" data-lage="${kroppLage}">${LANDS ? `<div class="ls-kv-bg" aria-hidden="true"><i></i><i></i><i></i><span>${Array.from({ length: 16 }, (_, n) => `<b style="--x:${(n * 37 + 7) % 100}%;--t:${7 + (n % 4) * 2}s;--d:${-(n * .9).toFixed(1)}s;--s:${(1.5 + (n % 3) * .8).toFixed(1)}px"></b>`).join('')}</span>${kvLandskap()}</div>` : ''}
+      <section class="kv-scen in" style="--i:1" data-lage="${kroppLage}">${LANDS ? `<div class="ls-kv-bg" aria-hidden="true"><i></i><i></i><i></i><span>${Array.from({ length: 16 }, (_, n) => `<b style="--x:${(n * 37 + 7) % 100}%;--t:${7 + (n % 4) * 2}s;--d:${-(n * .9).toFixed(1)}s;--s:${(1.5 + (n % 3) * .8).toFixed(1)}px"></b>`).join('')}</span><canvas class="kv-ns-cv" width="220" height="110" aria-hidden="true"></canvas>${kvLandskap()}</div>` : ''}
         <div class="kv-lage" role="group" aria-label="Visa" style="--n:${KV_LAGEN.indexOf(kroppLage)};--fran:${fran}"><span class="kv-lage-markor" aria-hidden="true"></span>${seg.map(([v, t, i]) => `<button type="button" data-g="kropp-lage" data-v="${v}" aria-pressed="${kroppLage === v}">${ik(i)}<span>${t}</span></button>`).join('')}</div>
         <div data-kropp-plats></div>
         ${kroppLage === 'med' ? `<div class="kropp-las">${ik('las')}<b>Skyddat</b><span>Bara du och medicinsk personal</span></div>` : ''}
@@ -958,34 +958,31 @@
       <div class="kopplingar kv-snart in" style="--i:8">${(LANDS ? [['puls', 'Rösten', '"Det hugger i vänster knä"'], ['skidor', 'Teknikanalys', 'Kameran jämför vänster och höger i spåret'], ['hjarta', 'Klockan', 'Återhämtning efter passen']] : [['puls', 'Rösten', '"Det hugger i vänster knä"'], ['rorlighet', 'Rörelseanalys', 'Kameran mäter rörligheten'], ['hjarta', 'Klockan', 'Återhämtning per dag']]).map(([i, t, u]) => `<div class="koppling"><span class="ikonruta" data-ton="is">${ik(i)}</span><b>${t}</b><small>${e(u)}</small></div>`).join('')}</div>
       <div class="notis kv-notis in" style="--i:9">${ik('info')}<span>Kroppskartan är ingen diagnos. Vid ihållande eller ökande besvär hänvisar vi dig vidare till rätt specialist eller vården.</span></div>`;
   }
+  // Norrskenet bakom fjällen på Kropp: ritas på en liten canvas (220 × 110) som skalas upp – låg upplösning ger naturligt mjukt ljus.
+  // Varje kolumn är en lodrät stråle längs en böljande båge: ljusast nederst (grönt), tonar uppåt mot blått/violett; två slöjor ovanpå varandra
+  // med additiv blandning. Bågen, strålarnas höjd och ljusstyrkan rör sig långsamt. Ritas bara när duken syns och fliken är aktiv.
+  if (LANDS) (() => { let t0 = performance.now(), sist = 0;
+    const slojor = [{ y: .8, a: 1.3, h: .72, f: [120, 255, 200], t: [120, 140, 255], v: .00045, k: 1 }, { y: .62, a: .85, h: .6, f: [90, 220, 255], t: [170, 110, 255], v: -.0003, k: 1.7 }];
+    function rita(nu) { requestAnimationFrame(rita);
+      const cv = document.querySelector('.kv-ns-cv'); if (!cv || document.hidden || !cv.offsetParent) return;
+      if (nu - sist < 33 && !lugn) return; sist = nu; const t = lugn ? 4000 : nu - t0, g = cv.getContext('2d'), W = cv.width, H = cv.height;
+      g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, W, H); g.globalCompositeOperation = 'lighter';
+      for (const sl of slojor) for (let x = 0; x < W; x++) {
+        const u = x / W, bas = H * (sl.y + Math.sin(u * 5.2 * sl.k + t * sl.v * 2.1) * .08 + Math.sin(u * 13 - t * sl.v * 3.3) * .03 + (u - .5) * (u - .5) * .25);
+        const ljus = Math.max(0, .35 + .4 * Math.sin(u * 9 * sl.k + t * .0007) + .3 * Math.sin(u * 31 - t * .0016) + .15 * Math.sin(u * 71 + t * .003)) * sl.a * Math.sin(Math.PI * u);
+        if (ljus < .02) continue; const h = H * sl.h * (.55 + .45 * Math.sin(u * 17 + t * .0009) * Math.sin(u * 7 - t * .0004) + .2);
+        const gr = g.createLinearGradient(0, bas, 0, bas - h);
+        gr.addColorStop(0, `rgba(${sl.f[0]}, ${sl.f[1]}, ${sl.f[2]}, 0)`); gr.addColorStop(.06, `rgba(${sl.f[0]}, ${sl.f[1]}, ${sl.f[2]}, ${(ljus * .9).toFixed(3)})`);
+        gr.addColorStop(.45, `rgba(${(sl.f[0] + sl.t[0]) >> 1}, ${(sl.f[1] + sl.t[1]) >> 1}, ${(sl.f[2] + sl.t[2]) >> 1}, ${(ljus * .35).toFixed(3)})`); gr.addColorStop(1, `rgba(${sl.t[0]}, ${sl.t[1]}, ${sl.t[2]}, 0)`);
+        g.fillStyle = gr; g.fillRect(x, bas - h, 1, h + 2); }
+      if (lugn) return; }
+    requestAnimationFrame(rita); })();
   // Kroppens bakgrund i landslaget: fjäll i två lager, granskog och två svenska flaggor som vajar på krönen.
   function kvLandskap() {
-    const gran = (x, y, h) => `<path d="M${x} ${y - h}L${x + h * .32} ${y - h * .45}H${x + h * .16}L${x + h * .42} ${y}H${x - h * .42}L${x - h * .16} ${y - h * .45}H${x - h * .32}Z"/>`;
-    const skog = Array.from({ length: 22 }, (_, i) => { const x = 6 + i * 18.4 + ((i * 7) % 5), y = 112 + ((i * 13) % 6), h = 13 + ((i * 11) % 9); return Math.abs(x - 200) < 70 ? '' : gran(x, y, h); }).join('');
-    // Svensk flagga i rätta proportioner (16 × 10, korset 5 + 2 + 9 / 4 + 2 + 4) som vajar: duken böljar (SMIL på formen),
-    // korset följer med genom klippningen och veckens ljus och skugga glider utåt. Stång med guldknopp på en snödriva.
-    const flagga = (x, y, n, d) => { const D1 = 'M0 -29 C5 -30.6 10 -27.4 16 -29.2 L16 -19.2 C10 -17.4 5 -20.6 0 -19 Z', D2 = 'M0 -29 C5 -27.6 10 -30.4 16 -28.6 L16 -18.6 C10 -20.4 5 -17.6 0 -19 Z';
-      const form = `<animate attributeName="d" dur="2.6s" begin="${d}s" repeatCount="indefinite" values="${D1};${D2};${D1}" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" keyTimes="0;.5;1"/>`;
-      return `<g class="kv-flagga" transform="translate(${x} ${y})"><defs><clipPath id="kv-fl-${n}"><path d="${D1}">${form}</path></clipPath>
-        <linearGradient id="kv-fv-${n}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="8" y2="0" spreadMethod="repeat"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".5" stop-color="#000" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity=".28"/></linearGradient></defs>
-        <ellipse class="kv-driva" cx="0" cy="0.6" rx="4.2" ry="1.4"/><rect class="kv-stang" x="-.6" y="-31" width="1.2" height="31.4" rx=".6"/><circle cx="0" cy="-31.4" r="1.25" fill="#ffcd00"/>
-        <g clip-path="url(#kv-fl-${n})"><rect x="0" y="-32" width="17" height="15" fill="#006aa7"/><rect x="5" y="-32" width="2" height="15" fill="#fecc02"/><rect x="0" y="-25.1" width="17" height="2" fill="#fecc02"/>
-          <rect x="-16" y="-32" width="48" height="15" fill="url(#kv-fv-${n})"><animateTransform attributeName="transform" type="translate" from="0 0" to="8 0" dur="1.3s" begin="${d}s" repeatCount="indefinite"/></rect></g></g>`; };
-    return `<svg class="kv-landskap" viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-      <defs><linearGradient id="kv-ns-g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7cf5c8" stop-opacity="0"/><stop offset=".35" stop-color="#7cf5c8" stop-opacity=".85"/><stop offset=".8" stop-color="#3fd3a8" stop-opacity=".35"/><stop offset="1" stop-color="#3fd3a8" stop-opacity="0"/></linearGradient>
-        <linearGradient id="kv-ns-g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a98bff" stop-opacity="0"/><stop offset=".3" stop-color="#8f9bff" stop-opacity=".6"/><stop offset=".75" stop-color="#4da3ff" stop-opacity=".3"/><stop offset="1" stop-color="#4da3ff" stop-opacity="0"/></linearGradient>
-        <linearGradient id="kv-ns-strg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity=".25"/></linearGradient><pattern id="kv-ns-str" width="7" height="120" patternUnits="userSpaceOnUse"><rect width="7" height="120" fill="url(#kv-ns-strg)"/></pattern>
-        <mask id="kv-ns-m" maskUnits="userSpaceOnUse" x="-60" y="-40" width="520" height="160"><rect x="-60" y="-40" width="520" height="160" fill="url(#kv-ns-str)"/></mask>
-        <radialGradient id="kv-ns-sken" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#7cf5c8" stop-opacity=".35"/><stop offset="1" stop-color="#7cf5c8" stop-opacity="0"/></radialGradient></defs>
-      <g class="kv-ns" aria-hidden="true">
-        <g class="kv-ns-slaja kv-ns-1" mask="url(#kv-ns-m)"><path d="M-40 -10 C40 6 90 -14 150 2 S270 22 330 0 S420 -10 460 6 L460 70 C400 52 350 66 290 54 S170 38 110 56 S20 60 -40 48 Z" fill="url(#kv-ns-g1)"/></g>
-        <g class="kv-ns-slaja kv-ns-2" mask="url(#kv-ns-m)"><path d="M-40 10 C60 -4 120 18 200 6 S320 -6 400 12 L460 14 L460 62 C380 46 300 60 220 48 S80 58 -40 52 Z" fill="url(#kv-ns-g2)"/></g>
-        <g class="kv-ns-slaja kv-ns-3" mask="url(#kv-ns-m)"><path d="M60 0 C110 10 160 -6 220 4 S300 14 340 2 L340 58 C300 50 250 60 200 52 S110 50 60 56 Z" fill="url(#kv-ns-g1)" opacity=".7"/></g>
-        <ellipse class="kv-ns-glod" cx="200" cy="46" rx="230" ry="26" fill="url(#kv-ns-sken)"/></g>
-      <path class="kv-fj1" d="M0 120V70L38 52L70 64L112 36L150 58L178 48L214 62L250 30L292 56L326 44L362 60L400 46V120Z"/>
-      <path class="kv-fj1-sno" d="M112 36L103.6 41.6L107.6 40.6L110.4 43.2L113.6 41L116.6 42.4L120.4 41.1ZM250 30L241 38L245.4 37.1L248.6 39.8L251.6 37.2L255 38.2L258.4 35.5Z"/>
-      <path class="kv-fj2" d="M0 120V92Q60 78 120 90T240 88T400 84V120Z"/>
-      <path class="kv-fj-sken" d="M0 120V70L38 52L70 64L112 36L150 58L178 48L214 62L250 30L292 56L326 44L362 60L400 46V120Z"/><g class="kv-skog">${skog}</g></svg>`;
+    // Stilrena fjäll som på startsidan: två mjuka lager med ljus kant, inga granar eller toppar – norrskenet (canvas) står bakom
+    return '<svg class="kv-landskap" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">'
+      + '<path class="kv-fj1" d="M0 120V74Q36 60 76 68T156 56T236 64T316 50T400 62V120Z"/>'
+      + '<path class="kv-fj2" d="M0 120V94Q60 82 124 90T246 86T360 80T400 84V120Z"/></svg>';
   }
   // Landslaget: vad tekniken belastar (allmän bild, ingen mätning) – tryck på en rad så visas området på kroppen.
   const TEKNIK = [
@@ -1654,7 +1651,7 @@
     const fj = (top, n, amp) => { const p = Array.from({ length: n + 1 }, (_, i) => [i * 400 / n, i % 2 ? top + amp + ((i * 13) % 3) * 4 : top + ((i * 37) % 5) * 4]);
       let d = `M0 100 L0 ${p[0][1]}`; for (let i = 0; i < n; i++) d += ` Q${p[i][0].toFixed(0)} ${p[i][1].toFixed(0)} ${((p[i][0] + p[i + 1][0]) / 2).toFixed(0)} ${((p[i][1] + p[i + 1][1]) / 2).toFixed(0)}`; return d + ` L400 ${p[n][1]} L400 100 Z`; };
     const stj = Array.from({ length: 18 }, (_, i) => `<i style="--x:${(i * 53) % 100}%;--y:${(i * 31) % 60}%;--d:${(-(i * .8) % 5).toFixed(1)}s"></i>`).join('');
-    const sno = Array.from({ length: 22 }, (_, i) => `<b style="--x:${(i * 41 + 9) % 100}%;--t:${(6 + (i % 4) * 2).toFixed(0)}s;--d:${(-(i * .7)).toFixed(1)}s;--s:${(1.4 + (i % 3) * .9).toFixed(1)}px"></b>`).join('');
+    const sno = Array.from({ length: 9 }, (_, i) => `<b style="--x:${(i * 41 + 9) % 100}%;--t:${(6 + (i % 4) * 2).toFixed(0)}s;--d:${(-(i * .7)).toFixed(1)}s;--s:${(1.4 + (i % 3) * .9).toFixed(1)}px"></b>`).join('');
     return `<div class="ls-hero" aria-hidden="true"><div class="ls-hero-ns"><i></i><i></i><i></i></div><div class="ls-hero-stj">${stj}</div>
       <svg class="ls-hero-fj ls-hero-fj1" viewBox="0 0 400 100" preserveAspectRatio="none"><path d="${fj(26, 8, 34)}"/><path transform="translate(400 0)" d="${fj(26, 8, 34)}"/></svg>
       <svg class="ls-hero-fj ls-hero-fj2" viewBox="0 0 400 100" preserveAspectRatio="none"><path d="${fj(50, 5, 30)}"/><path transform="translate(400 0)" d="${fj(50, 5, 30)}"/></svg>
@@ -1693,7 +1690,7 @@
   function lsBacke() {
     const spar = 'M-30 99 L60 98 C130 97 200 95 262 91 C292 89 306 80 326 64 C342 51 358 46 375 50 C395 56 410 66 440 72';
     const ryggen = 'M0 98.5 L60 98 C130 97 200 95 262 91 C292 89 306 80 326 64 C342 51 358 46 375 50 C395 56 400 60 400 61';
-    const lag = [[0, 1.02, 1], [.55, .98, 0], [1.25, 1.06, 0], [2.3, 1, 0], [3.1, .96, 0]];
+    const lag = [[0, 1.25, 1], [.9, 1.2, 0], [1.9, 1.3, 0]];
     const akare = ([bak, takt, ledare], n) => { const b = (-bak).toFixed(2);
       return `<g class="ls-ak" data-n="${n}"><animateMotion dur="16s" begin="${b}s" repeatCount="indefinite" rotate="auto" path="${spar}" calcMode="linear" keyPoints="0;.64;.85;1" keyTimes="0;.5;.87;1"/>
         <animate attributeName="opacity" dur="16s" begin="${b}s" repeatCount="indefinite" values="0;0;1;1;0" keyTimes="0;.25;.31;.94;1"/>
